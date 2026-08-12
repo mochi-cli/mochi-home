@@ -1,129 +1,140 @@
 <svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" role="img" width="1200" height="630">
-  <title>Mochi — Your team's data workspace, without the server bills</title>
-  <desc>Promotional poster in Mochi's HUD style: mascot with dashed reticle rings on the left, product headline and value bullets on the right.</desc>
+  <title>Mochi — The local-first data workspace for your team and AI agents</title>
+  <desc>Product cover: headline on the left with the install command, real product table (Deals) on the right, matching the live site's neutral + violet design.</desc>
 
   <defs>
-    <linearGradient id="mgrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#4a4a4a"/>
-      <stop offset="42%" stop-color="#6d6d6d"/>
-      <stop offset="100%" stop-color="#ededea"/>
-    </linearGradient>
-    <radialGradient id="mhl" cx="42%" cy="30%" r="58%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.30"/>
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    <radialGradient id="glow" cx="100%" cy="100%" r="75%">
+      <stop offset="0%" stop-color="#6d5ef8" stop-opacity="0.10"/>
+      <stop offset="60%" stop-color="#6d5ef8" stop-opacity="0"/>
     </radialGradient>
+    <clipPath id="cardClip"><rect x="0" y="0" width="620" height="430" rx="16"/></clipPath>
   </defs>
 
-  <rect width="1200" height="630" fill="#f2f2f0"/>
+  <rect width="1200" height="630" fill="#ffffff"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
 
-  <g stroke="#131313" stroke-width="1.5" fill="none">
-    <path d="M32 52 L32 32 L52 32"/>
-    <path d="M1148 32 L1168 32 L1168 52"/>
-    <path d="M32 578 L32 598 L52 598"/>
-    <path d="M1148 598 L1168 598 L1168 578"/>
-  </g>
+  <!-- ===================== LEFT: wordmark, headline, install ===================== -->
+  <g font-family="ui-sans-serif, -apple-system, 'Segoe UI', sans-serif">
+    <text x="72" y="76" font-size="24" font-weight="700" letter-spacing="-0.5" fill="#171717">mochi</text>
 
-  <g font-family="'Silkscreen', 'Courier New', ui-monospace, monospace" font-size="11" fill="#131313" letter-spacing="1.5">
-    <g transform="translate(72,58)">
-      <rect x="0" y="0" width="14" height="14" fill="none" stroke="#131313"/>
-      <path d="M0 0 L14 14 M14 0 L0 14" stroke="#131313"/>
-    </g>
-    <text x="98" y="70">MOCHI · v1.0</text>
-    <text x="600" y="70" text-anchor="middle" opacity="0.55">AGENT-NATIVE DATA WORKSPACE</text>
-    <text x="1128" y="70" text-anchor="end">READY ▸</text>
-  </g>
-  <line x1="60" y1="86" x2="1140" y2="86" stroke="#131313" stroke-width="1" opacity="0.35"/>
+    <!-- live badge -->
+    <rect x="72" y="108" width="286" height="34" rx="17" fill="#ffffff" stroke="#e5e5e5"/>
+    <circle cx="92" cy="125" r="4" fill="#10b981"/>
+    <text x="106" y="130" font-size="13" fill="#171717">Local-first · Peer-to-peer · AI-native</text>
 
-  <g transform="translate(90,180)">
-    <g fill="none" stroke="#131313">
-      <circle cx="180" cy="180" r="176" stroke-width="1" stroke-dasharray="2 6" opacity="0.55"/>
-      <circle cx="180" cy="180" r="140" stroke-width="1" stroke-dasharray="10 8" opacity="0.55"/>
-      <circle cx="180" cy="180" r="104" stroke-width="1" opacity="0.30"/>
-      <path d="M180 0 v34 M180 326 v34 M0 180 h34 M326 180 h34" stroke-width="1" opacity="0.55"/>
-    </g>
+    <text x="70" y="198" font-size="42" font-weight="700" letter-spacing="-1.2" fill="#171717">The local-first data</text>
+    <text x="70" y="244" font-size="42" font-weight="700" letter-spacing="-1.2" fill="#171717">workspace for your</text>
+    <text x="70" y="290" font-size="42" font-weight="700" letter-spacing="-1.2" fill="#171717">team and AI agents.</text>
+    <text x="70" y="334" font-size="42" font-weight="700" letter-spacing="-1.2" fill="#6d5ef8">Zero server bills.</text>
 
-    <g transform="translate(80,70)">
-      <path d="M58 64 L66 38 L88 60 Z" fill="#4a4a4a"/>
-      <path d="M142 64 L134 38 L112 60 Z" fill="#4a4a4a"/>
-      <path d="M40 112 C40 74 58 52 100 52 C142 52 160 74 160 112 L160 168 q-15 20 -30 0 q-15 20 -30 0 q-15 20 -30 0 q-15 20 -30 0 Z"
-            fill="url(#mgrad)" stroke="#3a3a3a" stroke-width="1.5"/>
-      <ellipse cx="90" cy="86" rx="46" ry="34" fill="url(#mhl)"/>
-      <rect x="74" y="88" width="15" height="32" rx="7.5" fill="#f0f0ee"/>
-      <rect x="111" y="88" width="15" height="32" rx="7.5" fill="#f0f0ee"/>
-      <path d="M94 122 L106 122 L100 130 Z" fill="#f0f0ee"/>
-    </g>
+    <text x="72" y="378" font-size="17" fill="#6b7280">Build CRM, HR, inventory, or any internal tool — no code, no</text>
+    <text x="72" y="400" font-size="17" fill="#6b7280">prompts. Works natively with Claude, Codex, and OpenCode.</text>
 
-    <g stroke="#131313" stroke-width="1" opacity="0.55">
-      <path d="M180 175 v10 M175 180 h10"/>
+    <!-- install command -->
+    <rect x="72" y="432" width="420" height="54" rx="14" fill="#ffffff" stroke="#e5e5e5"/>
+    <text x="94" y="465" font-family="ui-monospace, 'SF Mono', monospace" font-size="16" fill="#6b7280">$</text>
+    <text x="112" y="465" font-family="ui-monospace, 'SF Mono', monospace" font-size="16" fill="#171717">npx @mochi-cli/mochi init all</text>
+
+    <!-- engine chips -->
+    <g font-family="ui-sans-serif, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#ffffff">
+      <rect x="72" y="502" width="52" height="24" rx="12" fill="#171717"/>
+      <text x="98" y="518" text-anchor="middle">ALL</text>
+      <rect x="132" y="502" width="72" height="24" rx="12" fill="#e5e5e5"/>
+      <text x="168" y="518" text-anchor="middle" fill="#6b7280">CLAUDE</text>
+      <rect x="212" y="502" width="66" height="24" rx="12" fill="#e5e5e5"/>
+      <text x="245" y="518" text-anchor="middle" fill="#6b7280">CODEX</text>
+      <rect x="286" y="502" width="88" height="24" rx="12" fill="#e5e5e5"/>
+      <text x="330" y="518" text-anchor="middle" fill="#6b7280">OPENCODE</text>
     </g>
   </g>
 
-  <g font-family="'Silkscreen', 'Courier New', ui-monospace, monospace" font-size="11" fill="#131313" letter-spacing="2">
-    <rect x="500" y="128" width="8" height="8" fill="#131313"/>
-    <text x="516" y="137">FOR OFFICE TEAMS · BUILDERS · AI AGENTS</text>
-  </g>
+  <!-- ===================== RIGHT: the real product table ===================== -->
+  <g transform="translate(560,100)">
+    <rect x="0" y="0" width="576" height="430" rx="16" fill="#ffffff" stroke="#e5e5e5" stroke-width="1.5"/>
+    <g clip-path="url(#cardClip)">
+      <!-- window chrome -->
+      <rect x="0" y="0" width="576" height="34" fill="#f7f7f7"/>
+      <circle cx="20" cy="17" r="6" fill="#ff5f57"/>
+      <circle cx="38" cy="17" r="6" fill="#febc2e"/>
+      <circle cx="56" cy="17" r="6" fill="#28c840"/>
 
-  <g font-family="'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', ui-sans-serif, sans-serif" fill="#131313">
-    <text x="500" y="200" font-size="56" font-weight="700" letter-spacing="-2.5">Your team's data</text>
-    <text x="500" y="258" font-size="56" font-weight="700" letter-spacing="-2.5">workspace, without</text>
-    <text x="500" y="316" font-size="56" font-weight="700" letter-spacing="-2.5" font-style="italic">the server bills.</text>
-  </g>
+      <!-- tab strip -->
+      <rect x="0" y="34" width="576" height="38" fill="#f7f7f7"/>
+      <g font-family="ui-sans-serif, -apple-system, sans-serif" font-size="12" font-weight="600">
+        <rect x="14" y="42" width="16" height="16" rx="4" fill="#d1fbe8"/>
+        <text x="22" y="54" text-anchor="middle" fill="#047857">C</text>
+        <text x="36" y="55" fill="#6b7280">Customers</text>
 
-  <text x="500" y="352" font-family="'Geist', -apple-system, ui-sans-serif, sans-serif" font-size="16" fill="#5f5f5c" letter-spacing="0.2">Build CRM, ERP, or any internal tool — no code, no prompts, no monthly server fees.</text>
+        <rect x="118" y="40" width="90" height="30" rx="8" fill="#ffffff"/>
+        <rect x="124" y="45" width="16" height="16" rx="4" fill="#ede9fe"/>
+        <text x="132" y="57" text-anchor="middle" fill="#5b21b6">D</text>
+        <text x="146" y="58" fill="#171717">Deals</text>
 
-  <line x1="500" y1="378" x2="1128" y2="378" stroke="#131313" stroke-width="1" opacity="0.35"/>
+        <rect x="222" y="42" width="16" height="16" rx="4" fill="#fef3c7"/>
+        <text x="230" y="54" text-anchor="middle" fill="#b45309">I</text>
+        <text x="244" y="55" fill="#6b7280">Interactions</text>
+      </g>
 
-  <g font-family="'Geist', -apple-system, ui-sans-serif, sans-serif" font-size="15" fill="#131313">
-    <rect x="500" y="404" width="8" height="8" fill="#131313"/>
-    <text x="518" y="413" font-weight="600">Design your own CRM / ERP / HR tracker</text>
-    <text x="518" y="431" fill="#5f5f5c">Describe data in plain Markdown — no SQL, no prompts</text>
+      <!-- toolbar -->
+      <rect x="0" y="72" width="576" height="34" fill="#ffffff"/>
+      <text x="14" y="93" font-family="ui-sans-serif, sans-serif" font-size="12" font-weight="600" fill="#171717">Grid view</text>
+      <rect x="518" y="79" width="46" height="20" rx="6" fill="#171717"/>
+      <text x="541" y="93" text-anchor="middle" font-family="ui-sans-serif, sans-serif" font-size="10" font-weight="600" fill="#ffffff">+ New</text>
 
-    <rect x="500" y="454" width="8" height="8" fill="#131313"/>
-    <text x="518" y="463" font-weight="600">Real-time collab on your laptop</text>
-    <text x="518" y="481" fill="#5f5f5c">Peer-to-peer sync — zero hosting fees, your data stays yours</text>
+      <!-- header row -->
+      <line x1="0" y1="106" x2="576" y2="106" stroke="#e5e5e5"/>
+      <g font-family="ui-sans-serif, sans-serif" font-size="10" font-weight="600" fill="#6b7280" letter-spacing="0.4">
+        <text x="14" y="122">#</text>
+        <text x="40" y="122">COMPANY</text>
+        <text x="220" y="122">STAGE</text>
+        <text x="340" y="122">OWNER</text>
+        <text x="470" y="122">VALUE</text>
+      </g>
+      <line x1="0" y1="132" x2="576" y2="132" stroke="#e5e5e5"/>
 
-    <rect x="500" y="504" width="8" height="8" fill="#131313"/>
-    <text x="518" y="513" font-weight="600">Agent-native via MCP</text>
-    <text x="518" y="531" fill="#5f5f5c">Claude, Codex, OpenCode — every change diff-reviewable in Git</text>
-  </g>
+      <!-- rows -->
+      <g font-family="ui-sans-serif, sans-serif" font-size="13">
+        <text x="14" y="158" fill="#6b7280">1</text>
+        <text x="40" y="158" font-weight="600" fill="#171717">VisionQuest Labs</text>
+        <rect x="220" y="144" width="76" height="22" rx="11" fill="#ffffff" stroke="#e5e5e5"/>
+        <text x="258" y="159" text-anchor="middle" font-size="11" fill="#171717">Discovery</text>
+        <text x="340" y="158" fill="#6b7280">James Cooper</text>
+        <text x="470" y="158" font-weight="600" fill="#171717">$14,300</text>
 
-  <line x1="60" y1="560" x2="1140" y2="560" stroke="#131313" stroke-width="1" opacity="0.35"/>
+        <line x1="0" y1="176" x2="576" y2="176" stroke="#f0f0f0"/>
+        <text x="14" y="200" fill="#6b7280">2</text>
+        <text x="40" y="200" font-weight="600" fill="#171717">Acetube Inc.</text>
+        <rect x="220" y="186" width="86" height="22" rx="11" fill="#ffffff" stroke="#e5e5e5"/>
+        <text x="263" y="201" text-anchor="middle" font-size="11" fill="#171717">Negotiation</text>
+        <text x="340" y="200" fill="#6b7280">Charlotte King</text>
+        <text x="470" y="200" font-weight="600" fill="#171717">$48,200</text>
 
-  <g transform="translate(72,568)" fill="#131313">
-    <rect x="0"   y="0" width="1" height="9" opacity="0.7"/>
-    <rect x="15"  y="4" width="1" height="5" opacity="0.35"/>
-    <rect x="30"  y="4" width="1" height="5" opacity="0.35"/>
-    <rect x="45"  y="4" width="1" height="5" opacity="0.35"/>
-    <rect x="60"  y="4" width="1" height="5" opacity="0.35"/>
-    <rect x="75"  y="0" width="1" height="9" opacity="0.7"/>
-    <rect x="90"  y="4" width="1" height="5" opacity="0.35"/>
-    <rect x="105" y="4" width="1" height="5" opacity="0.35"/>
-    <rect x="120" y="4" width="1" height="5" opacity="0.35"/>
-    <rect x="135" y="4" width="1" height="5" opacity="0.35"/>
-    <rect x="150" y="0" width="1" height="9" opacity="0.7"/>
-    <rect x="165" y="4" width="1" height="5" opacity="0.35"/>
-    <rect x="180" y="4" width="1" height="5" opacity="0.35"/>
-    <rect x="195" y="4" width="1" height="5" opacity="0.35"/>
-    <rect x="210" y="4" width="1" height="5" opacity="0.35"/>
-    <rect x="225" y="0" width="1" height="9" opacity="0.7"/>
-    <rect x="240" y="4" width="1" height="5" opacity="0.35"/>
-    <rect x="255" y="4" width="1" height="5" opacity="0.35"/>
-    <rect x="270" y="4" width="1" height="5" opacity="0.35"/>
-    <rect x="285" y="4" width="1" height="5" opacity="0.35"/>
-    <rect x="300" y="0" width="1" height="9" opacity="0.7"/>
-  </g>
+        <line x1="0" y1="218" x2="576" y2="218" stroke="#f0f0f0"/>
+        <text x="14" y="242" fill="#6b7280">3</text>
+        <text x="40" y="242" font-weight="600" fill="#171717">LKS Retainer</text>
+        <rect x="220" y="228" width="76" height="22" rx="11" fill="#ffffff" stroke="#e5e5e5"/>
+        <text x="258" y="243" text-anchor="middle" font-size="11" fill="#171717">Discovery</text>
+        <text x="340" y="242" fill="#6b7280">Benjamin Taylor</text>
+        <text x="470" y="242" font-weight="600" fill="#171717">$6,500</text>
 
-  <g font-family="'Silkscreen', 'Courier New', ui-monospace, monospace" font-size="11" fill="#131313" letter-spacing="2">
-    <text x="440" y="595">◇ NO SERVER   ◇ NO PROMPTS   ◇ NO LOCK-IN</text>
-    <text x="1128" y="595" text-anchor="end">GET MOCHI ▸</text>
-  </g>
+        <line x1="0" y1="260" x2="576" y2="260" stroke="#f0f0f0"/>
+        <text x="14" y="284" fill="#6b7280">4</text>
+        <text x="40" y="284" font-weight="600" fill="#171717">Timbershadow</text>
+        <rect x="220" y="270" width="82" height="22" rx="11" fill="#d1fbe8"/>
+        <text x="261" y="285" text-anchor="middle" font-size="11" fill="#047857">Closed won</text>
+        <text x="340" y="284" fill="#6b7280">Casey Park</text>
+        <text x="470" y="284" font-weight="600" fill="#171717">$61,540</text>
+      </g>
 
-  <g stroke="#131313" stroke-width="1" opacity="0.6" fill="none">
-    <g transform="translate(1090,140)">
-      <path d="M8 1 v14 M1 8 h14"/>
+      <!-- status bar -->
+      <rect x="0" y="396" width="576" height="34" fill="#f7f7f7"/>
+      <text x="14" y="417" font-family="ui-sans-serif, sans-serif" font-size="11" fill="#6b7280">Showing 5</text>
+      <circle cx="96" cy="413" r="3.5" fill="#10b981"/>
+      <text x="106" y="417" font-family="ui-sans-serif, sans-serif" font-size="11" fill="#6b7280">in sync</text>
     </g>
-    <g transform="translate(1090,470)">
-      <path d="M8 1 v14 M1 8 h14"/>
-    </g>
   </g>
+
+  <line x1="60" y1="576" x2="1140" y2="576" stroke="#e5e5e5"/>
+  <text x="60" y="608" font-family="ui-sans-serif, sans-serif" font-size="14" fill="#6b7280">Your team's data workspace — no server bills, no lock-in, agent-ready.</text>
+  <text x="1140" y="608" text-anchor="end" font-family="ui-sans-serif, sans-serif" font-size="14" font-weight="600" fill="#171717">mochi-cli.com</text>
 </svg>

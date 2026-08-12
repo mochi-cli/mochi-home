@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ChevronDown, Globe } from "lucide-react";
 import { locales } from "@/lib/i18n";
 import { useLang } from "./LanguageProvider";
 
@@ -16,14 +17,11 @@ export default function LangSwitcher() {
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="pixel flex h-9 items-center gap-1.5 border border-line bg-surface px-2.5 text-[9px] text-foreground transition-colors hover:bg-surface-2"
+        className="flex h-8 items-center gap-1.5 rounded-full border border-border bg-background px-3 text-xs font-medium text-foreground transition-colors hover:bg-secondary"
       >
-        <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden="true">
-          <circle cx="8" cy="8" r="6.5" />
-          <path d="M1.5 8h13M8 1.5c2 2 2 11 0 13M8 1.5c-2 2-2 11 0 13" />
-        </svg>
+        <Globe className="h-3.5 w-3.5 text-muted-foreground" />
         {current.short}
-        <span className={`transition-transform ${open ? "rotate-180" : ""}`}>▾</span>
+        <ChevronDown className={`h-3 w-3 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open && (
@@ -36,7 +34,7 @@ export default function LangSwitcher() {
           />
           <ul
             role="listbox"
-            className="absolute right-0 z-50 mt-1.5 w-40 border border-line bg-surface shadow-[4px_4px_0_0_var(--line)]"
+            className="absolute right-0 z-50 mt-1.5 w-40 overflow-hidden rounded-lg border border-border bg-popover py-1 shadow-lg"
           >
             {locales.map((l) => (
               <li key={l.code}>
@@ -48,12 +46,12 @@ export default function LangSwitcher() {
                     setLocale(l.code);
                     setOpen(false);
                   }}
-                  className={`flex w-full items-center justify-between px-3 py-2 text-left text-[13px] transition-colors hover:bg-surface-2 ${
-                    l.code === locale ? "text-foreground" : "text-muted"
+                  className={`flex w-full items-center justify-between px-3 py-1.5 text-left text-[13px] transition-colors hover:bg-secondary ${
+                    l.code === locale ? "text-foreground" : "text-muted-foreground"
                   }`}
                 >
                   <span>{l.label}</span>
-                  <span className="pixel text-[8px] text-muted-2">{l.short}</span>
+                  <span className="mono text-[10px] text-muted-foreground">{l.short}</span>
                 </button>
               </li>
             ))}

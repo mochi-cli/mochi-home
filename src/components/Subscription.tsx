@@ -1,7 +1,11 @@
 "use client";
 
+import { Check, ShieldCheck } from "lucide-react";
 import Reveal from "./Reveal";
 import { useLang } from "./LanguageProvider";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface Plan {
   name: string;
@@ -36,26 +40,18 @@ const plans: Plan[] = [
   },
 ];
 
-function Check({ color }: { color: string }) {
-  return (
-    <svg viewBox="0 0 16 16" className="h-4 w-4 flex-none" fill="none" stroke={color} strokeWidth="2" aria-hidden="true">
-      <path d="M3 8.5l3.5 3.5L13 5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
 export default function Subscription() {
   const { m } = useLang();
 
   return (
-    <section id="pricing" className="relative border-b border-line-soft bg-surface-2">
+    <section id="pricing" className="relative border-b border-border bg-secondary/30">
       <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-28">
         <Reveal className="mb-12 text-center">
-          <p className="tech">// PRICING</p>
+          <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-violet">Pricing</p>
           <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
             {m.price.title}
           </h2>
-          <p className="mt-3 text-base text-muted">{m.price.sub}</p>
+          <p className="mt-3 text-base text-muted-foreground">{m.price.sub}</p>
         </Reveal>
 
         <div className="mx-auto grid max-w-3xl gap-5 md:grid-cols-2">
@@ -63,69 +59,71 @@ export default function Subscription() {
             const data = m.price.plans[i];
             const hot = plan.popular;
             return (
-              <Reveal key={plan.name} delay={i * 90}>
-                <div
-                  className={`relative flex h-full flex-col rounded-2xl p-8 text-foreground transition-shadow ${
-                    hot
-                      ? "bg-mesh-bright ring-2 ring-[#34d399]/50 shadow-[var(--shadow-lift)]"
-                      : "border border-line-soft bg-surface"
+              <Reveal key={plan.name} delay={i * 90} className="relative">
+                {hot && (
+                  <Badge className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap border-transparent bg-violet text-violet-foreground">
+                    ★ {m.price.popular}
+                  </Badge>
+                )}
+                <Card
+                  className={`relative flex h-full flex-col p-8 ${
+                    hot ? "ring-2 ring-violet" : ""
                   }`}
                 >
-                  {hot && (
-                    <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[#34d399] px-3 py-1 text-[11px] font-semibold text-white">
-                      ★ {m.price.popular}
-                    </span>
-                  )}
-
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-foreground">{plan.name}</span>
-                    <span className="text-xs font-medium text-muted-2">{plan.credits}</span>
+                    <span className="text-xs font-medium text-muted-foreground">{plan.credits}</span>
                   </div>
 
                   <div className="mt-6 flex items-end gap-1.5">
                     <span className="text-5xl font-semibold leading-none">{plan.price}</span>
-                    <span className="mb-1.5 text-sm text-muted">{plan.priceSuffix}</span>
+                    <span className="mb-1.5 text-sm text-muted-foreground">{plan.priceSuffix}</span>
                   </div>
-                  <p className="mt-2 text-sm text-muted">{data.tagline}</p>
+                  <p className="mt-2 text-sm text-muted-foreground">{data.tagline}</p>
 
-                  <div className="my-6 h-px w-full bg-line-soft" />
+                  <div className="my-6 h-px w-full bg-border" />
 
                   <ul className="flex flex-1 flex-col gap-3">
                     {data.features.map((f) => (
                       <li key={f} className="flex items-start gap-2.5 text-sm text-foreground">
-                        <Check color={hot ? "#047857" : "var(--foreground)"} />
+                        <Check className={`mt-0.5 h-4 w-4 flex-none ${hot ? "text-violet" : "text-foreground"}`} />
                         <span>{f}</span>
                       </li>
                     ))}
                   </ul>
 
                   {plan.ctaHref ? (
-                    <a
-                      href={plan.ctaHref}
-                      {...(plan.ctaHref.startsWith("http")
-                        ? { target: "_blank", rel: "noopener noreferrer" }
-                        : {})}
-                      className={`mt-8 inline-flex h-11 w-full items-center justify-center rounded-full text-sm font-medium transition-transform hover:-translate-y-px ${
-                        hot ? "bg-[#047857] text-white" : "bg-foreground text-background"
-                      }`}
+                    <Button
+                      render={
+                        <a
+                          href={plan.ctaHref}
+                          {...(plan.ctaHref.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                        />
+                      }
+                      nativeButton={false}
+                      size="lg"
+                      className={`mt-8 h-11 w-full rounded-full text-sm ${hot ? "bg-violet text-violet-foreground hover:bg-violet/90" : ""}`}
                     >
                       {plan.ctaLabel}
-                    </a>
+                    </Button>
                   ) : (
                     <span
                       aria-disabled="true"
-                      className="mt-8 inline-flex h-11 w-full cursor-not-allowed items-center justify-center rounded-full border border-line-soft bg-surface-2 text-sm text-muted-2"
+                      className="mt-8 inline-flex h-11 w-full cursor-not-allowed items-center justify-center rounded-full border border-border bg-secondary text-sm text-muted-foreground"
                     >
                       {plan.ctaLabel}
                     </span>
                   )}
-                </div>
+                </Card>
               </Reveal>
             );
           })}
         </div>
 
-        <p className="mt-8 text-center text-xs text-muted-2">{m.price.billed}</p>
+        <p className="mt-8 flex items-center justify-center gap-1.5 text-center text-xs text-muted-foreground">
+          <ShieldCheck className="h-3.5 w-3.5" />
+          {m.price.billed}
+        </p>
       </div>
     </section>
   );

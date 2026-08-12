@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Silkscreen } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import { EngineProvider } from "@/components/EngineProvider";
@@ -14,21 +14,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// pixel/arcade font — Latin only, used for decorative HUD labels
-const pixel = Silkscreen({
-  variable: "--font-pixel",
-  weight: ["400", "700"],
-  subsets: ["latin"],
-});
-
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mochi-cli.com";
 const TWITTER_HANDLE = process.env.NEXT_PUBLIC_TWITTER_HANDLE ?? "";
 
-const TITLE = "Mochi — Your team's data workspace, without the server bills";
+const TITLE = "Mochi — The local-first data workspace for your team and AI agents";
 const DESCRIPTION =
   "Build CRM, HR, inventory, or any internal tool — no code, no prompts, no monthly server fees. Runs on your laptop, syncs peer-to-peer, and works natively with Claude, Codex, and OpenCode.";
 const SHORT_DESCRIPTION =
-  "Build CRM, HR, inventory, or any internal tool — no code, no prompts, no monthly server fees. Peer-to-peer collab, agent-native via MCP.";
+  "The local-first data workspace for your team and AI agents. Zero server bills — agent-native via MCP, peer-to-peer sync.";
 
 const LOCALES = ["en", "es", "fr", "de", "ja", "zh", "vi"] as const;
 const OG_LOCALE_MAP: Record<(typeof LOCALES)[number], string> = {
@@ -43,7 +36,7 @@ const OG_LOCALE_MAP: Record<(typeof LOCALES)[number], string> = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f2f2f0" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#131313" },
   ],
   width: "device-width",
@@ -110,7 +103,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Mochi — your team's data workspace, without the server bills",
+        alt: "Mochi — the local-first data workspace for your team and AI agents",
         type: "image/png",
       },
     ],
@@ -119,7 +112,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: TITLE,
     description: SHORT_DESCRIPTION,
-    images: [{ url: "/og-image.png", alt: "Mochi — your team's data workspace" }],
+    images: [{ url: "/og-image.png", alt: "Mochi — the local-first data workspace for your team and AI agents" }],
     ...(TWITTER_HANDLE ? { site: TWITTER_HANDLE, creator: TWITTER_HANDLE } : {}),
   },
   robots: {
@@ -200,7 +193,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${pixel.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
         <script

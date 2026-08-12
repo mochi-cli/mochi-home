@@ -1,7 +1,8 @@
 "use client";
 
-import Mascot from "./Mascot";
+import Image from "next/image";
 import { useLang } from "./LanguageProvider";
+import { Separator } from "@/components/ui/separator";
 
 const columns = [
   {
@@ -33,29 +34,26 @@ const columns = [
 export default function Footer() {
   const { m } = useLang();
   return (
-    <footer className="relative border-t border-line-soft bg-surface-2">
+    <footer className="relative border-t border-border bg-secondary/30">
       <div className="mx-auto max-w-6xl px-6 py-14">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="max-w-xs">
-            <div className="flex items-center gap-2.5">
-              <Mascot pose="happy" uid="foot" className="h-8 w-8" />
-              <span className="pixel text-base tracking-wide text-foreground">MOCHI</span>
-            </div>
-            <p className="mt-4 text-sm leading-relaxed text-muted">
+            <Image src="/logo.svg" alt="Mochi" width={128} height={32} className="h-7 w-auto" />
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               {m.footer.tagline}
             </p>
           </div>
 
           {columns.map((col) => (
             <div key={col.heading}>
-              <p className="tech">{col.heading}</p>
+              <p className="eyebrow">{col.heading}</p>
               <ul className="mt-4 space-y-2.5">
                 {col.links.map((link) => (
                   <li key={link.href}>
                     <a
                       href={link.href}
                       {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                      className="text-sm text-muted transition-colors hover:text-foreground"
+                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                     >
                       {link.label}
                     </a>
@@ -66,12 +64,14 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-line-soft pt-6 sm:flex-row sm:items-center">
-          <span className="text-xs text-muted-2">
+        <Separator className="mt-12" />
+
+        <div className="mt-6 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+          <span className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} Mochi. Data workspace for teams and agents.
           </span>
-          <span className="mono inline-flex items-center gap-1.5 rounded-full bg-[#d1fbe8] px-2.5 py-1 text-[11px] font-medium text-[#047857]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#10b981]" />
+          <span className="mono inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-2.5 py-1 text-[11px] font-medium text-brand-soft-foreground">
+            <span className="h-1.5 w-1.5 rounded-full bg-brand" />
             All systems operational
           </span>
         </div>
