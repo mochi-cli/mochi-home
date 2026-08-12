@@ -25,7 +25,7 @@ export default function Home() {
         {/* 4. Templates — các template có sẵn */}
         <Templates />
 
-        {/* 5. Trust — giới thiệu Mochi, chỉ số tin cậy */}
+        {/* 5. Trust — giới thiệu Mochi + so sánh Excel/Copilot/Airtable, trước khi vào giá */}
         <MascotIntro />
 
         {/* 6. Pricing — bảng giá */}

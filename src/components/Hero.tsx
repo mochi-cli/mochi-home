@@ -1,17 +1,35 @@
 "use client";
 
 import { useState } from "react";
-import Mascot from "./Mascot";
+import { Check, Copy, Lock, Play, RefreshCw, ShieldCheck } from "lucide-react";
 import { useLang } from "./LanguageProvider";
-import { useEngine, ALL_ENGINES } from "./EngineProvider";
-import { toneAt } from "@/lib/tones";
+import { useEngine, ALL_ENGINES, ALL_OPTION } from "./EngineProvider";
+import { Button } from "@/components/ui/button";
+import HeroStage from "./HeroStage";
+
+const TRUST = [
+  { icon: Lock, title: "No server.", desc: "Your data stays on your devices." },
+  { icon: RefreshCw, title: "Peer-to-peer sync.", desc: "Works offline. Changes sync when you're back." },
+  { icon: ShieldCheck, title: "Private by default.", desc: "Encrypted in transit. You own your data." },
+];
+
+/** Splits a headline into its lead clause and a final highlighted clause,
+ *  e.g. "Do the thing. Skip the rest." → lead "Do the thing.", tail "Skip the rest."
+ *  Locale-agnostic: falls back to no highlight when there's only one sentence. */
+function splitHeadline(headline: string) {
+  const parts = headline.split(/(?<=[.!?])\s+/).filter(Boolean);
+  if (parts.length < 2) return { lead: headline, tail: null as string | null };
+  const tail = parts.pop()!;
+  return { lead: parts.join(" ") + " ", tail };
+}
 
 export default function Hero() {
   const { m } = useLang();
-  const { selectedEngines, toggleEngine, kitValue } = useEngine();
+  const { selectedEngine, selectEngine, kitValue } = useEngine();
   const [copied, setCopied] = useState(false);
 
-  const installCommand = `npx @mochi-cli/mochi init --kit ${kitValue}`;
+  const installCommand = `npx @mochi-cli/mochi init ${kitValue}`;
+  const { lead, tail } = splitHeadline(m.hero.headline);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(installCommand);
@@ -20,96 +38,90 @@ export default function Hero() {
   };
 
   return (
-    <section id="top" className="relative overflow-hidden border-b border-line-soft">
-      {/* ambient background glow — slow drifting color blobs, kept faint so text stays crisp */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div
-          className="animate-drift-a absolute -left-24 -top-32 h-[420px] w-[420px] rounded-full opacity-60 blur-3xl"
-          style={{ background: "radial-gradient(circle, rgba(163,240,209,0.55), transparent 70%)" }}
-        />
-        <div
-          className="animate-drift-b absolute -right-28 top-0 h-[380px] w-[380px] rounded-full opacity-50 blur-3xl"
-          style={{ background: "radial-gradient(circle, rgba(147,197,253,0.5), transparent 70%)" }}
-        />
-        <div
-          className="animate-drift-c absolute bottom-[-160px] left-1/3 h-[360px] w-[360px] rounded-full opacity-45 blur-3xl"
-          style={{ background: "radial-gradient(circle, rgba(216,180,254,0.45), transparent 70%)" }}
-        />
-      </div>
-      <div className="dotgrid pointer-events-none absolute inset-0 opacity-70" />
+    <section id="top" className="bg-hero-wash relative overflow-hidden">
+      <div className="relative mx-auto grid max-w-6xl gap-14 px-6 py-20 lg:grid-cols-2 lg:items-center lg:py-28">
+        {/* left — pitch, install, trust */}
+        <div className="text-center lg:text-left">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3.5 py-1.5 text-[13px] text-foreground shadow-xs">
+            <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+            Local-first · Peer-to-peer · AI-native
+          </span>
 
-      <div className="relative mx-auto max-w-5xl px-6 pb-20 pt-16 text-center md:pt-24">
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-line-soft bg-surface px-4 py-1.5 text-xs text-muted">
-          <span className="h-1.5 w-1.5 animate-blink rounded-full bg-highlight-strong" />
-          <span className="tracking-wide">Live workspace — synced peer-to-peer</span>
-        </div>
+          <h1 className="mx-auto mt-6 max-w-xl text-balance text-[2.3rem] font-semibold leading-[1.08] tracking-[-0.03em] text-foreground sm:text-5xl lg:mx-0">
+            {lead}
+            {tail && <span className="text-violet">{tail}</span>}
+          </h1>
+          <p className="mx-auto mt-5 max-w-md text-pretty text-[17px] leading-[1.55] text-muted-foreground lg:mx-0">
+            {m.hero.sub}
+          </p>
 
-        <h1 className="mx-auto max-w-4xl text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-6xl md:text-7xl">
-          {m.hero.headline}
-        </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-pretty text-base leading-relaxed text-muted sm:text-lg">
-          {m.hero.sub}
-        </p>
-
-        {/* Prompt bar — teable-style, with mascot as avatar */}
-        <div className="mt-10 flex justify-center">
-          <div className="relative w-full max-w-3xl rounded-2xl border border-line-soft bg-surface p-2 text-left shadow-[var(--shadow-card)]">
-            <div className="flex items-start gap-3 p-3">
-              <div className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-highlight/50">
-                <Mascot uid="hero" className="h-8 w-8" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="mono flex items-center gap-2 text-sm text-foreground">
-                  <span className="text-muted-2">$</span>
-                  <span className="truncate">{installCommand}</span>
-                </div>
-                <p className="mt-1.5 text-xs text-muted-2">
-                  Select an agent · kit is auto-detected
-                </p>
-              </div>
+          {/* install command — the primary action, so it gets the visual weight */}
+          <div className="mt-8 flex justify-center lg:justify-start">
+            <div className="flex max-w-full items-center gap-3 rounded-xl border border-border bg-card py-2 pl-4 pr-2 shadow-sm">
+              <code className="mono overflow-x-auto whitespace-nowrap text-[15px] text-foreground">
+                <span className="mr-1.5 select-none text-muted-foreground">$</span>
+                {installCommand}
+              </code>
               <button
                 onClick={handleCopy}
-                className="btn-ghost h-9 text-xs"
                 title="Copy install command"
+                aria-label="Copy install command"
+                className="flex h-8 w-8 flex-none items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
               >
-                {copied ? "Copied ✓" : "Copy"}
+                {copied ? <Check className="h-4 w-4 text-brand" /> : <Copy className="h-4 w-4" />}
               </button>
             </div>
+          </div>
 
-            <div className="flex flex-wrap items-center gap-1.5 border-t border-line-soft px-3 py-3">
-              {ALL_ENGINES.map((a, i) => {
-                const isSelected = selectedEngines.includes(a);
-                const tone = toneAt(i);
-                return (
-                  <button
-                    key={a}
-                    onClick={() => toggleEngine(a)}
-                    style={
-                      isSelected
-                        ? { backgroundColor: tone.bg, color: tone.fg, borderColor: "transparent" }
-                        : undefined
-                    }
-                    className={`rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors ${
-                      isSelected
-                        ? ""
-                        : "border-line-soft bg-surface text-muted hover:border-line hover:text-foreground"
-                    }`}
-                  >
-                    {a}
-                  </button>
-                );
-              })}
-            </div>
+          <div className="mt-3.5 flex flex-wrap items-center justify-center gap-1.5 lg:justify-start">
+            {[ALL_OPTION, ...ALL_ENGINES].map((a) => {
+              const isSelected = selectedEngine === a;
+              return (
+                <button
+                  key={a}
+                  onClick={() => selectEngine(a)}
+                  aria-pressed={isSelected}
+                  className={`rounded-full border px-2 py-0.5 text-[10px] font-medium transition-colors ${
+                    isSelected
+                      ? "border-transparent bg-foreground/85 text-background"
+                      : "border-border bg-background/60 text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {a}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="mt-6 flex flex-col items-center justify-center gap-2.5 sm:flex-row lg:justify-start">
+            <Button
+              render={<a href="#workflow" />}
+              nativeButton={false}
+              variant="outline"
+              className="h-9 gap-1.5 rounded-lg px-4 text-[15px]"
+            >
+              <Play className="h-3.5 w-3.5" />
+              See how it works
+            </Button>
+            <Button render={<a href="#pricing" />} nativeButton={false} className="h-9 rounded-lg px-4 text-[15px]">
+              Get started
+            </Button>
+          </div>
+
+          <div className="mt-10 grid gap-6 border-t border-border pt-8 sm:grid-cols-3 lg:text-left">
+            {TRUST.map((t) => (
+              <div key={t.title} className="flex flex-col items-center gap-1.5 sm:items-start">
+                <t.icon className="h-4 w-4 text-muted-foreground" />
+                <p className="text-[13px] font-semibold text-foreground">{t.title}</p>
+                <p className="text-[12px] leading-snug text-muted-foreground">{t.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <a href="#pricing" className="btn-primary text-sm">
-            Get started →
-          </a>
-          <a href="#workflow" className="btn-ghost text-sm">
-            See how it works
-          </a>
+        {/* right — the live product, driven by the same demo script */}
+        <div>
+          <HeroStage />
         </div>
       </div>
     </section>

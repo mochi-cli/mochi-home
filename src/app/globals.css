@@ -1,22 +1,57 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #fdfdfb;
-  --foreground: #131313;
-  --surface: #ffffff;
-  --surface-2: #f2f2ee;
-  --line: #131313;
-  --line-soft: rgba(19, 19, 19, 0.12);
-  --line-faint: rgba(19, 19, 19, 0.06);
-  --muted: #5f5f5c;
-  --muted-2: #97978f;
-  --chrome: #d7d7d2;
-  --highlight: #a3f0d1;
-  --highlight-strong: #34d399;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.145 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.48 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.911 0 0);
+  --input: oklch(0.911 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.75rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+
+  /* ---- Mochi single brand accent — the one color allowed off the gray scale ---- */
+  --brand: #10b981;
+  --brand-foreground: #ffffff;
+  --brand-soft: #d1fbe8;
+  --brand-soft-foreground: #047857;
+
+  /* ---- Wordmark accent — the logo mark and hero headline highlight only.
+     Everything that reports live/sync status keeps the brand green above,
+     since that's the color the real product's own UI actually uses. ---- */
+  --violet: #6d5ef8;
+  --violet-foreground: #ffffff;
+  --violet-soft: #ede9fe;
+  --violet-soft-foreground: #5b21b6;
+
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
   --shadow-lift: 0 8px 28px rgba(0, 0, 0, 0.08);
 }
@@ -24,133 +59,118 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-surface: var(--surface);
-  --color-surface-2: var(--surface-2);
-  --color-line: var(--line);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
-  --color-muted-2: var(--muted-2);
-  --color-chrome: var(--chrome);
-  --color-highlight: var(--highlight);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-soft-foreground: var(--brand-soft-foreground);
+
+  --color-violet: var(--violet);
+  --color-violet-foreground: var(--violet-foreground);
+  --color-violet-soft: var(--violet-soft);
+  --color-violet-soft-foreground: var(--violet-soft-foreground);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-pixel: var(--font-pixel);
+  --font-heading: var(--font-sans);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
 }
 
 @layer base {
   html {
     /* bumps every rem-based text size site-wide by ~6% */
     font-size: 17px;
+    @apply font-sans;
+  }
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: var(--highlight);
+  background: var(--brand-soft);
   color: var(--foreground);
 }
 
-/* ---- Type helpers ---- */
-.pixel {
-  font-family: var(--font-pixel), monospace;
-  letter-spacing: 0.02em;
-}
 .mono {
   font-family: var(--font-mono), monospace;
 }
-.tech {
-  font-family: var(--font-mono), monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.18em;
+
+/* small uppercase eyebrow label used above section headings */
+.eyebrow {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--muted-2);
-}
-
-/* Marker-style highlight — like teable's yellow, but mint */
-.mark {
-  background-image: linear-gradient(
-    180deg,
-    transparent 55%,
-    var(--highlight) 55%,
-    var(--highlight) 92%,
-    transparent 92%
-  );
-  padding: 0 0.08em;
-  border-radius: 2px;
-}
-
-/* ---- Surfaces ---- */
-.panel {
-  position: relative;
-  overflow: hidden;
-  background: var(--surface);
-  border: 1px solid rgba(19, 19, 19, 0.14);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-}
-.card {
-  position: relative;
-  background: var(--surface);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--radius-lg);
-  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
-}
-.card:hover {
-  box-shadow: var(--shadow-lift);
-  border-color: rgba(19, 19, 19, 0.22);
+  color: var(--muted-foreground);
 }
 
 /* dotted grid, very subtle */
 .dotgrid {
-  background-image: radial-gradient(var(--line-faint) 1px, transparent 1px);
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
   background-size: 22px 22px;
 }
 
-/* bright, colorful mesh — used behind big CTA/pricing surfaces instead of solid black */
-.bg-mesh-bright {
+/* soft ambient gradient — used behind the hero / CTA instead of a stark white or busy rainbow mesh */
+.bg-mesh-neutral {
   background:
-    radial-gradient(120% 140% at 0% 0%, rgba(163, 240, 209, 0.55) 0%, transparent 55%),
-    radial-gradient(120% 140% at 100% 0%, rgba(147, 197, 253, 0.45) 0%, transparent 55%),
-    radial-gradient(120% 140% at 100% 100%, rgba(216, 180, 254, 0.4) 0%, transparent 55%),
-    radial-gradient(120% 140% at 0% 100%, rgba(253, 186, 116, 0.3) 0%, transparent 55%),
-    var(--surface);
+    radial-gradient(120% 140% at 50% 0%, color-mix(in oklch, var(--brand) 7%, transparent) 0%, transparent 60%),
+    radial-gradient(90% 120% at 100% 100%, oklch(0.97 0 0) 0%, transparent 60%),
+    var(--background);
 }
 
-/* ---- Buttons ---- */
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  border-radius: 999px;
-  background: var(--foreground);
-  color: var(--background);
-  padding: 0.7rem 1.4rem;
-  font-weight: 500;
-  border: 1px solid var(--foreground);
-  transition: background 0.15s ease, transform 0.12s ease;
+/* hero wash — white at the top fading into a soft periwinkle toward the product
+   screenshot, with a lighter core so the window still reads against it */
+.bg-hero-wash {
+  background:
+    radial-gradient(60% 45% at 50% 92%, rgba(255, 255, 255, 0.9) 0%, transparent 72%),
+    linear-gradient(180deg, #ffffff 0%, #ffffff 18%, #f0f2fb 48%, #dfe4f6 78%, #d6dcf2 100%);
 }
-.btn-primary:hover { background: #000; transform: translateY(-1px); }
-.btn-primary:active { transform: translateY(0); }
-
-.btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--foreground);
-  padding: 0.7rem 1.4rem;
-  font-weight: 500;
-  border: 1px solid var(--line-soft);
-  transition: border-color 0.15s ease, background 0.15s ease;
+.dark .bg-hero-wash {
+  background: linear-gradient(180deg, var(--background) 0%, var(--background) 40%, oklch(0.2 0.02 275) 100%);
 }
-.btn-ghost:hover { border-color: var(--line); background: var(--surface-2); }
 
 /* ---- Animations ---- */
 @keyframes float {
@@ -178,11 +198,6 @@ body {
   to { transform: scaleX(1); }
 }
 .animate-tabgrow { animation: tabgrow 4.5s linear forwards; }
-
-@keyframes blinkeye {
-  0%, 92%, 100% { transform: scaleY(1); }
-  96% { transform: scaleY(0.12); }
-}
 
 @keyframes cursor {
   0%, 49% { opacity: 1; }
@@ -217,4 +232,33 @@ body {
   .animate-drift-c,
   .animate-tabgrow { animation: none; }
   .reveal { opacity: 1; transform: none; }
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
 }

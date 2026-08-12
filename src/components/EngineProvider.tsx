@@ -3,8 +3,10 @@
 import React, { createContext, useContext, useState } from "react";
 
 interface EngineContextType {
-  selectedEngines: string[];
-  toggleEngine: (engine: string) => void;
+  /** "ALL" or one of ALL_ENGINES — single-select, "ALL" by default */
+  selectedEngine: string;
+  selectEngine: (engine: string) => void;
+  /** lowercase value used in the install command, e.g. "all" or "claude" */
   kitValue: string;
 }
 
@@ -18,25 +20,17 @@ export const ALL_ENGINES = [
   "OPENCLAW",
 ] as const;
 
+export const ALL_OPTION = "ALL";
+
 export function EngineProvider({ children }: { children: React.ReactNode }) {
-  const [selectedEngines, setSelectedEngines] = useState<string[]>([...ALL_ENGINES]);
+  const [selectedEngine, setSelectedEngine] = useState<string>(ALL_OPTION);
 
-  const toggleEngine = (engine: string) => {
-    setSelectedEngines((prev) =>
-      prev.includes(engine)
-        ? prev.filter((e) => e !== engine)
-        : [...prev, engine]
-    );
-  };
+  const selectEngine = (engine: string) => setSelectedEngine(engine);
 
-  // Kit value: single-engine picks its own kit slug; anything else = "all".
-  const kitValue =
-    selectedEngines.length === 1
-      ? selectedEngines[0].toLowerCase()
-      : "all";
+  const kitValue = selectedEngine === ALL_OPTION ? "all" : selectedEngine.toLowerCase();
 
   return (
-    <EngineContext.Provider value={{ selectedEngines, toggleEngine, kitValue }}>
+    <EngineContext.Provider value={{ selectedEngine, selectEngine, kitValue }}>
       {children}
     </EngineContext.Provider>
   );
