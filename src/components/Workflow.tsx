@@ -6,19 +6,12 @@ import { useLang } from "./LanguageProvider";
 import { useEngine } from "./EngineProvider";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Copy, Check, Download, LayoutGrid, Zap, Lock, RefreshCw, ShieldCheck, Code2 } from "lucide-react";
+import { Copy, Check, Download, LayoutGrid, Zap } from "lucide-react";
 
 const stepMeta = [
-  { n: "01", cmd: "npx @mochi-cli/mochi init --kit all", icon: Download, tone: "violet" as const }, // overridden per selection
+  { n: "01", cmd: "", icon: Download, tone: "violet" as const }, // overridden per selection
   { n: "02", cmd: '"Hey Mochi create profile"', icon: LayoutGrid, tone: "violet" as const },
   { n: "03", cmd: '"Hey mochi create CRM"', icon: Zap, tone: "brand" as const },
-];
-
-const TRUST = [
-  { icon: Lock, title: "Local-first by default", desc: "Your data stays on your devices." },
-  { icon: RefreshCw, title: "Peer-to-peer sync", desc: "Works offline. Changes sync when you're back." },
-  { icon: ShieldCheck, title: "Private & secure", desc: "End-to-end encrypted. You own your data." },
-  { icon: Code2, title: "Open & extensible", desc: "Build with APIs, MCP, and your favorite tools." },
 ];
 
 function CopyableCommand({ text }: { text: string }) {
@@ -29,8 +22,8 @@ function CopyableCommand({ text }: { text: string }) {
     setTimeout(() => setCopied(false), 2000);
   };
   return (
-    <div className="mono mt-6 flex items-center justify-between gap-2 rounded-xl border border-border bg-secondary/60 px-3 py-2 text-[12px] text-foreground">
-      <span className="truncate">{text}</span>
+    <div className="mono mt-6 flex items-center justify-between gap-2 rounded-xl border border-border bg-secondary/60 px-3 py-2 text-[12px] text-foreground [overflow-wrap:anywhere]">
+      <span className="min-w-0 flex-1 truncate">{text}</span>
       <Button
         variant="ghost"
         size="icon-sm"
@@ -60,7 +53,7 @@ function Connector() {
 
 export default function Workflow() {
   const { m } = useLang();
-  const { kitValue } = useEngine();
+  const { installCommand } = useEngine();
   return (
     <section id="workflow" className="relative border-b border-border">
       <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-28">
@@ -77,51 +70,41 @@ export default function Workflow() {
         <div className="flex flex-col gap-5 md:flex-row md:items-stretch">
           {stepMeta.map((s, i) => (
             <Fragment key={s.n}>
-              <Reveal className="md:flex-1" delay={i * 100}>
-                <Card className="h-full p-7">
+              <Reveal className="min-w-0 md:flex-1" delay={i * 100}>
+                <Card className="flex h-full min-w-0 flex-col p-7">
                   <div className="flex items-center justify-between">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-violet text-sm font-semibold text-violet-foreground">
-                      {i + 1}
-                    </span>
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-violet text-sm font-semibold text-violet-foreground">
+                        {i + 1}
+                      </span>
+                      <span
+                        className={`flex h-9 w-9 flex-none items-center justify-center rounded-xl ${
+                          s.tone === "brand" ? "bg-brand-soft text-brand-soft-foreground" : "bg-violet-soft text-violet-soft-foreground"
+                        }`}
+                      >
+                        <s.icon className="h-4.5 w-4.5" />
+                      </span>
+                    </div>
                     <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-violet">Step {s.n}</span>
                   </div>
-                  <span
-                    className={`mt-5 flex h-10 w-10 items-center justify-center rounded-xl ${
-                      s.tone === "brand" ? "bg-brand-soft text-brand-soft-foreground" : "bg-violet-soft text-violet-soft-foreground"
-                    }`}
-                  >
-                    <s.icon className="h-5 w-5" />
-                  </span>
-                  <h3 className="mt-4 text-xl font-semibold tracking-tight text-foreground">
-                    {m.flow.steps[i].title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {m.flow.steps[i].desc}
-                  </p>
-                  <CopyableCommand text={i === 0 ? `npx @mochi-cli/mochi init ${kitValue}` : s.cmd} />
+                  {/* grows to fill the leftover space so every card's command
+                      chip lands on the same baseline, no matter how much the
+                      title/description wrap */}
+                  <div className="flex-1">
+                    <h3 className="mt-5 text-xl font-semibold tracking-tight text-foreground">
+                      {m.flow.steps[i].title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      {m.flow.steps[i].desc}
+                    </p>
+                  </div>
+                  <CopyableCommand text={i === 0 ? installCommand : s.cmd} />
                 </Card>
               </Reveal>
               {i < stepMeta.length - 1 && <Connector />}
             </Fragment>
           ))}
         </div>
-
-        {/* trust strip — the four claims that matter most, right where the CTA follows */}
-        <Reveal>
-          <div className="mt-6 flex flex-col divide-y divide-border rounded-3xl border border-border bg-card sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
-            {TRUST.map((t) => (
-              <div key={t.title} className="flex items-start gap-3 p-6">
-                <span className="flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-violet-soft text-violet-soft-foreground">
-                  <t.icon className="h-4 w-4" />
-                </span>
-                <div>
-                  <div className="text-sm font-semibold text-foreground">{t.title}</div>
-                  <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">{t.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Reveal>
       </div>
     </section>
   );

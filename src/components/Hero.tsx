@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Check, Copy, Lock, Play, RefreshCw, ShieldCheck } from "lucide-react";
 import { useLang } from "./LanguageProvider";
-import { useEngine, ALL_ENGINES, ALL_OPTION } from "./EngineProvider";
+import { useEngine, ALL_ENGINES } from "./EngineProvider";
 import { Button } from "@/components/ui/button";
 import HeroStage from "./HeroStage";
 
@@ -25,10 +25,9 @@ function splitHeadline(headline: string) {
 
 export default function Hero() {
   const { m } = useLang();
-  const { selectedEngine, selectEngine, kitValue } = useEngine();
+  const { selectedEngine, selectEngine, installCommand } = useEngine();
   const [copied, setCopied] = useState(false);
 
-  const installCommand = `npx @mochi-cli/mochi init ${kitValue}`;
   const { lead, tail } = splitHeadline(m.hero.headline);
 
   const handleCopy = () => {
@@ -74,12 +73,12 @@ export default function Hero() {
           </div>
 
           <div className="mt-3.5 flex flex-wrap items-center justify-center gap-1.5 lg:justify-start">
-            {[ALL_OPTION, ...ALL_ENGINES].map((a) => {
-              const isSelected = selectedEngine === a;
+            {ALL_ENGINES.map((engine) => {
+              const isSelected = selectedEngine.slug === engine.slug;
               return (
                 <button
-                  key={a}
-                  onClick={() => selectEngine(a)}
+                  key={engine.slug}
+                  onClick={() => selectEngine(engine.slug)}
                   aria-pressed={isSelected}
                   className={`rounded-full border px-2 py-0.5 text-[10px] font-medium transition-colors ${
                     isSelected
@@ -87,7 +86,7 @@ export default function Hero() {
                       : "border-border bg-background/60 text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  {a}
+                  {engine.label}
                 </button>
               );
             })}

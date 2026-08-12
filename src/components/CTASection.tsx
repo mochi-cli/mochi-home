@@ -2,10 +2,12 @@
 
 import Reveal from "./Reveal";
 import { useLang } from "./LanguageProvider";
+import { useEngine } from "./EngineProvider";
 import { Button } from "@/components/ui/button";
 
 export default function CTASection() {
   const { m } = useLang();
+  const { installCommand } = useEngine();
   return (
     <section className="border-b border-border">
       <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
@@ -24,7 +26,7 @@ export default function CTASection() {
                   Get started →
                 </Button>
                 <div className="mono flex h-12 w-full max-w-full items-center gap-3 overflow-x-auto whitespace-nowrap rounded-full border border-border bg-card px-5 text-sm text-foreground/90 sm:w-auto">
-                  <span className="text-muted-foreground">$</span> sudo npx @mochi-cli/mochi init --kit all
+                  <span className="text-muted-foreground">$</span> {installCommand}
                 </div>
               </div>
             </div>
