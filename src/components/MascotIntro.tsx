@@ -98,8 +98,7 @@ export default function MascotIntro() {
             {m.char.title}
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-            {m.char.sub} Spreadsheets bolt AI on top, and cloud databases charge you monthly to
-            store data you already own — Mochi was built agent-native and local-first from the start.
+            {m.char.sub}
           </p>
         </Reveal>
 

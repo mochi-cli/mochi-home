@@ -2,35 +2,42 @@
 
 import React, { createContext, useContext, useState } from "react";
 
+export const MOCHI_VERSION = "main";
+
+export interface Engine {
+  slug: string;
+  label: string;
+}
+
+// The real install targets Mochi supports — one `install <slug>` per agent.
+export const ALL_ENGINES: Engine[] = [
+  { slug: "claude-code", label: "CLAUDE CODE" },
+  { slug: "claude-desktop", label: "CLAUDE DESKTOP" },
+  { slug: "opencode", label: "OPENCODE" },
+  { slug: "hermes-agent", label: "HERMES-AGENT" },
+];
+
 interface EngineContextType {
-  /** "ALL" or one of ALL_ENGINES — single-select, "ALL" by default */
-  selectedEngine: string;
-  selectEngine: (engine: string) => void;
-  /** lowercase value used in the install command, e.g. "all" or "claude" */
-  kitValue: string;
+  selectedEngine: Engine;
+  selectEngine: (slug: string) => void;
+  /** the exact command shown/copied, e.g. `npx --yes github:mochi-cli/mochi#v0.2.20 install claude-code` */
+  installCommand: string;
 }
 
 const EngineContext = createContext<EngineContextType | undefined>(undefined);
 
-export const ALL_ENGINES = [
-  "CLAUDE",
-  "CODEX",
-  "OPENCODE",
-  "HERMES-AGENT",
-  "OPENCLAW",
-] as const;
-
-export const ALL_OPTION = "ALL";
-
 export function EngineProvider({ children }: { children: React.ReactNode }) {
-  const [selectedEngine, setSelectedEngine] = useState<string>(ALL_OPTION);
+  const [selectedEngine, setSelectedEngine] = useState<Engine>(ALL_ENGINES[0]);
 
-  const selectEngine = (engine: string) => setSelectedEngine(engine);
+  const selectEngine = (slug: string) => {
+    const engine = ALL_ENGINES.find((e) => e.slug === slug);
+    if (engine) setSelectedEngine(engine);
+  };
 
-  const kitValue = selectedEngine === ALL_OPTION ? "all" : selectedEngine.toLowerCase();
+  const installCommand = `npx --yes github:mochi-cli/mochi#${MOCHI_VERSION} install ${selectedEngine.slug}`;
 
   return (
-    <EngineContext.Provider value={{ selectedEngine, selectEngine, kitValue }}>
+    <EngineContext.Provider value={{ selectedEngine, selectEngine, installCommand }}>
       {children}
     </EngineContext.Provider>
   );

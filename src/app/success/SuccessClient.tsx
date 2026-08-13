@@ -5,10 +5,12 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import { useLang } from "@/components/LanguageProvider";
+import { useEngine } from "@/components/EngineProvider";
 import { Button } from "@/components/ui/button";
 
 function SuccessContent() {
   const { m } = useLang();
+  const { installCommand } = useEngine();
   const searchParams = useSearchParams();
   const checkoutId = searchParams.get("checkout_id");
 
@@ -47,7 +49,7 @@ function SuccessContent() {
         </div>
 
         <div className="mono mt-8 inline-flex h-11 max-w-full items-center gap-3 overflow-x-auto whitespace-nowrap rounded-full border border-border bg-card px-5 text-sm text-foreground/90">
-          <span className="text-muted-foreground">$</span> npx @mochi-cli/mochi init --kit all
+          <span className="text-muted-foreground">$</span> {installCommand}
         </div>
 
         <p className="mt-8 text-xs text-muted-foreground">{m.success.note}</p>

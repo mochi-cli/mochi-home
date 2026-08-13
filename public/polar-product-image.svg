@@ -22,24 +22,26 @@
 
     <text x="78" y="238" font-size="48" font-weight="700" letter-spacing="-1.3" fill="#171717">Mochi Pro</text>
     <text x="78" y="284" font-size="22" fill="#6b7280">Agent-native data workspace</text>
-    <text x="78" y="312" font-size="22" fill="#6b7280">for Claude, Codex &amp; OpenCode</text>
+    <text x="78" y="312" font-size="22" fill="#6b7280">for Claude, OpenCode &amp; Hermes-Agent</text>
 
     <!-- engine chips -->
-    <g font-family="ui-sans-serif, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#ffffff">
-      <rect x="80" y="352" width="82" height="28" rx="14" fill="#171717"/>
-      <text x="121" y="370" text-anchor="middle">CLAUDE</text>
-      <rect x="172" y="352" width="76" height="28" rx="14" fill="#171717"/>
-      <text x="210" y="370" text-anchor="middle">CODEX</text>
-      <rect x="258" y="352" width="106" height="28" rx="14" fill="#171717"/>
-      <text x="311" y="370" text-anchor="middle">OPENCODE</text>
+    <g font-family="ui-sans-serif, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#ffffff">
+      <rect x="78" y="352" width="104" height="28" rx="14" fill="#171717"/>
+      <text x="130" y="370" text-anchor="middle">CLAUDE CODE</text>
+      <rect x="190" y="352" width="126" height="28" rx="14" fill="#171717"/>
+      <text x="253" y="370" text-anchor="middle">CLAUDE DESKTOP</text>
+      <rect x="324" y="352" width="84" height="28" rx="14" fill="#171717"/>
+      <text x="366" y="370" text-anchor="middle">OPENCODE</text>
+      <rect x="416" y="352" width="112" height="28" rx="14" fill="#171717"/>
+      <text x="472" y="370" text-anchor="middle">HERMES-AGENT</text>
     </g>
 
     <text x="78" y="440" font-size="17" fill="#6b7280">One command to install. One-time payment —</text>
     <text x="78" y="464" font-size="17" fill="#6b7280">no subscription, no server bills, ever.</text>
 
-    <rect x="78" y="494" width="380" height="52" rx="14" fill="#ffffff" stroke="#e5e5e5"/>
-    <text x="100" y="526" font-family="ui-monospace, 'SF Mono', monospace" font-size="15" fill="#6b7280">$</text>
-    <text x="117" y="526" font-family="ui-monospace, 'SF Mono', monospace" font-size="15" fill="#171717">npx @mochi-cli/mochi init all</text>
+    <rect x="78" y="494" width="520" height="52" rx="14" fill="#ffffff" stroke="#e5e5e5"/>
+    <text x="100" y="526" font-family="ui-monospace, 'SF Mono', monospace" font-size="12" fill="#6b7280">$</text>
+    <text x="117" y="526" font-family="ui-monospace, 'SF Mono', monospace" font-size="12" fill="#171717">npx --yes github:mochi-cli/mochi#main install claude-code</text>
   </g>
 
   <!-- ===================== RIGHT: pricing card ===================== -->

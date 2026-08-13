@@ -229,13 +229,13 @@ const en: Messages = {
 },
   hero: {
     headline: "The local-first data workspace for your team and AI agents. Zero server bills.",
-    sub: "Build CRM, HR, inventory, or any internal tool — no code, no prompts, no monthly server fees. Runs on your laptop, syncs peer-to-peer, and works natively with Claude, Codex, and OpenCode.",
+    sub: "Build CRM, HR, inventory, or any internal tool — no code, no prompts, no monthly server fees. Runs on your laptop, syncs peer-to-peer, and works natively with Claude, OpenCode, and Hermes-Agent.",
   },
   feat: {
     title: "One workspace for your team and your AI agents",
     items: [
       {
-        title: "Chat with Claude, Codex & OpenCode",
+        title: "Chat with Claude, OpenCode & Hermes-Agent",
         desc: "AI agents operate your data through typed MCP tools — safe, auditable, and Git-backed. Every change is diff-reviewable.",
       },
       {
@@ -291,7 +291,7 @@ const en: Messages = {
   },
   char: {
     title: "Meet Mochi",
-    sub: "A small, round, always-ready sidekick — standing between your team, your AI agents, and your data. Mochi never decides for you; it just makes every data operation simple, safe, and easy to track.",
+    sub: "Mochi is a local-first, AI-native data assistant. It simplifies, secures, and tracks data operations between your team and AI agents, eliminating the hassle of tacked-on AI in spreadsheets or monthly cloud storage fees.",
   },
   price: {
     title: "Choose your plan",

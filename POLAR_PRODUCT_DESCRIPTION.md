@@ -1,11 +1,11 @@
 # Mochi Pro — the local-first data workspace for your team and AI agents
 
-Build CRM, HR, inventory, or any internal tool — no code, no prompts, no monthly server fees. Mochi runs on your laptop, syncs peer-to-peer, and works natively with **Claude, Codex, OpenCode, Hermes-Agent, and OpenClaw**.
+Build CRM, HR, inventory, or any internal tool — no code, no prompts, no monthly server fees. Mochi runs on your laptop, syncs peer-to-peer, and works natively with **Claude Code, Claude Desktop, OpenCode, and Hermes-Agent**.
 
 One-time payment. Pay once, use forever — no subscription, ever.
 
 ```
-npx @mochi-cli/mochi init all
+npx --yes github:mochi-cli/mochi#main install claude-code
 ```
 
 ## Why Mochi
@@ -32,10 +32,15 @@ Spreadsheets bolt AI on top as an afterthought. Cloud databases charge you month
 
 ## Get started
 
+Install for whichever agent you use:
+
 ```
-npx @mochi-cli/mochi init all
+npx --yes github:mochi-cli/mochi#main install claude-code
+npx --yes github:mochi-cli/mochi#main install claude-desktop
+npx --yes github:mochi-cli/mochi#main install opencode
+npx --yes github:mochi-cli/mochi#main install hermes-agent
 ```
 
-Pick a template — or describe your own schema in plain language — and start talking to your data through Claude, Codex, or OpenCode.
+Pick a template — or describe your own schema in plain language — and start talking to your data through Claude or OpenCode.
 
 Questions, bugs, or feature requests: [github.com/mochi-cli/mochi](https://github.com/mochi-cli/mochi)
