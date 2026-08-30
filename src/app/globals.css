@@ -52,8 +52,36 @@
   --violet-soft: #ede9fe;
   --violet-soft-foreground: #5b21b6;
 
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
-  --shadow-lift: 0 8px 28px rgba(0, 0, 0, 0.08);
+  /* ---- Surfaces ----
+     --surface-alt is the alternating section band. It has to sit far enough from
+     --background to actually register as a different surface: the old
+     `bg-secondary/30` computed to oklch 0.991, i.e. 0.9% off white, which no eye
+     resolves. A trace of the wordmark hue keeps it related to the brand. */
+  --surface-alt: oklch(0.972 0.006 275);
+
+  /* ---- Elevation ----
+     Small bordered cards get no shadow at all: a 1px border and a 4% shadow doing
+     the same job on a near-white page just reads as smudge. Shadows are spent on
+     the product windows instead, and there they carry real weight. */
+  --shadow-card: 0 1px 2px rgba(17, 17, 27, 0.05), 0 2px 6px rgba(17, 17, 27, 0.04);
+  --shadow-window: 0 2px 4px rgba(17, 17, 27, 0.05), 0 12px 32px -8px rgba(17, 17, 27, 0.14);
+  --shadow-lift: 0 4px 10px rgba(17, 17, 27, 0.06), 0 20px 48px -12px rgba(17, 17, 27, 0.18);
+
+  /* ---- Type scale ----
+     One hero size, one section size, one finale size. The page used to run every
+     h2 at the same 38px with a 51px h1 above them — a 1.33 ratio across seven
+     sections, which gives the eye no way to tell the opening from the middle. */
+  /* Capped so the install command — the page's real primary action — still
+     clears the fold on a 1280x800 laptop. A larger headline pushed it to
+     813px in an 800px viewport. */
+  --text-hero: clamp(2.25rem, 1.3rem + 3.3vw, 3.35rem);
+  --text-h2: clamp(1.65rem, 1.35rem + 1.1vw, 2rem);
+  --text-h2-finale: clamp(2rem, 1.4rem + 2.6vw, 3rem);
+
+  /* Inner panels here sit inside p-6/p-8, and concentric math (outer radius minus
+     the inset) lands near zero at that depth. A big radius on them reads as a
+     bubble floating in a box; this keeps a hairline of softness instead. */
+  --radius-inset: 0.5rem;
 }
 
 @theme inline {
@@ -138,13 +166,25 @@ body {
   font-family: var(--font-mono), monospace;
 }
 
-/* small uppercase eyebrow label used above section headings */
+/* Alternating section band. Paired with the base background it carries the
+   page's chapter breaks on its own, which is why the sections no longer also
+   draw a border-b — a colour change and a rule doing the same job is noise. */
+.section-alt {
+  background-color: var(--surface-alt);
+}
+
+/* The one eyebrow. Three sections used to hand-roll their own inline variant
+   (13px/600/violet) while the rest used this class (0.8rem/500/muted), so the
+   same label appeared at two weights and two colours on one page. */
 .eyebrow {
-  font-size: 0.8rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted-foreground);
+}
+.eyebrow-accent {
+  color: var(--violet);
 }
 
 /* dotted grid, very subtle */
@@ -217,6 +257,11 @@ body {
   transition:
     opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Cards, tables and product windows settle rather than slide: running the same
+   18px rise on all fifteen blocks made the whole page one predictable gesture. */
+.reveal.reveal-soft {
+  transform: scale(0.985);
 }
 .reveal.is-visible {
   opacity: 1;

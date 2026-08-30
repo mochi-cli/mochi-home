@@ -24,7 +24,7 @@ const ENTRIES: Entry[] = [
 
 export default function AuditHistory({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="w-full overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-lift)]">
+    <div className="w-full overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-window)]">
       {/* window chrome */}
       <div className="flex h-9 items-center gap-2 border-b border-border bg-secondary/70 px-4">
         <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />

@@ -4,37 +4,37 @@ import Image from "next/image";
 import { useLang } from "./LanguageProvider";
 import { Separator } from "@/components/ui/separator";
 
-const columns = [
-  {
-    heading: "Product",
-    links: [
-      { label: "How it works", href: "#workflow" },
-      { label: "Features", href: "#features" },
-      { label: "Templates", href: "#templates" },
-      { label: "Pricing", href: "#pricing" },
-    ],
-  },
-  {
-    heading: "Developer",
-    links: [
-      { label: "GitHub — CLI", href: "https://github.com/mochi-cli/mochi", external: true },
-      { label: "GitHub — Home", href: "https://github.com/mochi-cli/home", external: true },
-      { label: "MCP integration", href: "#features" },
-    ],
-  },
-  {
-    heading: "Company",
-    links: [
-      { label: "About Mochi", href: "#mochi" },
-      { label: "Changelog", href: "https://github.com/mochi-cli/mochi/releases", external: true },
-    ],
-  },
-];
-
 export default function Footer() {
   const { m } = useLang();
+
+  const columns = [
+    {
+      heading: m.footer.product,
+      links: [
+        { label: m.nav.howItWorks, href: "#workflow" },
+        { label: m.nav.features, href: "#features" },
+        { label: m.nav.templates, href: "#templates" },
+        { label: m.nav.pricing, href: "#pricing" },
+      ],
+    },
+    {
+      heading: m.footer.developer,
+      links: [
+        { label: m.nav.repo, href: "https://github.com/mochi-cli/mochi", external: true },
+        { label: m.nav.repoHome, href: "https://github.com/mochi-cli/home", external: true },
+        { label: m.nav.mcp, href: "#features" },
+      ],
+    },
+    {
+      heading: m.footer.company,
+      links: [
+        { label: m.nav.about, href: "#mochi" },
+        { label: m.nav.changelog, href: "https://github.com/mochi-cli/mochi/releases", external: true },
+      ],
+    },
+  ];
   return (
-    <footer className="relative border-t border-border bg-secondary/30">
+    <footer className="section-alt relative border-t border-border">
       <div className="mx-auto max-w-6xl px-6 py-14">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="max-w-xs">
@@ -68,11 +68,11 @@ export default function Footer() {
 
         <div className="mt-6 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
           <span className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Mochi. Data workspace for teams and agents.
+            © {new Date().getFullYear()} Mochi. {m.footer.copyright}
           </span>
           <span className="mono inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-2.5 py-1 text-[11px] font-medium text-brand-soft-foreground">
             <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-            All systems operational
+            {m.footer.status}
           </span>
         </div>
       </div>

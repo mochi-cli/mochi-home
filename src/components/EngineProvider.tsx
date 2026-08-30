@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState } from "react";
+import { track } from "@vercel/analytics";
 
 export const MOCHI_VERSION = "main";
 
@@ -31,7 +32,9 @@ export function EngineProvider({ children }: { children: React.ReactNode }) {
 
   const selectEngine = (slug: string) => {
     const engine = ALL_ENGINES.find((e) => e.slug === slug);
-    if (engine) setSelectedEngine(engine);
+    if (!engine) return;
+    setSelectedEngine(engine);
+    track("engine_select", { engine: engine.slug });
   };
 
   const installCommand = `npx --yes github:mochi-cli/mochi#${MOCHI_VERSION} install ${selectedEngine.slug}`;

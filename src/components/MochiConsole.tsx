@@ -156,6 +156,22 @@ function Cursor() {
 const estimateTokens = (text: string) => Math.max(120, Math.round(text.length * 2.4));
 const estimateSecs = (text: string) => Math.max(0.4, Math.round((text.length / 240) * 10) / 10);
 
+/** An agent reply can carry an ASCII table. Those lines either draw a rule
+ *  (+-----+) or hold cells (| a | b |), and they always arrive as one contiguous
+ *  run — so a line-by-line scan is enough, and it stays correct while the reply
+ *  is still being typed out one character at a time. */
+function splitTableBlocks(text: string) {
+  const isTableLine = (l: string) => /^\s*[+|]/.test(l) && l.trim().length > 1;
+  const blocks: { table: boolean; text: string }[] = [];
+  for (const line of text.split("\n")) {
+    const table = isTableLine(line);
+    const last = blocks[blocks.length - 1];
+    if (last && last.table === table) last.text += "\n" + line;
+    else blocks.push({ table, text: line });
+  }
+  return blocks;
+}
+
 // Chat layout takes a light cue from Claude's own UI — a plain-text reply
 // with a small mark beside it, rather than a filled bubble — since this
 // panel is literally demonstrating "chat with Claude, Codex & OpenCode".
@@ -170,16 +186,36 @@ function Bubble({ line, caret }: { line: Line; caret?: boolean }) {
       </div>
     );
   }
+  // Prose stays on the chat surface; machine output gets terminal chrome, reusing
+  // the same dark panel colours as the console window in HeroStage.
+  const blocks = splitTableBlocks(line.text);
+
   return (
     <div className="flex items-start gap-2.5">
       <span className="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full bg-foreground text-background">
         <Sparkles className="h-3.5 w-3.5" />
       </span>
-      <div className="max-w-[85%] min-w-0">
-        <p className="whitespace-pre-wrap pt-0.5 text-[13.5px] leading-relaxed text-foreground">
-          {line.text}
-          {caret && <Cursor />}
-        </p>
+      <div className="max-w-[85%] min-w-0 space-y-1.5">
+        {blocks.map((b, i) => {
+          const isLast = i === blocks.length - 1;
+          return b.table ? (
+            <pre
+              key={i}
+              className="mono overflow-x-auto rounded-[var(--radius-inset)] border border-white/10 bg-[#16181d] px-3 py-2 text-[12px] leading-[1.55] text-white/90"
+            >
+              {b.text}
+              {caret && isLast && <Cursor />}
+            </pre>
+          ) : (
+            <p
+              key={i}
+              className="whitespace-pre-wrap pt-0.5 text-[13.5px] leading-relaxed text-foreground"
+            >
+              {b.text}
+              {caret && isLast && <Cursor />}
+            </p>
+          );
+        })}
         {!caret && (
           <p className="mono mt-1 text-[10px] text-muted-foreground/70">
             {estimateSecs(line.text)}s · ↓ {estimateTokens(line.text).toLocaleString("en-US")} tokens

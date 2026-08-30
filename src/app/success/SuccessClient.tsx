@@ -1,6 +1,7 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
+import { track } from "@vercel/analytics";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
@@ -13,6 +14,12 @@ function SuccessContent() {
   const { installCommand } = useEngine();
   const searchParams = useSearchParams();
   const checkoutId = searchParams.get("checkout_id");
+
+  // Polar redirects here only after a completed purchase, so this is the
+  // revenue end of the funnel the other four events lead into.
+  useEffect(() => {
+    track("checkout_success");
+  }, []);
 
   return (
     <section className="bg-mesh-neutral relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-20">
