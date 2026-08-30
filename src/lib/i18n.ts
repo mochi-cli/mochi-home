@@ -24,22 +24,137 @@ interface Plan {
   tagline: string;
   features: string[];
 }
+interface Trust {
+  title: string;
+  desc: string;
+}
+/** One row of the Excel/Airtable/Mochi table. The yes/no *icons* stay in
+ *  MascotIntro (they are presentation); only the prose lives here. A cell left
+ *  as "" falls back to the localized `compare.yes` / `compare.no` word. */
+interface CompareRow {
+  feature: string;
+  excel: string;
+  airtable: string;
+  mochi: string;
+}
 export interface Messages {
   scripts: any;
   db: any;
-  hero: { headline: string; sub: string };
-  feat: { title: string; items: Feature[] };
+  nav: {
+    product: string;
+    pricing: string;
+    docs: string;
+    changelog: string;
+    community: string;
+    howItWorks: string;
+    features: string;
+    templates: string;
+    repo: string;
+    repoHome: string;
+    discussions: string;
+    mcp: string;
+    about: string;
+    star: string;
+    menu: string;
+    openMenu: string;
+  };
+  hero: {
+    headline: string;
+    sub: string;
+    badge: string;
+    ctaPrimary: string;
+    ctaSecondary: string;
+    copyLabel: string;
+    trust: Trust[];
+  };
+  eyebrow: {
+    flow: string;
+    feat: string;
+    views: string;
+    tpl: string;
+    char: string;
+    compare: string;
+    price: string;
+    step: string;
+  };
+  feat: { title: string; sub: string; items: Feature[] };
+  /** the fifth feature block; the first four come from feat/git above */
+  audit: Feature;
   git: { title: string; items: Feature[]; agentLabel: string; syncedCaption: string };
-  flow: { title: string; steps: Step[] };
-  tpl: { title: string; sub: string; items: string[] };
+  flow: { title: string; sub: string; steps: Step[] };
+  views: { title: string; sub: string; shots: string[] };
+  tpl: { title: string; sub: string; items: string[]; viewAll: string };
   char: { title: string; sub: string };
-  price: { title: string; sub: string; billed: string; popular: string; plans: Plan[] };
-  cta: { sub: string };
-  footer: { tagline: string };
+  compare: { yes: string; no: string; rows: CompareRow[] };
+  price: { title: string; sub: string; billed: string; popular: string; soon: string; getPro: string; forever: string; plans: Plan[] };
+  cta: { title: string; sub: string; button: string };
+  footer: {
+    tagline: string;
+    product: string;
+    developer: string;
+    company: string;
+    copyright: string;
+    status: string;
+  };
+  waitlist: {
+    title: string;
+    sub: string;
+    placeholder: string;
+    button: string;
+    sending: string;
+    success: string;
+    error: string;
+    invalid: string;
+  };
   success: { title: string; sub: string; order: string; cta: string; back: string; note: string };
 }
 
 const en: Messages = {
+  nav: {
+    product: "Product",
+    pricing: "Pricing",
+    docs: "Docs",
+    changelog: "Changelog",
+    community: "Community",
+    howItWorks: "How it works",
+    features: "Features",
+    templates: "Templates",
+    repo: "GitHub repo",
+    repoHome: "GitHub — Home",
+    discussions: "Discussions",
+    mcp: "MCP integration",
+    about: "About Mochi",
+    star: "Star on GitHub",
+    menu: "Menu",
+    openMenu: "Open menu",
+  },
+  eyebrow: {
+    flow: "How it works",
+    feat: "Features",
+    views: "Views",
+    tpl: "Templates",
+    char: "Why Mochi",
+    compare: "Versus Excel + Copilot, and Airtable",
+    price: "Pricing",
+    step: "Step",
+  },
+  views: {
+    title: "One dataset, every view your team thinks in",
+    sub: "Grid, Kanban, Calendar, Gallery, Chart — all read the same records. Switch views without copying data or rebuilding a thing.",
+    shots: ["Leads — By Status", "Orders — By Order Date", "Products — Product Cards", "Tasks — Grouped by Priority", "Leads — By Source"],
+  },
+  compare: {
+    yes: "Yes",
+    no: "No",
+    rows: [
+      { feature: "AI agents read & write your data natively", excel: "Suggests formulas only", airtable: "", mochi: "" },
+      { feature: "Where your data lives", excel: "Local file, no sync", airtable: "Their cloud, always", mochi: "Your laptop or the cloud — your call" },
+      { feature: "Runs without a server or account", excel: "Copilot needs a Microsoft account", airtable: "", mochi: "" },
+      { feature: "Every write is versioned, traceable & reversible", excel: "Undo history only", airtable: "Paid tiers only", mochi: "" },
+      { feature: "Real-time collab — teammates and agents", excel: "Needs Microsoft 365", airtable: "", mochi: "" },
+      { feature: "Pricing", excel: "Per seat + Copilot add-on", airtable: "Per seat, monthly", mochi: "$19 once, forever" },
+    ],
+  },
 
     scripts: {
       "chat": [
@@ -230,9 +345,19 @@ const en: Messages = {
   hero: {
     headline: "The local-first data workspace for your team and AI agents. Zero server bills.",
     sub: "Build CRM, HR, inventory, or any internal tool — no code, no prompts, no monthly server fees. Runs on your laptop, syncs peer-to-peer, and works natively with Claude, OpenCode, and Hermes-Agent.",
+    badge: "Local-first · Peer-to-peer · AI-native",
+    ctaPrimary: "Get started",
+    ctaSecondary: "See how it works",
+    copyLabel: "Copy install command",
+    trust: [
+      { title: "No server.", desc: "Your data stays on your devices." },
+      { title: "Peer-to-peer sync.", desc: "Works offline. Changes sync when you're back." },
+      { title: "Private by default.", desc: "Encrypted in transit. You own your data." },
+    ],
   },
   feat: {
     title: "One workspace for your team and your AI agents",
+    sub: "Mochi combines the simplicity of a spreadsheet, the power of a database, and the intelligence of AI.",
     items: [
       {
         title: "Chat with Claude, OpenCode & Hermes-Agent",
@@ -256,6 +381,7 @@ const en: Messages = {
       },
     ],
   },
+  audit: { title: "Auditable, no-code control", desc: "Every agent edit is logged field by field, and filters or groups are built by clicking — not by prompting." },
   git: {
     title: "Git-backed storage control & data history",
     items: [
@@ -273,6 +399,7 @@ const en: Messages = {
   },
   flow: {
     title: "Three steps to your team's workspace",
+    sub: "Get started in minutes. No servers, no complex setup.",
     steps: [
       { title: "Install Mochi", desc: "One command. Free to start. Works on Mac, Linux, and Windows." },
       { title: "Pick a template", desc: "Start from CRM, HR, Inventory, Projects, or a blank canvas." },
@@ -280,13 +407,14 @@ const en: Messages = {
     ],
   },
   tpl: {
+    viewAll: "View all →",
     title: "Templates for the tools you actually need",
     sub: "Whether you run sales, HR, ops, or a project team — start from a template with schema, relations, and sample data. Customize in plain language, or let your agent do it.",
     items: [
-      "Customers, sales opportunities, interaction history",
-      "People, departments, attendance, reviews",
-      "Products, stock, real-time in/out flow",
-      "Tasks, progress, members, deadlines",
+      "Centralize customer interactions to close more deals",
+      "Manage people, roles, and attendance in one workspace",
+      "Track stock, warehouses, and in/out flow in real time",
+      "Coordinate tasks and ship on time without pinging",
     ],
   },
   char: {
@@ -295,16 +423,36 @@ const en: Messages = {
   },
   price: {
     title: "Choose your plan",
-    sub: "Start free. Level up when your team grows.",
+    sub: "One plan, one payment. Yours forever.",
     billed: "One-time payment. Pay once, use forever.",
     popular: "MOST POPULAR",
+    forever: "/forever",
+    soon: "Soon",
+    getPro: "Get Pro →",
     plans: [
       { tagline: "For solo hobby projects", features: ["3 workspaces", "Free templates only", "Git bundle deploy", "Community support"] },
       { tagline: "For individual builders", features: ["Unlimited workspaces", "Mochi Table", "Premium templates", "Git bundle deploy", "Write history & rollback", "Priority support"] },
     ],
   },
-  cta: { sub: "Install Mochi in seconds — no server, no prompts, no lock-in." },
-  footer: { tagline: "Your team's data workspace — no server bills, no lock-in, agent-ready." },
+  cta: { title: "Ready to organize your data?", sub: "Install Mochi in seconds — no server, no prompts, no lock-in.", button: "Get started →" },
+  footer: {
+    tagline: "Your team's data workspace — no server bills, no lock-in, agent-ready.",
+    product: "Product",
+    developer: "Developer",
+    company: "Company",
+    copyright: "Data workspace for teams and agents.",
+    status: "All systems operational",
+  },
+  waitlist: {
+    title: "Free plan — coming soon",
+    sub: "We'll email you the day it opens. Nothing else.",
+    placeholder: "you@company.com",
+    button: "Notify me",
+    sending: "Sending…",
+    success: "You're on the list.",
+    error: "Something went wrong. Please try again.",
+    invalid: "Enter a valid email address.",
+  },
   success: {
     title: "You're all set!",
     sub: "Your Pro license is on its way to your inbox. Install Mochi and start building your workspace.",
@@ -316,6 +464,51 @@ const en: Messages = {
 };
 
 const es: Messages = {
+  nav: {
+    product: "Producto",
+    pricing: "Precios",
+    docs: "Documentación",
+    changelog: "Novedades",
+    community: "Comunidad",
+    howItWorks: "Cómo funciona",
+    features: "Funciones",
+    templates: "Plantillas",
+    repo: "Repositorio en GitHub",
+    repoHome: "GitHub — Home",
+    discussions: "Debates",
+    mcp: "Integración MCP",
+    about: "Sobre Mochi",
+    star: "Marcar en GitHub",
+    menu: "Menú",
+    openMenu: "Abrir menú",
+  },
+  eyebrow: {
+    flow: "Cómo funciona",
+    feat: "Funciones",
+    views: "Vistas",
+    tpl: "Plantillas",
+    char: "Por qué Mochi",
+    compare: "Frente a Excel + Copilot y Airtable",
+    price: "Precios",
+    step: "Paso",
+  },
+  views: {
+    title: "Un solo conjunto de datos, todas las vistas que tu equipo necesita",
+    sub: "Cuadrícula, Kanban, Calendario, Galería, Gráfico: todas leen los mismos registros. Cambia de vista sin copiar datos ni rehacer nada.",
+    shots: ["Leads — Por estado", "Pedidos — Por fecha", "Productos — Fichas", "Tareas — Por prioridad", "Leads — Por origen"],
+  },
+  compare: {
+    yes: "Sí",
+    no: "No",
+    rows: [
+      { feature: "Los agentes de IA leen y escriben tus datos de forma nativa", excel: "Solo sugiere fórmulas", airtable: "", mochi: "" },
+      { feature: "Dónde viven tus datos", excel: "Archivo local, sin sincronizar", airtable: "Su nube, siempre", mochi: "Tu portátil o la nube: tú decides" },
+      { feature: "Funciona sin servidor ni cuenta", excel: "Copilot exige una cuenta de Microsoft", airtable: "", mochi: "" },
+      { feature: "Cada escritura queda versionada, trazable y reversible", excel: "Solo historial de deshacer", airtable: "Solo en planes de pago", mochi: "" },
+      { feature: "Colaboración en tiempo real: equipo y agentes", excel: "Requiere Microsoft 365", airtable: "", mochi: "" },
+      { feature: "Precio", excel: "Por usuario + complemento Copilot", airtable: "Por usuario, mensual", mochi: "19 $ una vez, para siempre" },
+    ],
+  },
 
     scripts: {
       "chat": [
@@ -472,11 +665,21 @@ const es: Messages = {
       }
 },
   hero: {
-    headline: "Deja que tus agentes de IA hablen con tus datos",
-    sub: "Mochi convierte database en un espacio de trabajo nativo para agentes: crea una plantilla con un solo comando, opera tus datos en lenguaje natural y guárdalos con seguridad en Git.",
+    headline: "El espacio de datos local para tu equipo y tus agentes de IA. Cero facturas de servidor.",
+    sub: "Crea un CRM, RR. HH., inventario o cualquier herramienta interna: sin código, sin prompts, sin cuotas mensuales de servidor. Funciona en tu portátil, se sincroniza entre pares y habla de forma nativa con Claude, OpenCode y Hermes-Agent.",
+    badge: "Local-first · Peer-to-peer · Nativo para IA",
+    ctaPrimary: "Empezar",
+    ctaSecondary: "Ver cómo funciona",
+    copyLabel: "Copiar comando de instalación",
+    trust: [
+      { title: "Sin servidor.", desc: "Tus datos se quedan en tus dispositivos." },
+      { title: "Sincronización peer-to-peer.", desc: "Funciona sin conexión. Se sincroniza al volver." },
+      { title: "Privado por defecto.", desc: "Cifrado en tránsito. Los datos son tuyos." },
+    ],
   },
   feat: {
     title: "Todo lo que tu agente necesita para trabajar con datos",
+    sub: "Mochi combina la simplicidad de una hoja de cálculo, la potencia de una base de datos y la inteligencia de la IA.",
     items: [
       {
         title: "Chatea con naturalidad con Claude, Codex y OpenCode",
@@ -492,6 +695,7 @@ const es: Messages = {
       },
     ],
   },
+  audit: { title: "Control auditable, sin código", desc: "Cada edición del agente queda registrada campo por campo, y los filtros o grupos se crean haciendo clic, no escribiendo prompts." },
   git: {
     title: "Almacenamiento en Git y control del historial de datos",
     items: [
@@ -509,6 +713,7 @@ const es: Messages = {
   },
   flow: {
     title: "Tres pasos hacia un espacio nativo para agentes",
+    sub: "Empieza en minutos. Sin servidores, sin configuración complicada.",
     steps: [
       { title: "Inicializa un espacio de trabajo", desc: "Elige una plantilla lista. Mochi crea el esquema, las relaciones y los datos de ejemplo en segundos." },
       { title: "Chatea con tu agente", desc: "Claude, Codex u OpenCode operan los datos con herramientas tipadas, sin escribir SQL." },
@@ -516,13 +721,14 @@ const es: Messages = {
     ],
   },
   tpl: {
+    viewAll: "Ver todas →",
     title: "Plantillas para las herramientas que realmente necesitas",
     sub: "Ya sea que gestiones ventas, RRHH, operaciones o un equipo de proyecto — empieza desde una plantilla con esquema, relaciones y datos de ejemplo. Personaliza en lenguaje natural o deja que tu agente lo haga.",
     items: [
-      "Clientes, oportunidades de venta, historial de interacciones",
-      "Personas, departamentos, asistencia, evaluaciones",
-      "Productos, stock, flujo de entrada/salida en tiempo real",
-      "Tareas, progreso, miembros, plazos",
+      "Centraliza las interacciones con clientes para cerrar más ventas",
+      "Gestiona personas, roles y asistencia en un solo espacio",
+      "Controla stock, almacenes y entradas/salidas en tiempo real",
+      "Coordina tareas y entrega a tiempo sin perseguir a nadie",
     ],
   },
   char: {
@@ -531,16 +737,36 @@ const es: Messages = {
   },
   price: {
     title: "Elige tu plan",
-    sub: "Empieza gratis. Sube de nivel cuando quieras.",
+    sub: "Un plan, un pago. Tuyo para siempre.",
     billed: "Pago único. Paga una vez, úsalo para siempre.",
     popular: "MÁS POPULAR",
+    forever: "/para siempre",
+    soon: "Próximamente",
+    getPro: "Obtener Pro →",
     plans: [
       { tagline: "Para proyectos personales", features: ["3 espacios de trabajo", "Solo plantillas gratuitas", "Despliegue de paquete Git", "Soporte de la comunidad"] },
       { tagline: "Para creadores individuales", features: ["Espacios ilimitados", "Mochi Table", "Plantillas premium", "Despliegue de paquete Git", "Historial y reversión", "Soporte prioritario"] },
     ],
   },
-  cta: { sub: "Instala Mochi en segundos y empieza con tu primera plantilla." },
-  footer: { tagline: "El compañero de datos nativo para agentes: Claude, Codex y OpenCode." },
+  cta: { title: "¿Listo para organizar tus datos?", sub: "Instala Mochi en segundos y empieza con tu primera plantilla.", button: "Empezar →" },
+  footer: {
+    tagline: "El compañero de datos nativo para agentes: Claude, Codex y OpenCode.",
+    product: "Producto",
+    developer: "Desarrollo",
+    company: "Empresa",
+    copyright: "Espacio de datos para equipos y agentes.",
+    status: "Todos los sistemas operativos",
+  },
+  waitlist: {
+    title: "Plan gratuito — próximamente",
+    sub: "Te escribiremos el día que se abra. Nada más.",
+    placeholder: "tu@empresa.com",
+    button: "Avisarme",
+    sending: "Enviando…",
+    success: "Ya estás en la lista.",
+    error: "Algo salió mal. Inténtalo de nuevo.",
+    invalid: "Introduce un correo electrónico válido.",
+  },
   success: {
     title: "¡Todo listo!",
     sub: "Tu licencia Pro va de camino a tu correo. Instala Mochi y empieza a construir tu espacio de trabajo.",
@@ -552,6 +778,51 @@ const es: Messages = {
 };
 
 const fr: Messages = {
+  nav: {
+    product: "Produit",
+    pricing: "Tarifs",
+    docs: "Documentation",
+    changelog: "Nouveautés",
+    community: "Communauté",
+    howItWorks: "Comment ça marche",
+    features: "Fonctionnalités",
+    templates: "Modèles",
+    repo: "Dépôt GitHub",
+    repoHome: "GitHub — Home",
+    discussions: "Discussions",
+    mcp: "Intégration MCP",
+    about: "À propos de Mochi",
+    star: "Star sur GitHub",
+    menu: "Menu",
+    openMenu: "Ouvrir le menu",
+  },
+  eyebrow: {
+    flow: "Comment ça marche",
+    feat: "Fonctionnalités",
+    views: "Vues",
+    tpl: "Modèles",
+    char: "Pourquoi Mochi",
+    compare: "Face à Excel + Copilot et Airtable",
+    price: "Tarifs",
+    step: "Étape",
+  },
+  views: {
+    title: "Un seul jeu de données, toutes les vues dont votre équipe a besoin",
+    sub: "Grille, Kanban, Calendrier, Galerie, Graphique : tous lisent les mêmes enregistrements. Changez de vue sans copier ni reconstruire quoi que ce soit.",
+    shots: ["Leads — Par statut", "Commandes — Par date", "Produits — Fiches", "Tâches — Par priorité", "Leads — Par source"],
+  },
+  compare: {
+    yes: "Oui",
+    no: "Non",
+    rows: [
+      { feature: "Les agents IA lisent et écrivent vos données nativement", excel: "Suggère seulement des formules", airtable: "", mochi: "" },
+      { feature: "Où vivent vos données", excel: "Fichier local, sans synchro", airtable: "Leur cloud, toujours", mochi: "Votre ordinateur ou le cloud : à vous de choisir" },
+      { feature: "Fonctionne sans serveur ni compte", excel: "Copilot exige un compte Microsoft", airtable: "", mochi: "" },
+      { feature: "Chaque écriture est versionnée, traçable et réversible", excel: "Historique d'annulation seulement", airtable: "Offres payantes uniquement", mochi: "" },
+      { feature: "Collaboration en temps réel : équipe et agents", excel: "Nécessite Microsoft 365", airtable: "", mochi: "" },
+      { feature: "Tarif", excel: "Par siège + option Copilot", airtable: "Par siège, mensuel", mochi: "19 $ une fois, pour toujours" },
+    ],
+  },
 
     scripts: {
       "chat": [
@@ -708,11 +979,21 @@ const fr: Messages = {
       }
 },
   hero: {
-    headline: "Laissez vos agents IA dialoguer avec vos données",
-    sub: "Mochi transforme database en un espace de travail natif pour agents : créez un modèle en une commande, manipulez vos données en langage naturel et validez-les en toute sécurité sur Git.",
+    headline: "L'espace de données local pour votre équipe et vos agents IA. Zéro facture de serveur.",
+    sub: "Créez un CRM, un SIRH, un inventaire ou n'importe quel outil interne : sans code, sans prompts, sans frais de serveur mensuels. Tourne sur votre ordinateur, se synchronise en pair-à-pair et dialogue nativement avec Claude, OpenCode et Hermes-Agent.",
+    badge: "Local-first · Peer-to-peer · Nativement IA",
+    ctaPrimary: "Commencer",
+    ctaSecondary: "Voir comment ça marche",
+    copyLabel: "Copier la commande d'installation",
+    trust: [
+      { title: "Aucun serveur.", desc: "Vos données restent sur vos appareils." },
+      { title: "Synchro peer-to-peer.", desc: "Fonctionne hors ligne. Tout se synchronise au retour." },
+      { title: "Privé par défaut.", desc: "Chiffré en transit. Vos données vous appartiennent." },
+    ],
   },
   feat: {
     title: "Tout ce dont votre agent a besoin pour travailler avec les données",
+    sub: "Mochi réunit la simplicité d'un tableur, la puissance d'une base de données et l'intelligence de l'IA.",
     items: [
       {
         title: "Discutez naturellement avec Claude, Codex et OpenCode",
@@ -728,6 +1009,7 @@ const fr: Messages = {
       },
     ],
   },
+  audit: { title: "Un contrôle auditable, sans code", desc: "Chaque modification de l'agent est journalisée champ par champ, et les filtres ou groupes se construisent en cliquant, pas en rédigeant des prompts." },
   git: {
     title: "Stockage Git et contrôle de l'historique des données",
     items: [
@@ -745,6 +1027,7 @@ const fr: Messages = {
   },
   flow: {
     title: "Trois étapes vers un espace natif pour agents",
+    sub: "Démarrez en quelques minutes. Sans serveur, sans configuration compliquée.",
     steps: [
       { title: "Initialisez un espace de travail", desc: "Choisissez un modèle prêt. Mochi crée le schéma, les relations et les données d'exemple en quelques secondes." },
       { title: "Discutez avec votre agent", desc: "Claude, Codex ou OpenCode manipulent les données via des outils typés — sans SQL." },
@@ -752,13 +1035,14 @@ const fr: Messages = {
     ],
   },
   tpl: {
+    viewAll: "Tout voir →",
     title: "Des modèles prêts à l'emploi, personnalisables au besoin",
     sub: "Chaque modèle est livré avec un schéma, des relations de données et des données d'exemple — assez pour démarrer tout de suite, assez simple pour l'adapter à vos besoins.",
     items: [
-      "Clients, opportunités de vente, historique des interactions",
-      "Personnes, services, présence, évaluations",
-      "Produits, stock, entrées/sorties en temps réel",
-      "Tâches, avancement, membres, échéances",
+      "Centralisez les interactions clients pour conclure plus d'affaires",
+      "Gérez les personnes, les rôles et les présences au même endroit",
+      "Suivez le stock, les entrepôts et les flux en temps réel",
+      "Coordonnez les tâches et livrez à temps sans relancer personne",
     ],
   },
   char: {
@@ -767,16 +1051,36 @@ const fr: Messages = {
   },
   price: {
     title: "Choisissez votre formule",
-    sub: "Commencez gratuitement. Passez au niveau supérieur quand vous voulez.",
+    sub: "Une offre, un paiement. À vous pour toujours.",
     billed: "Paiement unique. Payez une fois, utilisez à vie.",
     popular: "LE PLUS POPULAIRE",
+    forever: "/à vie",
+    soon: "Bientôt",
+    getPro: "Passer à Pro →",
     plans: [
       { tagline: "Pour les projets perso", features: ["3 espaces de travail", "Modèles gratuits uniquement", "Déploiement de bundle Git", "Support communautaire"] },
       { tagline: "Pour les créateurs individuels", features: ["Espaces illimités", "Mochi Table", "Modèles premium", "Déploiement de bundle Git", "Historique et retour arrière", "Support prioritaire"] },
     ],
   },
-  cta: { sub: "Installez Mochi en quelques secondes et démarrez avec votre premier modèle." },
-  footer: { tagline: "Le compagnon de données natif pour agents : Claude, Codex et OpenCode." },
+  cta: { title: "Prêt à organiser vos données ?", sub: "Installez Mochi en quelques secondes et démarrez avec votre premier modèle.", button: "Commencer →" },
+  footer: {
+    tagline: "Le compagnon de données natif pour agents : Claude, Codex et OpenCode.",
+    product: "Produit",
+    developer: "Développeurs",
+    company: "Entreprise",
+    copyright: "Espace de données pour les équipes et les agents.",
+    status: "Tous les systèmes sont opérationnels",
+  },
+  waitlist: {
+    title: "Offre gratuite — bientôt disponible",
+    sub: "Nous vous écrirons le jour de l'ouverture. Rien d'autre.",
+    placeholder: "vous@entreprise.com",
+    button: "Me prévenir",
+    sending: "Envoi…",
+    success: "Vous êtes sur la liste.",
+    error: "Une erreur est survenue. Réessayez.",
+    invalid: "Saisissez une adresse e-mail valide.",
+  },
   success: {
     title: "Tout est prêt !",
     sub: "Votre licence Pro est en route vers votre boîte mail. Installez Mochi et commencez à construire votre espace de travail.",
@@ -788,6 +1092,51 @@ const fr: Messages = {
 };
 
 const de: Messages = {
+  nav: {
+    product: "Produkt",
+    pricing: "Preise",
+    docs: "Doku",
+    changelog: "Changelog",
+    community: "Community",
+    howItWorks: "So funktioniert's",
+    features: "Funktionen",
+    templates: "Vorlagen",
+    repo: "GitHub-Repository",
+    repoHome: "GitHub — Home",
+    discussions: "Diskussionen",
+    mcp: "MCP-Integration",
+    about: "Über Mochi",
+    star: "Auf GitHub starren",
+    menu: "Menü",
+    openMenu: "Menü öffnen",
+  },
+  eyebrow: {
+    flow: "So funktioniert's",
+    feat: "Funktionen",
+    views: "Ansichten",
+    tpl: "Vorlagen",
+    char: "Warum Mochi",
+    compare: "Im Vergleich zu Excel + Copilot und Airtable",
+    price: "Preise",
+    step: "Schritt",
+  },
+  views: {
+    title: "Ein Datensatz, jede Ansicht, in der dein Team denkt",
+    sub: "Grid, Kanban, Kalender, Galerie, Diagramm — alle lesen dieselben Datensätze. Ansicht wechseln, ohne Daten zu kopieren oder etwas neu zu bauen.",
+    shots: ["Leads — Nach Status", "Bestellungen — Nach Datum", "Produkte — Karten", "Aufgaben — Nach Priorität", "Leads — Nach Quelle"],
+  },
+  compare: {
+    yes: "Ja",
+    no: "Nein",
+    rows: [
+      { feature: "KI-Agenten lesen und schreiben deine Daten nativ", excel: "Schlägt nur Formeln vor", airtable: "", mochi: "" },
+      { feature: "Wo deine Daten liegen", excel: "Lokale Datei, keine Synchronisierung", airtable: "Immer deren Cloud", mochi: "Dein Laptop oder die Cloud — deine Entscheidung" },
+      { feature: "Läuft ohne Server und ohne Konto", excel: "Copilot braucht ein Microsoft-Konto", airtable: "", mochi: "" },
+      { feature: "Jeder Schreibvorgang ist versioniert, nachvollziehbar und umkehrbar", excel: "Nur Undo-Verlauf", airtable: "Nur in bezahlten Tarifen", mochi: "" },
+      { feature: "Echtzeit-Zusammenarbeit — Team und Agenten", excel: "Benötigt Microsoft 365", airtable: "", mochi: "" },
+      { feature: "Preis", excel: "Pro Platz + Copilot-Zusatz", airtable: "Pro Platz, monatlich", mochi: "Einmalig 19 $, für immer" },
+    ],
+  },
 
     scripts: {
       "chat": [
@@ -944,11 +1293,21 @@ const de: Messages = {
       }
 },
   hero: {
-    headline: "Lass deine KI-Agenten mit deinen Daten sprechen",
-    sub: "Mochi macht database zu einem agentennativen Workspace: Erstelle eine Vorlage mit einem Befehl, bearbeite deine Daten in natürlicher Sprache und committe sie sicher zu Git.",
+    headline: "Der lokale Datenraum für dein Team und deine KI-Agenten. Keine Serverkosten.",
+    sub: "Baue ein CRM, HR-Tool, Inventar oder jedes interne Werkzeug — ohne Code, ohne Prompts, ohne monatliche Servergebühren. Läuft auf deinem Laptop, synchronisiert peer-to-peer und arbeitet nativ mit Claude, OpenCode und Hermes-Agent.",
+    badge: "Local-first · Peer-to-peer · KI-nativ",
+    ctaPrimary: "Loslegen",
+    ctaSecondary: "So funktioniert's",
+    copyLabel: "Installationsbefehl kopieren",
+    trust: [
+      { title: "Kein Server.", desc: "Deine Daten bleiben auf deinen Geräten." },
+      { title: "Peer-to-Peer-Sync.", desc: "Funktioniert offline. Änderungen synchronisieren sich später." },
+      { title: "Privat by default.", desc: "Verschlüsselt bei der Übertragung. Die Daten gehören dir." },
+    ],
   },
   feat: {
     title: "Alles, was dein Agent für die Arbeit mit Daten braucht",
+    sub: "Mochi verbindet die Einfachheit einer Tabelle, die Leistung einer Datenbank und die Intelligenz von KI.",
     items: [
       {
         title: "Chatte natürlich mit Claude, Codex & OpenCode",
@@ -964,6 +1323,7 @@ const de: Messages = {
       },
     ],
   },
+  audit: { title: "Nachvollziehbare Kontrolle, ganz ohne Code", desc: "Jede Änderung des Agenten wird Feld für Feld protokolliert, und Filter oder Gruppen entstehen per Klick — nicht per Prompt." },
   git: {
     title: "Git-gesicherter Speicher & Datenverwaltung",
     items: [
@@ -981,6 +1341,7 @@ const de: Messages = {
   },
   flow: {
     title: "Drei Schritte zu einem agentennativen Workspace",
+    sub: "In Minuten startklar. Keine Server, kein kompliziertes Setup.",
     steps: [
       { title: "Workspace initialisieren", desc: "Wähle eine fertige Vorlage. Mochi erstellt Schema, Relationen und Beispieldaten in Sekunden." },
       { title: "Mit deinem Agenten chatten", desc: "Claude, Codex oder OpenCode bearbeiten Daten über typisierte Tools – ohne SQL." },
@@ -988,13 +1349,14 @@ const de: Messages = {
     ],
   },
   tpl: {
+    viewAll: "Alle ansehen →",
     title: "Fertige Vorlagen, bei Bedarf anpassbar",
     sub: "Jede Vorlage kommt mit Schema, Datenrelationen und Beispieldaten – genug, damit dein Agent sofort loslegt, einfach genug für deine Anpassungen.",
     items: [
-      "Kunden, Verkaufschancen, Interaktionsverlauf",
-      "Personen, Abteilungen, Anwesenheit, Bewertungen",
-      "Produkte, Bestand, Zu-/Abgänge in Echtzeit",
-      "Aufgaben, Fortschritt, Mitglieder, Fristen",
+      "Kundenkontakte bündeln und mehr Abschlüsse erzielen",
+      "Menschen, Rollen und Anwesenheit an einem Ort verwalten",
+      "Bestand, Lager und Zu-/Abgänge in Echtzeit verfolgen",
+      "Aufgaben koordinieren und pünktlich liefern, ohne nachzuhaken",
     ],
   },
   char: {
@@ -1003,16 +1365,36 @@ const de: Messages = {
   },
   price: {
     title: "Wähle deinen Plan",
-    sub: "Kostenlos starten. Aufsteigen, wenn du bereit bist.",
+    sub: "Ein Tarif, eine Zahlung. Für immer deins.",
     billed: "Einmalzahlung. Einmal zahlen, für immer nutzen.",
     popular: "AM BELIEBTESTEN",
+    forever: "/für immer",
+    soon: "Bald",
+    getPro: "Pro holen →",
     plans: [
       { tagline: "Für private Hobbyprojekte", features: ["3 Workspaces", "Nur kostenlose Vorlagen", "Git-Bundle-Deploy", "Community-Support"] },
       { tagline: "Für einzelne Entwickler", features: ["Unbegrenzte Workspaces", "Mochi Table", "Premium-Vorlagen", "Git-Bundle-Deploy", "Schreibverlauf & Rollback", "Priorisierter Support"] },
     ],
   },
-  cta: { sub: "Installiere Mochi in Sekunden und starte mit deiner ersten Vorlage." },
-  footer: { tagline: "Der agentennative Datenbegleiter für Claude, Codex und OpenCode." },
+  cta: { title: "Bereit, deine Daten zu ordnen?", sub: "Installiere Mochi in Sekunden und starte mit deiner ersten Vorlage.", button: "Loslegen →" },
+  footer: {
+    tagline: "Der agentennative Datenbegleiter für Claude, Codex und OpenCode.",
+    product: "Produkt",
+    developer: "Entwickler",
+    company: "Unternehmen",
+    copyright: "Daten-Workspace für Teams und Agenten.",
+    status: "Alle Systeme betriebsbereit",
+  },
+  waitlist: {
+    title: "Kostenloser Tarif — bald verfügbar",
+    sub: "Wir schreiben dir am Tag der Freischaltung. Sonst nichts.",
+    placeholder: "du@firma.de",
+    button: "Benachrichtige mich",
+    sending: "Wird gesendet…",
+    success: "Du stehst auf der Liste.",
+    error: "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+    invalid: "Bitte gib eine gültige E-Mail-Adresse ein.",
+  },
   success: {
     title: "Alles bereit!",
     sub: "Deine Pro-Lizenz ist auf dem Weg in dein Postfach. Installiere Mochi und starte mit deinem Workspace.",
@@ -1024,6 +1406,51 @@ const de: Messages = {
 };
 
 const ja: Messages = {
+  nav: {
+    product: "プロダクト",
+    pricing: "料金",
+    docs: "ドキュメント",
+    changelog: "変更履歴",
+    community: "コミュニティ",
+    howItWorks: "使い方",
+    features: "機能",
+    templates: "テンプレート",
+    repo: "GitHub リポジトリ",
+    repoHome: "GitHub — Home",
+    discussions: "ディスカッション",
+    mcp: "MCP 連携",
+    about: "Mochi について",
+    star: "GitHub でスターを付ける",
+    menu: "メニュー",
+    openMenu: "メニューを開く",
+  },
+  eyebrow: {
+    flow: "使い方",
+    feat: "機能",
+    views: "ビュー",
+    tpl: "テンプレート",
+    char: "Mochi を選ぶ理由",
+    compare: "Excel + Copilot・Airtable との比較",
+    price: "料金",
+    step: "ステップ",
+  },
+  views: {
+    title: "ひとつのデータを、チームの考え方どおりのビューで",
+    sub: "グリッド、カンバン、カレンダー、ギャラリー、チャート — すべて同じレコードを読みます。データを複製することも作り直すこともなく、ビューだけを切り替えられます。",
+    shots: ["リード — ステータス別", "注文 — 注文日別", "商品 — カード表示", "タスク — 優先度別", "リード — 流入元別"],
+  },
+  compare: {
+    yes: "対応",
+    no: "非対応",
+    rows: [
+      { feature: "AIエージェントがデータをネイティブに読み書き", excel: "数式の提案のみ", airtable: "", mochi: "" },
+      { feature: "データの保存場所", excel: "ローカルファイル、同期なし", airtable: "常に提供元のクラウド", mochi: "自分のPCでもクラウドでも — 選べます" },
+      { feature: "サーバーもアカウントも不要で動作", excel: "Copilot には Microsoft アカウントが必要", airtable: "", mochi: "" },
+      { feature: "すべての書き込みがバージョン管理・追跡・巻き戻し可能", excel: "元に戻す履歴のみ", airtable: "有料プランのみ", mochi: "" },
+      { feature: "リアルタイム共同編集 — メンバーとエージェント", excel: "Microsoft 365 が必要", airtable: "", mochi: "" },
+      { feature: "料金", excel: "1席ごと + Copilot 追加料金", airtable: "1席ごとの月額", mochi: "買い切り 19 ドル、ずっと使える" },
+    ],
+  },
 
     scripts: {
       "chat": [
@@ -1180,11 +1607,21 @@ const ja: Messages = {
       }
 },
   hero: {
-    headline: "AIエージェントをあなたのデータと対話させよう",
-    sub: "Mochiはdatabaseをエージェントネイティブなワークスペースに変えます。1つのコマンドでテンプレートを作成し、自然言語でデータを操作し、安全にGitへコミットできます。",
+    headline: "チームとAIエージェントのための、ローカルファーストなデータワークスペース。サーバー費用はゼロ。",
+    sub: "CRM、人事、在庫管理など、社内ツールを何でも構築できます。コードもプロンプトも月額のサーバー費用も不要。手元のノートPCで動き、ピアツーピアで同期し、Claude・OpenCode・Hermes-Agent とそのまま連携します。",
+    badge: "ローカルファースト · ピアツーピア · AIネイティブ",
+    ctaPrimary: "はじめる",
+    ctaSecondary: "使い方を見る",
+    copyLabel: "インストールコマンドをコピー",
+    trust: [
+      { title: "サーバー不要。", desc: "データはあなたの端末に残ります。" },
+      { title: "ピアツーピア同期。", desc: "オフラインでも動作し、復帰時に同期します。" },
+      { title: "既定でプライベート。", desc: "通信は暗号化。データの所有者はあなたです。" },
+    ],
   },
   feat: {
     title: "エージェントがデータを扱うために必要なすべて",
+    sub: "Mochiは、表計算の手軽さ、データベースの性能、そしてAIの知性をひとつにまとめます。",
     items: [
       {
         title: "Claude・Codex・OpenCodeと自然に対話",
@@ -1200,6 +1637,7 @@ const ja: Messages = {
       },
     ],
   },
+  audit: { title: "ノーコードで、監査できる操作", desc: "エージェントの編集はフィールド単位で記録され、フィルターやグループ化はプロンプトではなくクリックで作れます。" },
   git: {
     title: "Git連携ストレージ制御とデータ履歴管理",
     items: [
@@ -1217,6 +1655,7 @@ const ja: Messages = {
   },
   flow: {
     title: "エージェントネイティブなワークスペースへの3ステップ",
+    sub: "数分で開始。サーバーも複雑な設定も不要です。",
     steps: [
       { title: "ワークスペースを初期化", desc: "既製テンプレートを選ぶだけ。Mochiがスキーマ・リレーション・サンプルデータを数秒で作成します。" },
       { title: "エージェントと対話", desc: "Claude・Codex・OpenCodeが型付きツールでデータを操作。SQLは不要です。" },
@@ -1224,13 +1663,14 @@ const ja: Messages = {
     ],
   },
   tpl: {
+    viewAll: "すべて見る →",
     title: "既製テンプレート、必要に応じてカスタマイズ",
     sub: "各テンプレートにはスキーマ・データリレーション・サンプルデータが付属。エージェントがすぐ動き出せて、あなたのニーズに合わせて簡単に調整できます。",
     items: [
-      "顧客、商談、対応履歴",
-      "従業員、部署、勤怠、評価",
-      "商品、在庫、リアルタイムの入出庫",
-      "タスク、進捗、メンバー、期限",
+      "顧客とのやり取りを集約して、成約数を伸ばす",
+      "人・役割・勤怠をひとつのワークスペースで管理",
+      "在庫・倉庫・入出庫をリアルタイムに把握",
+      "タスクを整理し、催促なしで期日どおりに届ける",
     ],
   },
   char: {
@@ -1239,16 +1679,36 @@ const ja: Messages = {
   },
   price: {
     title: "プランを選ぶ",
-    sub: "無料で始めて、必要になったらレベルアップ。",
+    sub: "プランはひとつ、支払いも一度きり。ずっとあなたのものです。",
     billed: "一度きりのお支払い。一度払えば、ずっと使えます。",
     popular: "一番人気",
+    forever: "/買い切り",
+    soon: "近日公開",
+    getPro: "Pro を購入 →",
     plans: [
       { tagline: "個人の趣味プロジェクト向け", features: ["ワークスペース3つ", "無料テンプレートのみ", "Gitバンドルデプロイ", "コミュニティサポート"] },
       { tagline: "個人開発者向け", features: ["ワークスペース無制限", "Mochi Table", "プレミアムテンプレート", "Gitバンドルデプロイ", "書き込み履歴とロールバック", "優先サポート"] },
     ],
   },
-  cta: { sub: "数秒でMochiをインストールして、最初のテンプレートから始めましょう。" },
-  footer: { tagline: "Claude・Codex・OpenCodeのためのエージェントネイティブなデータ相棒。" },
+  cta: { title: "データを整理する準備はできましたか？", sub: "数秒でMochiをインストールして、最初のテンプレートから始めましょう。", button: "はじめる →" },
+  footer: {
+    tagline: "Claude・Codex・OpenCodeのためのエージェントネイティブなデータ相棒。",
+    product: "プロダクト",
+    developer: "開発者",
+    company: "会社情報",
+    copyright: "チームとエージェントのためのデータワークスペース。",
+    status: "全システム正常稼働",
+  },
+  waitlist: {
+    title: "無料プランは近日公開",
+    sub: "公開日にメールでお知らせします。それ以外は送りません。",
+    placeholder: "you@company.com",
+    button: "通知を受け取る",
+    sending: "送信中…",
+    success: "登録が完了しました。",
+    error: "問題が発生しました。もう一度お試しください。",
+    invalid: "有効なメールアドレスを入力してください。",
+  },
   success: {
     title: "準備完了です！",
     sub: "Proライセンスはまもなくメールに届きます。Mochiをインストールしてワークスペースの構築を始めましょう。",
@@ -1260,6 +1720,51 @@ const ja: Messages = {
 };
 
 const zh: Messages = {
+  nav: {
+    product: "产品",
+    pricing: "价格",
+    docs: "文档",
+    changelog: "更新日志",
+    community: "社区",
+    howItWorks: "如何使用",
+    features: "功能",
+    templates: "模板",
+    repo: "GitHub 仓库",
+    repoHome: "GitHub — Home",
+    discussions: "讨论区",
+    mcp: "MCP 集成",
+    about: "关于 Mochi",
+    star: "在 GitHub 上加星",
+    menu: "菜单",
+    openMenu: "打开菜单",
+  },
+  eyebrow: {
+    flow: "如何使用",
+    feat: "功能",
+    views: "视图",
+    tpl: "模板",
+    char: "为什么选 Mochi",
+    compare: "对比 Excel + Copilot 与 Airtable",
+    price: "价格",
+    step: "步骤",
+  },
+  views: {
+    title: "同一份数据，团队需要的每一种视图",
+    sub: "表格、看板、日历、图库、图表 — 读取的都是同一批记录。切换视图不必复制数据，也不用重新搭一遍。",
+    shots: ["线索 — 按状态", "订单 — 按下单日期", "商品 — 卡片视图", "任务 — 按优先级", "线索 — 按来源"],
+  },
+  compare: {
+    yes: "支持",
+    no: "不支持",
+    rows: [
+      { feature: "AI 智能体原生读写你的数据", excel: "仅能建议公式", airtable: "", mochi: "" },
+      { feature: "数据存放位置", excel: "本地文件，不同步", airtable: "始终在他们的云上", mochi: "你的电脑或云端 — 你说了算" },
+      { feature: "无需服务器和账号即可运行", excel: "Copilot 需要微软账号", airtable: "", mochi: "" },
+      { feature: "每次写入都有版本、可追溯、可回滚", excel: "仅有撤销历史", airtable: "仅限付费套餐", mochi: "" },
+      { feature: "实时协作 — 队友与智能体", excel: "需要 Microsoft 365", airtable: "", mochi: "" },
+      { feature: "价格", excel: "按席位收费 + Copilot 加购", airtable: "按席位，按月付费", mochi: "19 美元买断，终身可用" },
+    ],
+  },
 
     scripts: {
       "chat": [
@@ -1416,11 +1921,21 @@ const zh: Messages = {
       }
 },
   hero: {
-    headline: "让你的 AI 智能体与数据对话",
-    sub: "Mochi 把 database 变成面向智能体的工作区：一条命令创建模板，用自然语言操作数据，并安全地提交到 Git。",
+    headline: "为团队和 AI 智能体打造的本地优先数据空间。服务器费用为零。",
+    sub: "搭建 CRM、人事、库存或任何内部工具 —— 不用写代码，不用写提示词，也没有每月的服务器账单。就在你的电脑上运行，点对点同步，并原生对接 Claude、OpenCode 和 Hermes-Agent。",
+    badge: "本地优先 · 点对点 · AI 原生",
+    ctaPrimary: "开始使用",
+    ctaSecondary: "看看怎么用",
+    copyLabel: "复制安装命令",
+    trust: [
+      { title: "无需服务器。", desc: "数据始终留在你自己的设备上。" },
+      { title: "点对点同步。", desc: "离线可用，恢复联网后自动同步。" },
+      { title: "默认私密。", desc: "传输全程加密，数据归你所有。" },
+    ],
   },
   feat: {
     title: "智能体处理数据所需的一切",
+    sub: "Mochi 把表格的简单、数据库的能力和 AI 的智能合到了一起。",
     items: [
       {
         title: "与 Claude、Codex 和 OpenCode 自然对话",
@@ -1436,6 +1951,7 @@ const zh: Messages = {
       },
     ],
   },
+  audit: { title: "可审计的无代码控制", desc: "智能体的每一次修改都会逐字段记录，筛选和分组用点击就能完成，不用写提示词。" },
   git: {
     title: "Git 驱动的存储控制与数据历史管理",
     items: [
@@ -1453,6 +1969,7 @@ const zh: Messages = {
   },
   flow: {
     title: "三步搭建面向智能体的工作区",
+    sub: "几分钟即可上手。无需服务器，无需复杂配置。",
     steps: [
       { title: "初始化工作区", desc: "选择一个预置模板。Mochi 在数秒内创建架构、关系和示例数据。" },
       { title: "与智能体对话", desc: "Claude、Codex 或 OpenCode 通过类型化工具操作数据——无需 SQL。" },
@@ -1460,13 +1977,14 @@ const zh: Messages = {
     ],
   },
   tpl: {
+    viewAll: "查看全部 →",
     title: "预置模板，按需定制",
     sub: "每个模板都自带架构、数据关系和示例数据——足以让智能体立即上手，又简单到可按你的需求调整。",
     items: [
-      "客户、销售机会、互动记录",
-      "人员、部门、考勤、评估",
-      "商品、库存、实时出入库",
-      "任务、进度、成员、截止日期",
+      "集中管理客户往来，提高成交率",
+      "在一个空间里管理人员、角色和考勤",
+      "实时掌握库存、仓库和出入库流水",
+      "协调任务，不用催也能按时交付",
     ],
   },
   char: {
@@ -1475,16 +1993,36 @@ const zh: Messages = {
   },
   price: {
     title: "选择你的方案",
-    sub: "免费开始，准备好再升级。",
+    sub: "一个套餐，一次付费，终身属于你。",
     billed: "一次性付款，一次购买，永久使用。",
     popular: "最受欢迎",
+    forever: "/永久",
+    soon: "即将推出",
+    getPro: "获取 Pro →",
     plans: [
       { tagline: "适合个人业余项目", features: ["3 个工作区", "仅限免费模板", "Git 包部署", "社区支持"] },
       { tagline: "适合独立开发者", features: ["无限工作区", "Mochi Table", "高级模板", "Git 包部署", "写入历史与回滚", "优先支持"] },
     ],
   },
-  cta: { sub: "几秒钟安装 Mochi，从你的第一个模板开始。" },
-  footer: { tagline: "面向 Claude、Codex 和 OpenCode 的智能体原生数据伙伴。" },
+  cta: { title: "准备好整理你的数据了吗？", sub: "几秒钟安装 Mochi，从你的第一个模板开始。", button: "开始使用 →" },
+  footer: {
+    tagline: "面向 Claude、Codex 和 OpenCode 的智能体原生数据伙伴。",
+    product: "产品",
+    developer: "开发者",
+    company: "公司",
+    copyright: "面向团队与智能体的数据工作空间。",
+    status: "所有系统运行正常",
+  },
+  waitlist: {
+    title: "免费套餐 — 即将推出",
+    sub: "开放当天我们会发邮件通知你，仅此而已。",
+    placeholder: "you@company.com",
+    button: "通知我",
+    sending: "发送中…",
+    success: "已加入名单。",
+    error: "出了点问题，请重试。",
+    invalid: "请输入有效的邮箱地址。",
+  },
   success: {
     title: "一切就绪！",
     sub: "你的 Pro 许可证正发送到你的邮箱。安装 Mochi，开始搭建你的工作区。",
@@ -1496,6 +2034,51 @@ const zh: Messages = {
 };
 
 const vi: Messages = {
+  nav: {
+    product: "Sản phẩm",
+    pricing: "Bảng giá",
+    docs: "Tài liệu",
+    changelog: "Nhật ký thay đổi",
+    community: "Cộng đồng",
+    howItWorks: "Cách hoạt động",
+    features: "Tính năng",
+    templates: "Mẫu có sẵn",
+    repo: "Kho GitHub",
+    repoHome: "GitHub — Home",
+    discussions: "Thảo luận",
+    mcp: "Tích hợp MCP",
+    about: "Về Mochi",
+    star: "Gắn sao trên GitHub",
+    menu: "Menu",
+    openMenu: "Mở menu",
+  },
+  eyebrow: {
+    flow: "Cách hoạt động",
+    feat: "Tính năng",
+    views: "Chế độ xem",
+    tpl: "Mẫu có sẵn",
+    char: "Vì sao chọn Mochi",
+    compare: "So với Excel + Copilot và Airtable",
+    price: "Bảng giá",
+    step: "Bước",
+  },
+  views: {
+    title: "Một bộ dữ liệu, đủ mọi cách nhìn mà team bạn cần",
+    sub: "Lưới, Kanban, Lịch, Thư viện, Biểu đồ — tất cả đọc cùng một tập bản ghi. Đổi cách xem mà không phải sao chép dữ liệu hay dựng lại từ đầu.",
+    shots: ["Khách tiềm năng — Theo trạng thái", "Đơn hàng — Theo ngày đặt", "Sản phẩm — Dạng thẻ", "Công việc — Theo mức ưu tiên", "Khách tiềm năng — Theo nguồn"],
+  },
+  compare: {
+    yes: "Có",
+    no: "Không",
+    rows: [
+      { feature: "Agent AI đọc và ghi dữ liệu một cách tự nhiên", excel: "Chỉ gợi ý công thức", airtable: "", mochi: "" },
+      { feature: "Dữ liệu nằm ở đâu", excel: "Tệp trên máy, không đồng bộ", airtable: "Luôn nằm trên cloud của họ", mochi: "Máy bạn hoặc cloud — bạn quyết" },
+      { feature: "Chạy được mà không cần server hay tài khoản", excel: "Copilot đòi tài khoản Microsoft", airtable: "", mochi: "" },
+      { feature: "Mọi thao tác ghi đều có phiên bản, truy vết và hoàn tác được", excel: "Chỉ có lịch sử hoàn tác", airtable: "Chỉ có ở gói trả phí", mochi: "" },
+      { feature: "Cộng tác thời gian thực — cả người lẫn agent", excel: "Cần Microsoft 365", airtable: "", mochi: "" },
+      { feature: "Giá", excel: "Theo đầu người + phụ phí Copilot", airtable: "Theo đầu người, hàng tháng", mochi: "19 $ một lần, dùng mãi mãi" },
+    ],
+  },
 
     scripts: {
       "chat": [
@@ -1652,11 +2235,21 @@ const vi: Messages = {
       }
 },
   hero: {
-    headline: "Không gian dữ liệu cho cả team, không tốn phí server",
-    sub: "Tự xây CRM, HR, kho vận hay bất kỳ công cụ nội bộ nào — không cần code, không cần prompt, không cần thuê server hàng tháng. Chạy ngay trên laptop, đồng bộ P2P với đồng đội, và tương thích sẵn với Claude, Codex, OpenCode.",
+    headline: "Không gian dữ liệu local-first cho team và agent AI của bạn. Không tốn một đồng phí server.",
+    sub: "Tự xây CRM, HR, kho vận hay bất kỳ công cụ nội bộ nào — không cần code, không cần prompt, không cần thuê server hàng tháng. Chạy ngay trên laptop, đồng bộ ngang hàng với đồng đội, và tương thích sẵn với Claude, OpenCode và Hermes-Agent.",
+    badge: "Local-first · Ngang hàng · Thuần AI",
+    ctaPrimary: "Bắt đầu",
+    ctaSecondary: "Xem cách hoạt động",
+    copyLabel: "Sao chép lệnh cài đặt",
+    trust: [
+      { title: "Không cần server.", desc: "Dữ liệu nằm lại trên máy của bạn." },
+      { title: "Đồng bộ ngang hàng.", desc: "Chạy offline. Có mạng lại là đồng bộ." },
+      { title: "Riêng tư mặc định.", desc: "Mã hoá khi truyền. Dữ liệu là của bạn." },
+    ],
   },
   feat: {
     title: "Một workspace cho cả team và AI agent của bạn",
+    sub: "Mochi gộp lại sự đơn giản của bảng tính, sức mạnh của cơ sở dữ liệu và trí thông minh của AI.",
     items: [
       {
         title: "Trò chuyện với Claude, Codex & OpenCode",
@@ -1680,6 +2273,7 @@ const vi: Messages = {
       },
     ],
   },
+  audit: { title: "Kiểm soát được, truy vết được, không cần code", desc: "Mọi thay đổi của agent đều được ghi lại theo từng trường, còn bộ lọc và nhóm thì tạo bằng cách bấm chuột chứ không phải viết prompt." },
   git: {
     title: "Kiểm soát lưu trữ DB trên Git & quản lý lịch sử dữ liệu",
     items: [
@@ -1697,6 +2291,7 @@ const vi: Messages = {
   },
   flow: {
     title: "Ba bước có ngay workspace cho team",
+    sub: "Vài phút là xong. Không server, không cấu hình rườm rà.",
     steps: [
       { title: "Cài đặt Mochi", desc: "Chỉ một lệnh. Miễn phí bắt đầu. Chạy trên Mac, Linux và Windows." },
       { title: "Chọn template", desc: "Bắt đầu từ CRM, HR, kho vận, dự án — hoặc canvas trắng tùy bạn." },
@@ -1704,13 +2299,14 @@ const vi: Messages = {
     ],
   },
   tpl: {
+    viewAll: "Xem tất cả →",
     title: "Template cho đúng công cụ team bạn cần",
     sub: "Dù bạn làm sales, HR, vận hành hay điều phối dự án — bắt đầu từ template có sẵn schema, quan hệ và dữ liệu mẫu. Tùy biến bằng ngôn ngữ đời thường, hoặc để agent làm hộ.",
     items: [
-      "Khách hàng, cơ hội bán hàng, lịch sử tương tác",
-      "Nhân sự, phòng ban, chấm công, đánh giá",
-      "Sản phẩm, tồn kho, nhập xuất thời gian thực",
-      "Task, tiến độ, thành viên, deadline",
+      "Gom mọi tương tác với khách về một chỗ để chốt đơn nhanh hơn",
+      "Quản lý nhân sự, vai trò và chấm công trong cùng một nơi",
+      "Theo dõi tồn kho, kho bãi và xuất nhập theo thời gian thực",
+      "Điều phối công việc, giao đúng hạn mà không phải đi giục",
     ],
   },
   char: {
@@ -1719,16 +2315,36 @@ const vi: Messages = {
   },
   price: {
     title: "Chọn gói của bạn",
-    sub: "Bắt đầu miễn phí. Nâng cấp khi team lớn hơn.",
+    sub: "Một gói, trả một lần, dùng mãi mãi.",
     billed: "Thanh toán một lần. Trả một lần, dùng mãi mãi.",
     popular: "PHỔ BIẾN NHẤT",
+    forever: "/trọn đời",
+    soon: "Sắp có",
+    getPro: "Mua Pro →",
     plans: [
       { tagline: "Cho dự án cá nhân", features: ["3 workspace", "Chỉ dùng template miễn phí", "Deploy bundle Git", "Hỗ trợ cộng đồng"] },
       { tagline: "Cho nhà phát triển cá nhân", features: ["Workspace không giới hạn", "Mochi Table", "Template cao cấp", "Deploy bundle Git", "Lịch sử ghi & rollback", "Hỗ trợ ưu tiên"] },
     ],
   },
-  cta: { sub: "Cài đặt Mochi trong vài giây — không server, không prompt, không lock-in." },
-  footer: { tagline: "Không gian dữ liệu cho cả team — không phí server, không lock-in, sẵn sàng cho AI." },
+  cta: { title: "Sẵn sàng sắp xếp lại dữ liệu chưa?", sub: "Cài đặt Mochi trong vài giây — không server, không prompt, không lock-in.", button: "Bắt đầu →" },
+  footer: {
+    tagline: "Không gian dữ liệu cho cả team — không phí server, không lock-in, sẵn sàng cho AI.",
+    product: "Sản phẩm",
+    developer: "Nhà phát triển",
+    company: "Công ty",
+    copyright: "Không gian dữ liệu cho team và agent.",
+    status: "Mọi hệ thống hoạt động bình thường",
+  },
+  waitlist: {
+    title: "Gói Free — sắp ra mắt",
+    sub: "Mở là chúng tôi gửi email cho bạn ngay. Không gửi gì khác.",
+    placeholder: "ban@congty.com",
+    button: "Báo tôi khi có",
+    sending: "Đang gửi…",
+    success: "Đã ghi tên bạn vào danh sách.",
+    error: "Có lỗi xảy ra. Vui lòng thử lại.",
+    invalid: "Vui lòng nhập email hợp lệ.",
+  },
   success: {
     title: "Xong rồi!",
     sub: "License Pro của bạn đang được gửi tới email. Cài Mochi và bắt đầu xây workspace của bạn.",

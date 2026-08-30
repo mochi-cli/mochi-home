@@ -306,8 +306,8 @@ export default function AINative() {
     },
     {
       n: "05",
-      title: "Auditable, no-code control",
-      desc: "Every agent edit is logged field by field, and filters or groups are built by clicking — not by prompting.",
+      title: m.audit.title,
+      desc: m.audit.desc,
       render: () => <AuditAndFilterPanel />,
     },
   ];
@@ -344,20 +344,19 @@ export default function AINative() {
   };
 
   return (
-    <section id="features" className="relative border-b border-border bg-secondary/30">
-      <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
+    <section id="features" className="relative">
+      <div className="mx-auto max-w-6xl px-6 py-20 md:py-24">
         <Reveal className="mb-14 text-center">
-          <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-violet">Features</p>
-          <h2 className="mx-auto mt-3 max-w-2xl text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+          <p className="eyebrow eyebrow-accent">{m.eyebrow.feat}</p>
+          <h2 className="mx-auto mt-3 max-w-2xl text-[length:var(--text-h2)] font-semibold tracking-tight text-foreground">
             {m.feat.title}
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-[15px] leading-relaxed text-muted-foreground">
-            Mochi combines the simplicity of a spreadsheet, the power of a database, and the
-            intelligence of AI.
+            {m.feat.sub}
           </p>
         </Reveal>
 
-        <Reveal>
+        <Reveal variant="soft">
           <div className="grid gap-10 lg:grid-cols-[300px_1fr] lg:gap-12">
             {/* left: numbered capability list — a short dashed connector marks
                 the gap between items so the list reads as one sequence */}
@@ -420,18 +419,17 @@ export default function AINative() {
         </Reveal>
 
         {/* the same records, whichever way the team wants to look at them */}
-        <Reveal>
+        <Reveal variant="soft">
           <div className="mt-8 rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-card)] sm:p-8">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="eyebrow">Views</p>
+                <p className="eyebrow">{m.eyebrow.views}</p>
                 <h3 className="mt-2 text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-                  One dataset, every view your team thinks in
+                  {m.views.title}
                 </h3>
               </div>
               <p className="max-w-md text-[13px] leading-relaxed text-muted-foreground">
-                Grid, Kanban, Calendar, Gallery, Chart — all read the same records. Switch views without
-                copying data or rebuilding a thing.
+                {m.views.sub}
               </p>
             </div>
 
@@ -439,35 +437,35 @@ export default function AINative() {
               <ProductShot
                 src="/product/view-kanban-status.png"
                 alt="Mochi kanban board — leads grouped by pipeline status, with a detail panel open"
-                title="Leads — By Status"
+                title={m.views.shots[0]}
                 width={2000}
                 height={1000}
               />
               <ProductShot
                 src="/product/view-calendar.png"
                 alt="Mochi calendar view — orders plotted by order date across the month"
-                title="Orders — By Order Date"
+                title={m.views.shots[1]}
                 width={2000}
                 height={1000}
               />
               <ProductShot
                 src="/product/view-gallery.png"
                 alt="Mochi gallery view — product cards with cover photos, pricing, and descriptions"
-                title="Products — Product Cards"
+                title={m.views.shots[2]}
                 width={2000}
                 height={1000}
               />
               <ProductShot
                 src="/product/view-grid-grouped.png"
                 alt="Mochi grid view — tasks grouped by priority with status and owner columns"
-                title="Tasks — Grouped by Priority"
+                title={m.views.shots[3]}
                 width={2000}
                 height={1000}
               />
               <ProductShot
                 src="/product/view-chart.png"
                 alt="Mochi bar chart — lead count by source, computed from the same records"
-                title="Leads — By Source"
+                title={m.views.shots[4]}
                 width={2000}
                 height={1000}
               />

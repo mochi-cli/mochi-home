@@ -22,7 +22,7 @@ export default function ProductShot({
 }) {
   return (
     <figure
-      className={`overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-lift)] ${className}`}
+      className={`overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-window)] ${className}`}
     >
       <div className="flex h-9 items-center gap-2 border-b border-border bg-secondary/70 px-4">
         <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />

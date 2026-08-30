@@ -43,7 +43,6 @@ type Cell = string | { label: string; tone: Tone };
 interface TemplateSpec {
   key: string;
   label: string;
-  desc: string;
   icon: ReactNode;
   workspace: string;
   view: string;
@@ -57,7 +56,6 @@ const TEMPLATES: TemplateSpec[] = [
   {
     key: "crm",
     label: "CRM",
-    desc: "Centralize customer interactions to close more deals",
     icon: <Users className="h-4 w-4" />,
     workspace: "Sales CRM",
     collections: ["Deals", "Customers", "Leads", "Interactions", "Tasks"],
@@ -73,7 +71,6 @@ const TEMPLATES: TemplateSpec[] = [
   {
     key: "hrm",
     label: "HRM",
-    desc: "Manage people, roles, and attendance in one workspace",
     icon: <BadgeCheck className="h-4 w-4" />,
     workspace: "People ops",
     collections: ["Employees", "Teams", "Attendance", "Reviews"],
@@ -89,7 +86,6 @@ const TEMPLATES: TemplateSpec[] = [
   {
     key: "inventory",
     label: "Inventory",
-    desc: "Track stock, warehouses, and in/out flow in real time",
     icon: <Box className="h-4 w-4" />,
     workspace: "Warehouse",
     collections: ["Products", "Stock", "Warehouses", "Movements"],
@@ -105,7 +101,6 @@ const TEMPLATES: TemplateSpec[] = [
   {
     key: "project",
     label: "Projects",
-    desc: "Coordinate tasks and ship on time without pinging",
     icon: <ListChecks className="h-4 w-4" />,
     workspace: "Delivery",
     collections: ["Tasks", "Sprints", "People", "Milestones"],
@@ -159,12 +154,12 @@ export default function Templates() {
   }, [active]);
 
   return (
-    <section id="templates" className="relative border-b border-border bg-background">
-      <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
+    <section id="templates" className="section-alt relative">
+      <div className="mx-auto max-w-7xl px-6 py-20 md:py-24">
         <Reveal className="mb-10 flex flex-col items-start gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="eyebrow">Templates</p>
-            <h2 className="mt-3 max-w-2xl text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            <p className="eyebrow">{m.eyebrow.tpl}</p>
+            <h2 className="mt-3 max-w-2xl text-[length:var(--text-h2)] font-semibold tracking-tight text-foreground">
               {m.tpl.title}
             </h2>
             <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
@@ -177,11 +172,11 @@ export default function Templates() {
             variant="outline"
             className="rounded-full"
           >
-            View all →
+            {m.tpl.viewAll}
           </Button>
         </Reveal>
 
-        <Reveal>
+        <Reveal variant="soft">
           <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-card)] sm:p-8">
             {/* Tab row — auto-cycles; hover pauses it */}
             <div
@@ -191,7 +186,7 @@ export default function Templates() {
               onMouseLeave={() => { pausedRef.current = false; }}
               className="grid gap-4 border-b border-border pb-2 sm:grid-cols-2 lg:grid-cols-4"
             >
-              {TEMPLATES.map((t) => {
+              {TEMPLATES.map((t, i) => {
                 const isActive = t.key === active;
                 return (
                   <button
@@ -215,7 +210,7 @@ export default function Templates() {
                         {t.label}
                       </span>
                     </div>
-                    <p className="text-[13px] leading-relaxed text-muted-foreground">{t.desc}</p>
+                    <p className="text-[13px] leading-relaxed text-muted-foreground">{m.tpl.items[i]}</p>
                     {/* progress track — fills over AUTO_MS while active, like a story bar */}
                     <span className="absolute inset-x-4 -bottom-[10px] h-[3px] overflow-hidden rounded-full bg-border" aria-hidden>
                       {isActive && (
@@ -228,7 +223,7 @@ export default function Templates() {
             </div>
 
             {/* Preview — dressed as a real app window so it reads like a product shot */}
-            <div ref={previewRef} className="mt-8 overflow-hidden rounded-2xl border border-border bg-secondary/30 shadow-[var(--shadow-lift)]">
+            <div ref={previewRef} className="mt-8 overflow-hidden rounded-[var(--radius-inset)] border border-border bg-background shadow-[var(--shadow-window)]">
               {/* window chrome */}
               <div className="flex h-9 items-center gap-2 border-b border-border bg-secondary/70 px-4">
                 <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />

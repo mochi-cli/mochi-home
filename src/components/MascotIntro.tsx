@@ -12,89 +12,65 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-type Cell = { kind: "yes" } | { kind: "no" } | { kind: "partial"; label: string } | { kind: "text"; label: string };
-interface Row {
-  feature: string;
-  excel: Cell;
-  airtable: Cell;
-  mochi: Cell;
-}
+type CellKind = "yes" | "no" | "partial" | "text";
 
-const ROWS: Row[] = [
-  {
-    feature: "AI agents read & write your data natively",
-    excel: { kind: "partial", label: "Suggests formulas only" },
-    airtable: { kind: "no" },
-    mochi: { kind: "yes" },
-  },
-  {
-    feature: "Where your data lives",
-    excel: { kind: "text", label: "Local file, no sync" },
-    airtable: { kind: "text", label: "Their cloud, always" },
-    mochi: { kind: "text", label: "Your laptop or the cloud — your call" },
-  },
-  {
-    feature: "Runs without a server or account",
-    excel: { kind: "partial", label: "Copilot needs a Microsoft account" },
-    airtable: { kind: "no" },
-    mochi: { kind: "yes" },
-  },
-  {
-    feature: "Every write is versioned, traceable & reversible",
-    excel: { kind: "partial", label: "Undo history only" },
-    airtable: { kind: "partial", label: "Paid tiers only" },
-    mochi: { kind: "yes" },
-  },
-  {
-    feature: "Real-time collab — teammates and agents",
-    excel: { kind: "partial", label: "Needs Microsoft 365" },
-    airtable: { kind: "yes" },
-    mochi: { kind: "yes" },
-  },
-  {
-    feature: "Pricing",
-    excel: { kind: "text", label: "Per seat + Copilot add-on" },
-    airtable: { kind: "text", label: "Per seat, monthly" },
-    mochi: { kind: "text", label: "$19 once, forever" },
-  },
+/** Only the *shape* of each cell lives here — which icon it gets and whether it
+ *  carries prose. The wording comes from m.compare.rows so it can be translated. */
+const ROW_KINDS: { excel: CellKind; airtable: CellKind; mochi: CellKind }[] = [
+  { excel: "partial", airtable: "no", mochi: "yes" },
+  { excel: "text", airtable: "text", mochi: "text" },
+  { excel: "partial", airtable: "no", mochi: "yes" },
+  { excel: "partial", airtable: "partial", mochi: "yes" },
+  { excel: "partial", airtable: "yes", mochi: "yes" },
+  { excel: "text", airtable: "text", mochi: "text" },
 ];
 
-function CellContent({ cell }: { cell: Cell }) {
-  if (cell.kind === "yes") {
+function CellContent({
+  kind,
+  label,
+  yes,
+  no,
+}: {
+  kind: CellKind;
+  label: string;
+  yes: string;
+  no: string;
+}) {
+  if (kind === "yes") {
     return (
       <span className="inline-flex items-center gap-1.5 text-[13px] font-medium text-brand-soft-foreground">
         <Check className="h-4 w-4 text-brand" />
-        Yes
+        {yes}
       </span>
     );
   }
-  if (cell.kind === "no") {
+  if (kind === "no") {
     return (
       <span className="inline-flex items-center gap-1.5 text-[13px] text-muted-foreground">
         <X className="h-4 w-4 text-muted-foreground/60" />
-        No
+        {no}
       </span>
     );
   }
-  if (cell.kind === "partial") {
+  if (kind === "partial") {
     return (
       <span className="inline-flex items-center gap-1.5 text-[13px] text-muted-foreground">
         <Minus className="h-4 w-4 text-muted-foreground/60" />
-        {cell.label}
+        {label}
       </span>
     );
   }
-  return <span className="text-[13px] text-foreground">{cell.label}</span>;
+  return <span className="text-[13px] text-foreground">{label}</span>;
 }
 
 export default function MascotIntro() {
   const { m } = useLang();
   return (
-    <section id="mochi" className="relative border-b border-border">
-      <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-28">
+    <section id="mochi" className="relative">
+      <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-24">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="eyebrow">Why Mochi</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+          <p className="eyebrow">{m.eyebrow.char}</p>
+          <h2 className="mt-3 text-[length:var(--text-h2)] font-semibold tracking-tight text-foreground">
             {m.char.title}
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground">
@@ -103,8 +79,8 @@ export default function MascotIntro() {
         </Reveal>
 
         {/* same section, same intro — just checked against the tools you're probably using today */}
-        <Reveal>
-          <p className="eyebrow mt-14 text-center">Versus Excel + Copilot, and Airtable</p>
+        <Reveal variant="soft">
+          <p className="eyebrow mt-14 text-center">{m.eyebrow.compare}</p>
           <div className="mt-6 overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-card)]">
             <div className="overflow-x-auto">
               <Table className="min-w-[640px]">
@@ -119,20 +95,24 @@ export default function MascotIntro() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {ROWS.map((r) => (
+                  {m.compare.rows.map((r, i) => {
+                    const kinds = ROW_KINDS[i];
+                    const words = { yes: m.compare.yes, no: m.compare.no };
+                    return (
                     <TableRow key={r.feature}>
                       <TableCell className="text-[13px] font-medium text-foreground">{r.feature}</TableCell>
                       <TableCell>
-                        <CellContent cell={r.excel} />
+                        <CellContent kind={kinds.excel} label={r.excel} {...words} />
                       </TableCell>
                       <TableCell>
-                        <CellContent cell={r.airtable} />
+                        <CellContent kind={kinds.airtable} label={r.airtable} {...words} />
                       </TableCell>
                       <TableCell className="bg-brand-soft/40">
-                        <CellContent cell={r.mochi} />
+                        <CellContent kind={kinds.mochi} label={r.mochi} {...words} />
                       </TableCell>
                     </TableRow>
-                  ))}
+                    );
+                  })}
                 </TableBody>
               </Table>
             </div>

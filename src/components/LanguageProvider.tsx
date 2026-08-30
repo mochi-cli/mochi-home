@@ -20,16 +20,27 @@ const LangContext = createContext<LangValue>({
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<LocaleCode>(DEFAULT_LOCALE);
 
-  // Hydrate the saved locale from localStorage on mount. We intentionally start
-  // from DEFAULT_LOCALE on the server + first client render to avoid a hydration
-  // mismatch, then sync to the stored preference.
+  // Resolve the locale on mount from ?lang= first, then the stored preference.
+  // The URL wins so a shared /?lang=vi link renders Vietnamese even for a visitor
+  // whose last visit picked something else -- those are the URLs advertised by
+  // the hreflang alternates in layout.tsx and by sitemap.ts.
+  // We intentionally start from DEFAULT_LOCALE on the server + first client render
+  // to avoid a hydration mismatch, then sync.
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY) as LocaleCode | null;
-    if (saved && saved in messages && saved !== DEFAULT_LOCALE) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing from external store (localStorage)
-      setLocaleState(saved);
-      document.documentElement.lang = saved;
-    }
+    const fromUrl = new URLSearchParams(window.location.search).get("lang");
+    const stored = localStorage.getItem(STORAGE_KEY);
+    const next = [fromUrl, stored].find(
+      (l): l is LocaleCode => !!l && l in messages,
+    );
+    if (!next) return;
+
+    // An explicit ?lang= is a choice, so remember it for the next visit.
+    if (next === fromUrl) localStorage.setItem(STORAGE_KEY, next);
+    if (next === DEFAULT_LOCALE) return;
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing from external stores (URL + localStorage)
+    setLocaleState(next);
+    document.documentElement.lang = next;
   }, []);
 
   const setLocale = (l: LocaleCode) => {

@@ -3,6 +3,7 @@
 import { Fragment, useState } from "react";
 import Reveal from "./Reveal";
 import { useLang } from "./LanguageProvider";
+import { copyText } from "@/lib/copy";
 import { useEngine } from "./EngineProvider";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,8 +17,8 @@ const stepMeta = [
 
 function CopyableCommand({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
-  const handleCopy = () => {
-    navigator.clipboard.writeText(text);
+  const handleCopy = async () => {
+    if (!(await copyText(text))) return;
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -55,22 +56,22 @@ export default function Workflow() {
   const { m } = useLang();
   const { installCommand } = useEngine();
   return (
-    <section id="workflow" className="relative border-b border-border">
-      <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-28">
+    <section id="workflow" className="section-alt relative">
+      <div className="relative mx-auto max-w-6xl px-6 py-14 md:py-16">
         <Reveal className="mb-12">
-          <p className="text-[13px] font-semibold uppercase tracking-[0.08em] text-violet">How it works</p>
-          <h2 className="mt-3 max-w-3xl text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+          <p className="eyebrow eyebrow-accent">{m.eyebrow.flow}</p>
+          <h2 className="mt-3 max-w-3xl text-[length:var(--text-h2)] font-semibold tracking-tight text-foreground">
             {m.flow.title}
           </h2>
           <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted-foreground">
-            Get started in minutes. No servers, no complex setup.
+            {m.flow.sub}
           </p>
         </Reveal>
 
         <div className="flex flex-col gap-5 md:flex-row md:items-stretch">
           {stepMeta.map((s, i) => (
             <Fragment key={s.n}>
-              <Reveal className="min-w-0 md:flex-1" delay={i * 100}>
+              <Reveal className="min-w-0 md:flex-1" delay={i * 100} variant="soft">
                 <Card className="flex h-full min-w-0 flex-col p-7">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
@@ -85,7 +86,7 @@ export default function Workflow() {
                         <s.icon className="h-4.5 w-4.5" />
                       </span>
                     </div>
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-violet">Step {s.n}</span>
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-violet">{m.eyebrow.step} {s.n}</span>
                   </div>
                   {/* grows to fill the leftover space so every card's command
                       chip lands on the same baseline, no matter how much the

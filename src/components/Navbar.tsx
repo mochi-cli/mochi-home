@@ -18,23 +18,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import LangSwitcher from "./LangSwitcher";
+import { useLang } from "./LanguageProvider";
 
-const productLinks = [
-  { href: "#workflow", label: "How it works" },
-  { href: "#features", label: "Features" },
-  { href: "#templates", label: "Templates" },
-];
-
-const communityLinks = [
-  { href: "https://github.com/mochi-cli/mochi", label: "GitHub repo" },
-  { href: "https://github.com/mochi-cli/mochi/discussions", label: "Discussions" },
-];
-
-const flatLinks = [
-  { href: "#pricing", label: "Pricing" },
-  { href: "https://github.com/mochi-cli/mochi", label: "Docs", external: true },
-  { href: "https://github.com/mochi-cli/mochi/releases", label: "Changelog", external: true },
-];
+/** 1234 -> "1.2k"; anything under a thousand stays exact. */
+function formatStars(n: number) {
+  return n >= 1000 ? `${(n / 1000).toFixed(1).replace(/\.0$/, "")}k` : String(n);
+}
 
 function Logo() {
   return (
@@ -44,8 +33,26 @@ function Logo() {
   );
 }
 
-export default function Navbar() {
+export default function Navbar({ stars }: { stars?: number | null }) {
   const [open, setOpen] = useState(false);
+  const { m } = useLang();
+
+  const productLinks = [
+    { href: "#workflow", label: m.nav.howItWorks },
+    { href: "#features", label: m.nav.features },
+    { href: "#templates", label: m.nav.templates },
+  ];
+
+  const communityLinks = [
+    { href: "https://github.com/mochi-cli/mochi", label: m.nav.repo },
+    { href: "https://github.com/mochi-cli/mochi/discussions", label: m.nav.discussions },
+  ];
+
+  const flatLinks = [
+    { href: "#pricing", label: m.nav.pricing },
+    { href: "https://github.com/mochi-cli/mochi", label: m.nav.docs, external: true },
+    { href: "https://github.com/mochi-cli/mochi/releases", label: m.nav.changelog, external: true },
+  ];
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur">
@@ -59,7 +66,7 @@ export default function Navbar() {
                 <button className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[15px] font-medium text-foreground transition-colors hover:bg-secondary" />
               }
             >
-              Product
+              {m.nav.product}
               <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -88,7 +95,7 @@ export default function Navbar() {
                 <button className="flex items-center gap-1 rounded-lg px-3 py-1.5 text-[15px] font-medium text-foreground transition-colors hover:bg-secondary" />
               }
             >
-              Community
+              {m.nav.community}
               <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -115,14 +122,19 @@ export default function Navbar() {
             className="hidden h-9 gap-1.5 rounded-lg px-3.5 text-[15px] sm:inline-flex"
           >
             <Star className="h-4 w-4" />
-            Star on GitHub
+            {m.nav.star}
+            {typeof stars === "number" && (
+              <span className="ml-0.5 rounded bg-secondary px-1.5 py-0.5 text-[13px] font-medium tabular-nums text-muted-foreground">
+                {formatStars(stars)}
+              </span>
+            )}
           </Button>
           <Button
             variant="outline"
             size="icon"
             className="rounded-full md:hidden"
             onClick={() => setOpen(true)}
-            aria-label="Open menu"
+            aria-label={m.nav.openMenu}
           >
             <Menu className="h-4 w-4" />
           </Button>
@@ -132,7 +144,7 @@ export default function Navbar() {
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="right">
           <SheetHeader>
-            <SheetTitle>Menu</SheetTitle>
+            <SheetTitle>{m.nav.menu}</SheetTitle>
           </SheetHeader>
           <div className="flex flex-col gap-1 px-4">
             {[...productLinks, ...flatLinks, ...communityLinks].map((link) => (
@@ -156,7 +168,7 @@ export default function Navbar() {
               className="gap-1.5 rounded-full px-4"
             >
               <Star className="h-4 w-4" />
-              Star on GitHub
+              {m.nav.star}
             </Button>
           </div>
         </SheetContent>
