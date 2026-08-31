@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import TrustStrip from "@/components/TrustStrip";
 import Workflow from "@/components/Workflow";
 import AINative from "@/components/AINative";
 import Templates from "@/components/Templates";
@@ -39,8 +40,9 @@ export default async function Home() {
     <div className="flex flex-1 flex-col bg-background font-sans">
       <Navbar stars={stars} />
       <main className="flex-1">
-        {/* 1. Hook — giới thiệu sản phẩm + demo multi-user */}
+        {/* 1. Hook — giới thiệu sản phẩm + demo agent */}
         <Hero />
+        <TrustStrip />
 
         {/* 2. How it works — 3 bước sử dụng */}
         <Workflow />

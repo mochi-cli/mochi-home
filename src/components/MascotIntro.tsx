@@ -69,8 +69,7 @@ export default function MascotIntro() {
     <section id="mochi" className="relative">
       <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-24">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="eyebrow">{m.eyebrow.char}</p>
-          <h2 className="mt-3 text-[length:var(--text-h2)] font-semibold tracking-tight text-foreground">
+          <h2 className="text-[length:var(--text-h2)] font-semibold tracking-tight text-foreground">
             {m.char.title}
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground">
@@ -78,9 +77,9 @@ export default function MascotIntro() {
           </p>
         </Reveal>
 
-        {/* same section, same intro — just checked against the tools you're probably using today */}
+        {/* the same intro, checked against the tools you're probably using today */}
         <Reveal variant="soft">
-          <p className="eyebrow mt-14 text-center">{m.eyebrow.compare}</p>
+          <p className="mt-14 text-center text-sm font-medium text-muted-foreground">{m.eyebrow.compare}</p>
           <div className="mt-6 overflow-hidden rounded-3xl border border-border bg-card shadow-[var(--shadow-card)]">
             <div className="overflow-x-auto">
               <Table className="min-w-[640px]">

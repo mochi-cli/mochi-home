@@ -71,10 +71,12 @@
      One hero size, one section size, one finale size. The page used to run every
      h2 at the same 38px with a 51px h1 above them — a 1.33 ratio across seven
      sections, which gives the eye no way to tell the opening from the middle. */
-  /* Capped so the install command — the page's real primary action — still
+  /* Capped so the install command, the page's real primary action, still
      clears the fold on a 1280x800 laptop. A larger headline pushed it to
-     813px in an 800px viewport. */
-  --text-hero: clamp(2.25rem, 1.3rem + 3.3vw, 3.35rem);
+     813px in an 800px viewport. The gentler vw term also keeps the headline
+     from ballooning to four or five lines in the 640-1024px single-column
+     range, where the copy has no second column to sit beside. */
+  --text-hero: clamp(2.1rem, 1.4rem + 2.4vw, 3.3rem);
   --text-h2: clamp(1.65rem, 1.35rem + 1.1vw, 2rem);
   --text-h2-finale: clamp(2rem, 1.4rem + 2.6vw, 3rem);
 

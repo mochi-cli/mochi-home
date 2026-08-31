@@ -2,15 +2,12 @@
 
 import { useState } from "react";
 import { track } from "@vercel/analytics";
-import { Check, Copy, Lock, Play, RefreshCw, ShieldCheck } from "lucide-react";
+import { Check, Copy, Play } from "lucide-react";
 import { useLang } from "./LanguageProvider";
 import { useEngine, ALL_ENGINES } from "./EngineProvider";
 import { Button } from "@/components/ui/button";
 import HeroStage from "./HeroStage";
 import { copyText } from "@/lib/copy";
-
-/** Icons stay here (presentation); the copy lives in i18n and is zipped in by index. */
-const TRUST_ICONS = [Lock, RefreshCw, ShieldCheck];
 
 /** Splits a headline into its lead clause and a final highlighted clause,
  *  e.g. "Do the thing. Skip the rest." → lead "Do the thing.", tail "Skip the rest."
@@ -51,7 +48,7 @@ export default function Hero() {
             {m.hero.badge}
           </span>
 
-          <h1 className="mx-auto mt-6 max-w-2xl text-balance text-[length:var(--text-hero)] font-semibold leading-[1.06] tracking-[-0.03em] text-foreground lg:mx-0">
+          <h1 className="mx-auto mt-6 max-w-xl text-balance text-[length:var(--text-hero)] font-semibold leading-[1.06] tracking-[-0.03em] text-foreground lg:mx-0">
             {lead}
             {tail && <span className="text-violet">{tail}</span>}
           </h1>
@@ -61,8 +58,8 @@ export default function Hero() {
 
           {/* install command — the primary action, so it gets the visual weight */}
           <div className="mt-8 flex justify-center lg:justify-start">
-            <div className="flex max-w-full items-center gap-3 rounded-xl border border-border bg-card py-2 pl-4 pr-2 shadow-sm">
-              <code className="mono min-w-0 overflow-x-auto whitespace-nowrap text-[15px] text-foreground">
+            <div className="flex w-full items-center gap-3 rounded-xl border border-border bg-card py-2 pl-4 pr-2 shadow-sm sm:w-auto sm:max-w-full">
+              <code className="mono min-w-0 flex-1 whitespace-pre-wrap break-all text-[13px] text-foreground sm:flex-none sm:overflow-x-auto sm:whitespace-nowrap sm:break-normal sm:text-[14px]">
                 <span className="mr-1.5 select-none text-muted-foreground">$</span>
                 {installCommand}
               </code>
@@ -110,19 +107,6 @@ export default function Hero() {
             <Button render={<a href="#pricing" />} nativeButton={false} className="h-9 rounded-lg bg-violet px-4 text-[15px] text-violet-foreground hover:bg-violet/90">
               {m.hero.ctaPrimary}
             </Button>
-          </div>
-
-          <div className="mt-10 grid gap-6 border-t border-border pt-8 sm:grid-cols-3 lg:text-left">
-            {m.hero.trust.map((t, i) => {
-              const Icon = TRUST_ICONS[i];
-              return (
-              <div key={t.title} className="flex flex-col items-center gap-1.5 sm:items-start">
-                <Icon className="h-4 w-4 text-muted-foreground" />
-                <p className="text-[13px] font-semibold text-foreground">{t.title}</p>
-                <p className="text-[12px] leading-snug text-muted-foreground">{t.desc}</p>
-              </div>
-              );
-            })}
           </div>
         </div>
 

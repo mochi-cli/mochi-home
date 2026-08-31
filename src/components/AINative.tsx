@@ -421,14 +421,11 @@ export default function AINative() {
         {/* the same records, whichever way the team wants to look at them */}
         <Reveal variant="soft">
           <div className="mt-8 rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-card)] sm:p-8">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="eyebrow">{m.eyebrow.views}</p>
-                <h3 className="mt-2 text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-                  {m.views.title}
-                </h3>
-              </div>
-              <p className="max-w-md text-[13px] leading-relaxed text-muted-foreground">
+            <div className="max-w-2xl">
+              <h3 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+                {m.views.title}
+              </h3>
+              <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
                 {m.views.sub}
               </p>
             </div>
@@ -436,35 +433,35 @@ export default function AINative() {
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <ProductShot
                 src="/product/view-kanban-status.png"
-                alt="Mochi kanban board — leads grouped by pipeline status, with a detail panel open"
+                alt="Mochi kanban board: leads grouped by pipeline status, with a detail panel open"
                 title={m.views.shots[0]}
                 width={2000}
                 height={1000}
               />
               <ProductShot
                 src="/product/view-calendar.png"
-                alt="Mochi calendar view — orders plotted by order date across the month"
+                alt="Mochi calendar view: orders plotted by order date across the month"
                 title={m.views.shots[1]}
                 width={2000}
                 height={1000}
               />
               <ProductShot
                 src="/product/view-gallery.png"
-                alt="Mochi gallery view — product cards with cover photos, pricing, and descriptions"
+                alt="Mochi gallery view: product cards with cover photos, pricing, and descriptions"
                 title={m.views.shots[2]}
                 width={2000}
                 height={1000}
               />
               <ProductShot
                 src="/product/view-grid-grouped.png"
-                alt="Mochi grid view — tasks grouped by priority with status and owner columns"
+                alt="Mochi grid view: tasks grouped by priority with status and owner columns"
                 title={m.views.shots[3]}
                 width={2000}
                 height={1000}
               />
               <ProductShot
                 src="/product/view-chart.png"
-                alt="Mochi bar chart — lead count by source, computed from the same records"
+                alt="Mochi bar chart: lead count by source, computed from the same records"
                 title={m.views.shots[4]}
                 width={2000}
                 height={1000}

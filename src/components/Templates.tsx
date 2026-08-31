@@ -92,9 +92,9 @@ const TEMPLATES: TemplateSpec[] = [
     view: "Products / Low stock",
     cols: ["SKU", "Product", "Stock", "Status"],
     rows: [
-      ["SKU-001", "Ceramic mug — matte white",     "42",  { label: "In stock",    tone: "brand"   }],
-      ["SKU-014", "Notebook A5 — dot grid",        "8",   { label: "Low stock",   tone: "outline" }],
-      ["SKU-027", "Cable tidy strap — pack of 5",  "0",   { label: "Backorder",   tone: "neutral" }],
+      ["SKU-001", "Ceramic mug, matte white",      "42",  { label: "In stock",    tone: "brand"   }],
+      ["SKU-014", "Notebook A5, dot grid",         "8",   { label: "Low stock",   tone: "outline" }],
+      ["SKU-027", "Cable tidy strap, pack of 5",   "0",   { label: "Backorder",   tone: "neutral" }],
       ["SKU-039", "Coffee dripper V60",            "126", { label: "In stock",    tone: "brand"   }],
     ],
   },
@@ -158,8 +158,7 @@ export default function Templates() {
       <div className="mx-auto max-w-7xl px-6 py-20 md:py-24">
         <Reveal className="mb-10 flex flex-col items-start gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="eyebrow">{m.eyebrow.tpl}</p>
-            <h2 className="mt-3 max-w-2xl text-[length:var(--text-h2)] font-semibold tracking-tight text-foreground">
+            <h2 className="max-w-2xl text-[length:var(--text-h2)] font-semibold tracking-tight text-foreground">
               {m.tpl.title}
             </h2>
             <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
@@ -230,7 +229,7 @@ export default function Templates() {
                 <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
                 <span className="h-3 w-3 rounded-full bg-[#28c840]" />
                 <span className="ml-3 truncate text-[11px] text-muted-foreground">
-                  {activeTpl.workspace} — Mochi
+                  {activeTpl.workspace} · Mochi
                 </span>
               </div>
 

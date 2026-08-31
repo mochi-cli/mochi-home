@@ -18,11 +18,11 @@ const geistMono = Geist_Mono({
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mochi-cli.com";
 const TWITTER_HANDLE = process.env.NEXT_PUBLIC_TWITTER_HANDLE ?? "";
 
-const TITLE = "Mochi — The local-first data workspace for your team and AI agents";
+const TITLE = "Mochi · The local-first data workspace for your team and AI agents";
 const DESCRIPTION =
-  "Build CRM, HR, inventory, or any internal tool — no code, no prompts, no monthly server fees. Runs on your laptop, syncs peer-to-peer, and works natively with Claude, Codex, and OpenCode.";
+  "Build a CRM, HR tracker, inventory, or any internal tool. No code, no prompts, no monthly server fees. Runs on your laptop, syncs peer-to-peer, and works natively with Claude, Codex, and OpenCode.";
 const SHORT_DESCRIPTION =
-  "The local-first data workspace for your team and AI agents. Zero server bills — agent-native via MCP, peer-to-peer sync.";
+  "The local-first data workspace for your team and AI agents. Zero server bills, agent-native via MCP, peer-to-peer sync.";
 
 const LOCALES = ["en", "es", "fr", "de", "ja", "zh", "vi"] as const;
 const OG_LOCALE_MAP: Record<(typeof LOCALES)[number], string> = {
@@ -104,7 +104,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Mochi — the local-first data workspace for your team and AI agents",
+        alt: "Mochi, the local-first data workspace for your team and AI agents",
         type: "image/png",
       },
     ],
@@ -113,7 +113,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: TITLE,
     description: SHORT_DESCRIPTION,
-    images: [{ url: "/og-image.png", alt: "Mochi — the local-first data workspace for your team and AI agents" }],
+    images: [{ url: "/og-image.png", alt: "Mochi, the local-first data workspace for your team and AI agents" }],
     ...(TWITTER_HANDLE ? { site: TWITTER_HANDLE, creator: TWITTER_HANDLE } : {}),
   },
   robots: {
