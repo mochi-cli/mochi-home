@@ -35,8 +35,16 @@ export async function GET(request: Request) {
     // A callback this browser did not start. Consuming the state above means a
     // replay of the same link fails too.
     if (!expected || expected !== ourCode.slice(4)) return back('failed');
-    const account = await upsertAccount(email);
-    await startWebSession(account.id);
+    try {
+      const account = await upsertAccount(email);
+      await startWebSession(account.id);
+    } catch (error) {
+      // Everything else in this flow answers with a page. Letting the database
+      // throw through here means somebody who did nothing wrong gets a raw 500
+      // at the end of a sign-in, with nothing to do about it.
+      console.error('[service] web sign-in failed', error);
+      return back('failed');
+    }
     return NextResponse.redirect(`${env.origin}/profile`);
   }
 

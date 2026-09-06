@@ -56,6 +56,7 @@ export interface Messages {
     about: string;
     star: string;
     login: string;
+    account: string;
     menu: string;
     openMenu: string;
   };
@@ -149,6 +150,7 @@ const en: Messages = {
     about: "About Mochi",
     star: "Star on GitHub",
     login: "Log in",
+    account: "Account",
     menu: "Menu",
     openMenu: "Open menu",
   },
@@ -509,6 +511,7 @@ const es: Messages = {
     about: "Sobre Mochi",
     star: "Marcar en GitHub",
     login: "Iniciar sesión",
+    account: "Cuenta",
     menu: "Menú",
     openMenu: "Abrir menú",
   },
@@ -837,6 +840,7 @@ const fr: Messages = {
     about: "À propos de Mochi",
     star: "Star sur GitHub",
     login: "Se connecter",
+    account: "Compte",
     menu: "Menu",
     openMenu: "Ouvrir le menu",
   },
@@ -1165,6 +1169,7 @@ const de: Messages = {
     about: "Über Mochi",
     star: "Auf GitHub starren",
     login: "Anmelden",
+    account: "Konto",
     menu: "Menü",
     openMenu: "Menü öffnen",
   },
@@ -1493,6 +1498,7 @@ const ja: Messages = {
     about: "Mochi について",
     star: "GitHub でスターを付ける",
     login: "ログイン",
+    account: "アカウント",
     menu: "メニュー",
     openMenu: "メニューを開く",
   },
@@ -1821,6 +1827,7 @@ const zh: Messages = {
     about: "关于 Mochi",
     star: "在 GitHub 上加星",
     login: "登录",
+    account: "账户",
     menu: "菜单",
     openMenu: "打开菜单",
   },
@@ -2149,6 +2156,7 @@ const vi: Messages = {
     about: "Về Mochi",
     star: "Gắn sao trên GitHub",
     login: "Đăng nhập",
+    account: "Tài khoản",
     menu: "Menu",
     openMenu: "Mở menu",
   },

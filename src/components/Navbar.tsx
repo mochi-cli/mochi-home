@@ -8,10 +8,12 @@ import { Menu, X } from "lucide-react";
 import LangSwitcher from "./LangSwitcher";
 import { useLang } from "./LanguageProvider";
 import { DOWNLOAD_URL } from "@/lib/links";
+import { useSession } from "./useSession";
 
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const session = useSession();
 
   // Scroll lock while the sheet is up, so the page does not slide underneath
   // it on iOS, and Escape to close, because a full screen panel with no key to
@@ -66,12 +68,27 @@ export default function Navbar() {
           <div className="hidden sm:block">
             <LangSwitcher />
           </div>
-          <a
-            href="/profile"
-            className="hidden h-8 items-center rounded-[var(--r)] border border-line-strong px-3 text-[15px] text-ink transition-colors hover:bg-paper-sunk sm:inline-flex"
-          >
-            {m.nav.login}
-          </a>
+          {/* Nothing until the answer arrives: showing "Log in" to somebody
+              who is already signed in and then correcting it is worse than a
+              beat of empty space. */}
+          {session && (
+            <div className="hidden items-center gap-4 sm:flex">
+              {session.signedIn && session.plan === "free" && (
+                <a
+                  href="/profile"
+                  className="inline-flex h-8 items-center rounded-[var(--r)] bg-ink px-3 text-[15px] text-ink-inv transition-opacity hover:opacity-88"
+                >
+                  {m.price.cta}
+                </a>
+              )}
+              <a
+                href="/profile"
+                className="inline-flex h-8 items-center rounded-[var(--r)] border border-line-strong px-3 text-[15px] text-ink transition-colors hover:bg-paper-sunk"
+              >
+                {session.signedIn ? m.nav.account : m.nav.login}
+              </a>
+            </div>
+          )}
           <button
             onClick={() => setOpen(true)}
             aria-label={m.nav.openMenu}
@@ -122,8 +139,18 @@ export default function Navbar() {
               onClick={() => setOpen(false)}
               className="border-b border-line py-4 text-xl font-[380] tracking-[-0.02em] text-ink"
             >
-              {m.nav.login}
+              {session?.signedIn ? m.nav.account : m.nav.login}
             </a>
+
+            {session?.signedIn && session.plan === "free" && (
+              <a
+                href="/profile"
+                onClick={() => setOpen(false)}
+                className="border-b border-line py-4 text-xl font-[380] tracking-[-0.02em] text-ink"
+              >
+                {m.price.cta}
+              </a>
+            )}
 
             <a
               href={DOWNLOAD_URL}
