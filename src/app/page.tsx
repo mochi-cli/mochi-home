@@ -4,6 +4,7 @@ import TrustStrip from "@/components/TrustStrip";
 import AINative from "@/components/AINative";
 import Views from "@/components/Views";
 import Templates from "@/components/Templates";
+import Speed from "@/components/Speed";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import Pricing from "@/components/Pricing";
@@ -32,6 +33,9 @@ export default async function Home() {
 
         {/* what you start from */}
         <Templates />
+
+        {/* light, fast, and cheap for an agent to ask questions of */}
+        <Speed />
 
         <Pricing plans={plans} />
 
