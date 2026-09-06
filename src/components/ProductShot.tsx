@@ -1,7 +1,8 @@
 import Image from "next/image";
 
-/** A real screenshot of the Mochi app, dressed in the same window chrome the
- *  component-built previews use so captures and mockups read as one system. */
+/** A real screenshot of the Mochi app on a canvas panel. No fake window chrome:
+ *  the traffic lights added nothing the screenshot did not already say, and the
+ *  caption sits outside the image so it reads as a label, not an overlay. */
 export default function ProductShot({
   src,
   alt,
@@ -10,37 +11,36 @@ export default function ProductShot({
   height,
   priority = false,
   className = "",
+  imgClassName = "",
+  sizes = "(max-width: 1024px) 88vw, 420px",
 }: {
   src: string;
   alt: string;
-  /** shown in the window title bar */
+  /** short functional label shown under the shot */
   title?: string;
   width: number;
   height: number;
   priority?: boolean;
   className?: string;
+  imgClassName?: string;
+  sizes?: string;
 }) {
   return (
-    <figure
-      className={`overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-window)] ${className}`}
-    >
-      <div className="flex h-9 items-center gap-2 border-b border-border bg-secondary/70 px-4">
-        <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-        <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
-        <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-        {title && (
-          <figcaption className="ml-3 truncate text-[11px] text-muted-foreground">{title}</figcaption>
-        )}
+    <figure className={className}>
+      <div className="canvas">
+        <Image
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
+          priority={priority}
+          sizes={sizes}
+          className={`block h-auto w-full ${imgClassName}`}
+        />
       </div>
-      <Image
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        priority={priority}
-        sizes="(max-width: 1024px) 100vw, 640px"
-        className="block h-auto w-full"
-      />
+      {title && (
+        <figcaption className="mt-3 text-[14px] text-ink-2">{title}</figcaption>
+      )}
     </figure>
   );
 }

@@ -2,14 +2,14 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Mochi — Your team's data workspace",
+    name: "Mochi · Your team's data workspace",
     short_name: "Mochi",
     description:
-      "Build CRM, HR, inventory, or any internal tool — no code, no prompts, no monthly server fees.",
+      "Build a customer list, a hiring tracker, anything your team needs. It all lives on your own computer.",
     start_url: "/",
     display: "standalone",
-    background_color: "#f2f2f0",
-    theme_color: "#131313",
+    background_color: "#f0efe4",
+    theme_color: "#0a0a0a",
     orientation: "portrait-primary",
     icons: [
       {

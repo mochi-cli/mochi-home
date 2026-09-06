@@ -4,14 +4,11 @@ import { Suspense, useEffect } from "react";
 import { track } from "@vercel/analytics";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { CheckCircle2 } from "lucide-react";
 import { useLang } from "@/components/LanguageProvider";
-import { useEngine } from "@/components/EngineProvider";
-import { Button } from "@/components/ui/button";
+import { DOWNLOAD_URL, REPO_URL } from "@/lib/links";
 
 function SuccessContent() {
   const { m } = useLang();
-  const { installCommand } = useEngine();
   const searchParams = useSearchParams();
   const checkoutId = searchParams.get("checkout_id");
 
@@ -22,44 +19,43 @@ function SuccessContent() {
   }, []);
 
   return (
-    <section className="bg-mesh-neutral relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-20">
-      <div className="relative mx-auto max-w-lg text-center">
-        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-brand-soft">
-          <CheckCircle2 className="h-8 w-8 text-brand-soft-foreground" />
-        </div>
-
-        <h1 className="text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-5xl">
-          {m.success.title}
-        </h1>
-        <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-muted-foreground">
-          {m.success.sub}
-        </p>
+    <section className="flex min-h-[100dvh] items-center px-5 py-24 sm:px-8">
+      <div className="mx-auto w-full max-w-[46rem]">
+        <h1 className="display max-w-[14ch]">{m.success.title}</h1>
+        <p className="lead mt-6 max-w-[52ch]">{m.success.sub}</p>
 
         {checkoutId && (
-          <p className="mono mt-4 text-xs text-muted-foreground">
+          <p className="mono mt-5 text-[13px] text-ink-3">
             {m.success.order} {checkoutId}
           </p>
         )}
 
-        <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Button
-            render={<a href="https://github.com/mochi-cli/mochi" target="_blank" rel="noopener noreferrer" />}
-            nativeButton={false}
-            size="lg"
-            className="h-12 w-full rounded-full text-sm sm:w-auto"
+        <div className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-4">
+          <a
+            href={DOWNLOAD_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-11 items-center justify-center rounded-[var(--r)] bg-ink px-6 text-[15px] text-ink-inv transition-opacity hover:opacity-88 active:translate-y-px"
           >
-            {m.success.cta} →
-          </Button>
-          <Button render={<Link href="/" />} nativeButton={false} variant="outline" size="lg" className="h-12 w-full rounded-full text-sm sm:w-auto">
+            {m.hero.download}
+          </a>
+          <a
+            href={REPO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[15px] text-ink underline-offset-4 transition-colors hover:text-ink-2 hover:underline"
+          >
+            {m.success.cta}
+          </a>
+          <Link
+            href="/"
+            className="text-[15px] text-ink-2 underline-offset-4 transition-colors hover:text-ink hover:underline"
+          >
             {m.success.back}
-          </Button>
+          </Link>
         </div>
 
-        <div className="mono mt-8 inline-flex h-11 max-w-full items-center gap-3 overflow-x-auto whitespace-nowrap rounded-full border border-border bg-card px-5 text-sm text-foreground/90">
-          <span className="text-muted-foreground">$</span> {installCommand}
-        </div>
-
-        <p className="mt-8 text-xs text-muted-foreground">{m.success.note}</p>
+        <p className="mt-12 border-t border-line pt-6 text-[14px] text-ink-2">{m.success.note}</p>
       </div>
     </section>
   );

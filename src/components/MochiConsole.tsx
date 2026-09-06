@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Sparkles } from "lucide-react";
+import { useLang } from "./LanguageProvider";
+import { ClaudeMessage, ClaudePanel, splitReply, type Msg } from "./appui";
 
 type Who = "you" | "mochi";
 export interface Line {
@@ -22,7 +23,84 @@ const DEFAULT_SCRIPT: Line[] = [
 
 const STAGES = ["INIT", "QUERY", "WRITE", "COMMIT"];
 
-export default function MochiConsole({ customScript, heightClass = "h-[168px]", consoleId, initialDelay = 0, fullWidth = false }: { customScript?: Line[], heightClass?: string, consoleId?: string, initialDelay?: number, fullWidth?: boolean }) {
+function toMessages(line: Line): Msg[] {
+  if (line.who === "you") return [{ who: "you", text: line.text }];
+  return splitReply(line.text);
+}
+
+// Rough, deterministic "tokens burned" readout under each finished agent turn,
+// the same idea as the usage line Claude's own UI shows. Derived from the reply
+// length so it varies per message without needing per-locale data in every one
+// of the 7 translated scripts.
+const estimateTokens = (text: string) => Math.max(120, Math.round(text.length * 2.4));
+const estimateSecs = (text: string) => Math.max(0.4, Math.round((text.length / 240) * 10) / 10);
+
+function Pipeline({ stage }: { stage: number }) {
+  return (
+    <div
+      className="flex-none rounded-[8px] border px-2.5 py-2"
+      style={{ borderColor: "var(--cl-line)", background: "var(--cl-field)" }}
+    >
+      <div className="flex items-center">
+        {STAGES.map((s, i) => {
+          const done = i < stage;
+          const active = i === stage;
+          return (
+            <div key={s} className="flex flex-1 items-center">
+              {/* The dot is state, not a label: a numeral at this size is
+                  unreadable and would be text failing contrast for no gain. */}
+              <div className="flex flex-col items-center gap-1">
+                <span
+                  className={`h-2.5 w-2.5 flex-none rounded-full transition-colors duration-300 ${
+                    active ? "animate-pulse" : ""
+                  }`}
+                  style={{ background: active || done ? "var(--cl-accent)" : "var(--cl-line)" }}
+                  aria-hidden
+                />
+                <span
+                  className="mono text-[10px]"
+                  style={{ color: active || done ? "var(--cl-text)" : "var(--cl-muted)" }}
+                >
+                  {s}
+                </span>
+              </div>
+              {i < STAGES.length - 1 && (
+                <div className="mx-1 h-px flex-1" style={{ background: "var(--cl-line)" }}>
+                  <div
+                    className="h-full transition-all duration-300"
+                    style={{ background: "var(--cl-accent)", width: i < stage ? "100%" : 0 }}
+                  />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+export default function MochiConsole({
+  customScript,
+  heightClass = "h-[168px]",
+  consoleId,
+  initialDelay = 0,
+  fullWidth = false,
+  floating = false,
+  agentLabel,
+  status,
+}: {
+  customScript?: Line[];
+  heightClass?: string;
+  consoleId?: string;
+  initialDelay?: number;
+  fullWidth?: boolean;
+  /** dock this console inside a workspace window, on the given side */
+  floating?: false | "left" | "right";
+  agentLabel?: string;
+  status?: string;
+}) {
+  const { m } = useLang();
   const [history, setHistory] = useState<Line[]>([]);
   const [typing, setTyping] = useState<Line | null>(null);
   const [partial, setPartial] = useState("");
@@ -89,180 +167,47 @@ export default function MochiConsole({ customScript, heightClass = "h-[168px]", 
     return () => {
       cancelled = true;
     };
-  }, [consoleId, customScript]);
+  }, [consoleId, customScript, initialDelay]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [history, partial, processing]);
 
-  return (
-    <div className={`w-full overflow-hidden rounded-2xl border border-border bg-card text-left shadow-[var(--shadow-card)] ${fullWidth ? "" : "mx-auto max-w-xl"}`}>
-      {/* title bar */}
-      <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
-        <div className="flex items-center gap-2">
-          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-secondary text-muted-foreground">
-            <Sparkles className="h-3.5 w-3.5" />
-          </span>
-          <span className="text-xs font-semibold text-foreground">Mochi</span>
-        </div>
-        <span
-          className={`mono flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium transition-colors ${
-            processing ? "bg-secondary text-muted-foreground" : "bg-brand-soft text-brand-soft-foreground"
-          }`}
-        >
-          <span className={`h-1.5 w-1.5 rounded-full ${processing ? "bg-muted-foreground animate-pulse" : "bg-brand"}`} />
-          {processing ? "Processing" : "Live"}
-        </span>
-      </div>
+  // A "you" line is still being typed into the composer; an agent line is
+  // already streaming into the transcript.
+  const composing = typing?.who === "you" ? partial : "";
+  const streaming = typing?.who === "mochi" ? { ...typing, text: partial } : null;
 
-      {/* conversation */}
-      <div ref={scrollRef} className={`${heightClass} space-y-2 overflow-y-auto overflow-x-hidden px-4 py-4 scroll-smooth`}>
-        {history.map((l, i) => (
-          <Bubble key={i} line={l} />
+  const panel = (
+    <ClaudePanel
+      agent={agentLabel ?? m.heroDemo.agent}
+      placeholder={m.heroDemo.placeholder}
+      draft={composing}
+      scrollRef={scrollRef}
+      bodyClass={heightClass}
+      floating={floating}
+      status={processing ? "working" : status ?? "MCP"}
+    >
+        {history.map((line, i) => (
+          <div key={i} className="flex flex-none flex-col gap-1.5">
+            {toMessages(line).map((msg, j) => (
+              <ClaudeMessage key={j} msg={msg} />
+            ))}
+            {line.who === "mochi" && (
+              <p className="mono pl-[22px] text-[10px]" style={{ color: "var(--cl-muted)" }}>
+                {estimateSecs(line.text)}s &#8595; {estimateTokens(line.text).toLocaleString("en-US")} tokens
+              </p>
+            )}
+          </div>
         ))}
         {processing && <Pipeline stage={stage} />}
-        {typing?.who === "mochi" && <Bubble line={{ ...typing, text: partial }} caret />}
-      </div>
-
-      {/* input bar */}
-      <div className="flex items-center gap-2 border-t border-border bg-secondary/40 px-4 py-3">
-        <span className="mono text-sm text-muted-foreground mt-0.5 self-start">›</span>
-        <span className={`mono text-sm flex-1 leading-snug ${typing?.who === "you" ? "text-foreground" : "text-muted-foreground"}`}>
-          {typing?.who === "you" ? (
-            <>
-              {partial}
-              <span className="animate-cursor ml-0.5 inline-block h-4 w-2 translate-y-0.5 bg-current align-middle" />
-            </>
-          ) : (
-            "talk to mochi…"
-          )}
-        </span>
-        <span className={`ml-auto mono text-[10px] self-end transition-colors ${typing?.who === "you" ? "text-foreground" : "text-muted-foreground"}`}>
-          ENTER ⏎
-        </span>
-      </div>
-    </div>
+        {streaming &&
+          toMessages(streaming).map((msg, j, arr) => (
+            <ClaudeMessage key={j} msg={msg} caret={j === arr.length - 1} />
+          ))}
+    </ClaudePanel>
   );
-}
 
-function Cursor() {
-  return <span className="animate-cursor ml-0.5 inline-block h-4 w-1.5 translate-y-0.5 bg-current align-middle" />;
-}
-
-// Rough, deterministic "tokens burned" readout under each finished agent
-// turn — same idea as the usage line Claude/Codex's own UIs show. Derived
-// from the reply length so it varies per message without needing per-locale
-// data in every one of the 7 translated scripts.
-const estimateTokens = (text: string) => Math.max(120, Math.round(text.length * 2.4));
-const estimateSecs = (text: string) => Math.max(0.4, Math.round((text.length / 240) * 10) / 10);
-
-/** An agent reply can carry an ASCII table. Those lines either draw a rule
- *  (+-----+) or hold cells (| a | b |), and they always arrive as one contiguous
- *  run — so a line-by-line scan is enough, and it stays correct while the reply
- *  is still being typed out one character at a time. */
-function splitTableBlocks(text: string) {
-  const isTableLine = (l: string) => /^\s*[+|]/.test(l) && l.trim().length > 1;
-  const blocks: { table: boolean; text: string }[] = [];
-  for (const line of text.split("\n")) {
-    const table = isTableLine(line);
-    const last = blocks[blocks.length - 1];
-    if (last && last.table === table) last.text += "\n" + line;
-    else blocks.push({ table, text: line });
-  }
-  return blocks;
-}
-
-// Chat layout takes a light cue from Claude's own UI — a plain-text reply
-// with a small mark beside it, rather than a filled bubble — since this
-// panel is literally demonstrating "chat with Claude, Codex & OpenCode".
-function Bubble({ line, caret }: { line: Line; caret?: boolean }) {
-  if (line.who === "you") {
-    return (
-      <div className="flex justify-end">
-        <div className="max-w-[85%] whitespace-pre-wrap rounded-2xl bg-secondary px-4 py-2.5 text-[13.5px] leading-relaxed text-foreground">
-          {line.text}
-          {caret && <Cursor />}
-        </div>
-      </div>
-    );
-  }
-  // Prose stays on the chat surface; machine output gets terminal chrome, reusing
-  // the same dark panel colours as the console window in HeroStage.
-  const blocks = splitTableBlocks(line.text);
-
-  return (
-    <div className="flex items-start gap-2.5">
-      <span className="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full bg-foreground text-background">
-        <Sparkles className="h-3.5 w-3.5" />
-      </span>
-      <div className="max-w-[85%] min-w-0 space-y-1.5">
-        {blocks.map((b, i) => {
-          const isLast = i === blocks.length - 1;
-          return b.table ? (
-            <pre
-              key={i}
-              className="mono overflow-x-auto rounded-[var(--radius-inset)] border border-white/10 bg-[#16181d] px-3 py-2 text-[12px] leading-[1.55] text-white/90"
-            >
-              {b.text}
-              {caret && isLast && <Cursor />}
-            </pre>
-          ) : (
-            <p
-              key={i}
-              className="whitespace-pre-wrap pt-0.5 text-[13.5px] leading-relaxed text-foreground"
-            >
-              {b.text}
-              {caret && isLast && <Cursor />}
-            </p>
-          );
-        })}
-        {!caret && (
-          <p className="mono mt-1 text-[10px] text-muted-foreground/70">
-            {estimateSecs(line.text)}s · ↓ {estimateTokens(line.text).toLocaleString("en-US")} tokens
-          </p>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function Pipeline({ stage }: { stage: number }) {
-  return (
-    <div className="rounded-xl border border-border bg-secondary/40 px-3 py-2.5">
-      <div className="mb-2 flex items-center justify-between">
-        <span className="mono text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Workflow</span>
-        <span className="mono animate-blink text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Running…</span>
-      </div>
-
-      <div className="flex items-center">
-        {STAGES.map((s, i) => {
-          const done = i < stage;
-          const active = i === stage;
-          return (
-            <div key={s} className="flex flex-1 items-center">
-              <div className="flex flex-col items-center gap-1">
-                <span
-                  className={`flex h-4 w-4 items-center justify-center rounded-full text-[7px] transition-colors duration-300 ${
-                    active
-                      ? "bg-foreground text-background"
-                      : done
-                        ? "bg-brand text-white"
-                        : "bg-border text-muted-foreground"
-                  }`}
-                >
-                  {done ? "✓" : i + 1}
-                </span>
-                <span className={`mono text-[9px] ${active ? "text-foreground" : done ? "text-brand-soft-foreground" : "text-muted-foreground"}`}>{s}</span>
-              </div>
-              {i < STAGES.length - 1 && (
-                <div className="mx-1 h-px flex-1 overflow-hidden rounded-full bg-border">
-                  <div className={`h-full bg-brand transition-all duration-300 ${i < stage ? "w-full" : "w-0"}`} />
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
+  if (floating) return panel;
+  return <div className={fullWidth ? "w-full" : "mx-auto w-full max-w-xl"}>{panel}</div>;
 }

@@ -1,59 +1,39 @@
 "use client";
 
-import { useState } from "react";
-import { Check, Copy } from "lucide-react";
-import { track } from "@vercel/analytics";
 import Reveal from "./Reveal";
 import { useLang } from "./LanguageProvider";
-import { useEngine } from "./EngineProvider";
-import { Button } from "@/components/ui/button";
-import { copyText } from "@/lib/copy";
+import { DOWNLOAD_URL, REPO_URL } from "@/lib/links";
 
+/** The closing block. This is the page's one inversion: the final ask and the
+ *  footer share a single ink slab, so the light-locked page ends on a deliberate
+ *  full-width switch rather than alternating bands on the way down. */
 export default function CTASection() {
   const { m } = useLang();
-  const { selectedEngine, installCommand } = useEngine();
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    if (!(await copyText(installCommand))) return;
-    track("install_copy", { location: "cta", engine: selectedEngine.slug });
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   return (
-    <section>
-      <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <Reveal variant="soft">
-          <div className="bg-mesh-neutral relative overflow-hidden rounded-3xl px-8 py-20 text-center text-foreground ring-1 ring-border sm:px-16">
-            <div className="relative">
-              <h2 className="mx-auto max-w-2xl text-[length:var(--text-h2-finale)] font-semibold leading-[1.08] tracking-tight">
-                {m.cta.title}
-              </h2>
-              <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-muted-foreground">
-                {m.cta.sub}
-              </p>
+    <section className="on-ink pt-28 md:pt-36">
+      <div className="mx-auto max-w-[1280px] px-5 sm:px-8">
+        <Reveal>
+          <h2 className="display max-w-[16ch]">{m.cta.title}</h2>
+          <p className="lead mt-6 max-w-[48ch]">{m.cta.sub}</p>
 
-              <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Button render={<a href="#pricing" />} nativeButton={false} size="lg" className="h-12 w-full rounded-full bg-violet px-6 text-sm text-violet-foreground hover:bg-violet/90 sm:w-auto">
-                  {m.cta.button}
-                </Button>
-                <div className="flex h-12 w-full max-w-full items-center gap-2 rounded-full border border-border bg-card py-2 pl-5 pr-2 sm:w-auto">
-                  <code className="mono min-w-0 overflow-x-auto whitespace-nowrap text-sm text-foreground/90">
-                    <span className="mr-1.5 select-none text-muted-foreground">$</span>
-                    {installCommand}
-                  </code>
-                  <button
-                    onClick={handleCopy}
-                    title={m.hero.copyLabel}
-                    aria-label={m.hero.copyLabel}
-                    className="flex h-8 w-8 flex-none items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-                  >
-                    {copied ? <Check className="h-4 w-4 text-brand" /> : <Copy className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-            </div>
+          <div className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-4">
+            <a
+              href={DOWNLOAD_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-11 items-center justify-center rounded-[var(--r)] bg-ink px-6 text-[15px] text-ink-inv transition-opacity hover:opacity-88 active:translate-y-px"
+            >
+              {m.hero.download}
+            </a>
+            <a
+              href={REPO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[15px] text-ink underline-offset-4 transition-colors hover:text-ink-2 hover:underline"
+            >
+              {m.nav.docs}
+            </a>
           </div>
         </Reveal>
       </div>

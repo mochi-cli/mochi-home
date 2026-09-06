@@ -41,7 +41,7 @@ export const DEALS: Deal[] = [
 function StageBadge({ stage }: { stage: Stage }) {
   if (stage === "Closed won") {
     return (
-      <Badge className="border-transparent bg-brand-soft text-brand-soft-foreground">
+      <Badge className="border-transparent bg-accent-soft text-accent">
         {stage}
       </Badge>
     );
@@ -114,7 +114,7 @@ export default function ProductPreview({
           <Zap className="h-3.5 w-3.5" />
         </span>
         {filterLabel && (
-          <span className="flex animate-in fade-in zoom-in-95 items-center gap-1.5 rounded-md bg-brand-soft px-2 py-1 text-[11px] font-medium text-brand-soft-foreground duration-300">
+          <span className="flex animate-in fade-in zoom-in-95 items-center gap-1.5 rounded-md bg-accent-soft px-2 py-1 text-[11px] font-medium text-accent duration-300">
             <Filter className="h-3 w-3" />
             {filterLabel}
           </span>
@@ -149,7 +149,7 @@ export default function ProductPreview({
               key={d.company}
               className={cn(
                 "animate-in fade-in slide-in-from-bottom-1 duration-300",
-                d.company === highlight && "bg-brand-soft/60 hover:bg-brand-soft/60"
+                d.company === highlight && "bg-accent-soft/60 hover:bg-accent-soft/60"
               )}
             >
               <TableCell className="text-muted-foreground">{i + 1}</TableCell>
@@ -172,7 +172,7 @@ export default function ProductPreview({
           {filterLabel && ` of ${DEALS.length}`}
         </span>
         <span className="flex items-center gap-1.5">
-          <span className={cn("h-1.5 w-1.5 rounded-full bg-brand", writing && "animate-pulse")} />
+          <span className={cn("h-1.5 w-1.5 rounded-full bg-accent", writing && "animate-pulse")} />
           {writing ? "writing…" : "in sync"}
         </span>
         <span className="ml-auto hidden sm:inline">Workspace: Mochi Demo</span>
