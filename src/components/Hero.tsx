@@ -1,20 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { track } from "@vercel/analytics";
-import { Check, Copy, Play } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useLang } from "./LanguageProvider";
-import { useEngine, ALL_ENGINES } from "./EngineProvider";
-import { Button } from "@/components/ui/button";
-import HeroStage from "./HeroStage";
-import { copyText } from "@/lib/copy";
+import HeroChatTable from "./HeroChatTable";
+import MacDock from "./MacDock";
+import type { AgentSkin } from "./appui";
+import { DOWNLOAD_URL } from "@/lib/links";
 
-/** Splits a headline into its lead clause and a final highlighted clause,
- *  e.g. "Do the thing. Skip the rest." → lead "Do the thing.", tail "Skip the rest."
- *  Handles CJK terminators too: Japanese and Chinese end sentences with 。！？ and
- *  put no space after them, so a Latin-only "punctuation + whitespace" rule left
- *  those locales with no highlight at all.
- *  Falls back to no highlight when there's only one sentence. */
+/** Splits a headline into its lead clause and a final clause, so the second
+ *  clause can drop to grey. Handles CJK terminators too: Japanese and Chinese
+ *  end sentences with 。！？ and put no space after them, so a Latin-only
+ *  "punctuation + whitespace" rule left those locales with no split at all.
+ *  Falls back to a single-tone headline when there is only one sentence. */
 function splitHeadline(headline: string) {
   const parts = headline.split(/(?<=[。！？])|(?<=[.!?])\s+/).filter(Boolean);
   if (parts.length < 2) return { lead: headline, tail: null as string | null };
@@ -26,93 +24,56 @@ function splitHeadline(headline: string) {
 
 export default function Hero() {
   const { m } = useLang();
-  const { selectedEngine, selectEngine, installCommand } = useEngine();
-  const [copied, setCopied] = useState(false);
-
+  // Which agent is driving the demo. It lives here because the dock picks it
+  // and the workspace wears it.
+  const [agent, setAgent] = useState<AgentSkin>("claude");
   const { lead, tail } = splitHeadline(m.hero.headline);
 
-  const handleCopy = async () => {
-    if (!(await copyText(installCommand))) return;
-    track("install_copy", { location: "hero", engine: selectedEngine.slug });
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
-    <section id="top" className="bg-hero-wash relative overflow-hidden">
-      <div className="relative mx-auto grid max-w-6xl gap-14 px-6 py-16 lg:grid-cols-2 lg:items-center lg:py-24">
-        {/* left — pitch, install, trust */}
-        <div className="min-w-0 text-center lg:text-left">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3.5 py-1.5 text-[13px] text-foreground shadow-xs">
-            <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-            {m.hero.badge}
-          </span>
+    <section id="top" className="relative pt-16 sm:pt-20">
+      <div className="cell-field pointer-events-none absolute inset-x-0 top-0 h-[520px]" aria-hidden />
 
-          <h1 className="mx-auto mt-6 max-w-xl text-balance text-[length:var(--text-hero)] font-semibold leading-[1.06] tracking-[-0.03em] text-foreground lg:mx-0">
-            {lead}
-            {tail && <span className="text-violet">{tail}</span>}
-          </h1>
-          <p className="mx-auto mt-5 max-w-md text-pretty text-[17px] leading-[1.55] text-muted-foreground lg:mx-0">
-            {m.hero.sub}
-          </p>
+      <div className="relative mx-auto max-w-[1280px] px-5 sm:px-8">
+        <h1 className="display max-w-[19ch]">
+          {lead}
+          {tail && <span className="cont">{tail}</span>}
+        </h1>
 
-          {/* install command — the primary action, so it gets the visual weight */}
-          <div className="mt-8 flex justify-center lg:justify-start">
-            <div className="flex w-full items-center gap-3 rounded-xl border border-border bg-card py-2 pl-4 pr-2 shadow-sm sm:w-auto sm:max-w-full">
-              <code className="mono min-w-0 flex-1 whitespace-pre-wrap break-all text-[13px] text-foreground sm:flex-none sm:overflow-x-auto sm:whitespace-nowrap sm:break-normal sm:text-[14px]">
-                <span className="mr-1.5 select-none text-muted-foreground">$</span>
-                {installCommand}
-              </code>
-              <button
-                onClick={handleCopy}
-                title={m.hero.copyLabel}
-                aria-label={m.hero.copyLabel}
-                className="flex h-8 w-8 flex-none items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-              >
-                {copied ? <Check className="h-4 w-4 text-brand" /> : <Copy className="h-4 w-4" />}
-              </button>
-            </div>
-          </div>
+        <p className="lead mt-6 max-w-[54ch]">{m.hero.sub}</p>
 
-          <div className="mt-3.5 flex flex-wrap items-center justify-center gap-1.5 lg:justify-start">
-            {ALL_ENGINES.map((engine) => {
-              const isSelected = selectedEngine.slug === engine.slug;
-              return (
-                <button
-                  key={engine.slug}
-                  onClick={() => selectEngine(engine.slug)}
-                  aria-pressed={isSelected}
-                  className={`rounded-full border px-2 py-0.5 text-[10px] font-medium transition-colors ${
-                    isSelected
-                      ? "border-transparent bg-foreground/85 text-background"
-                      : "border-border bg-background/60 text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {engine.label}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="mt-6 flex flex-col items-center justify-center gap-2.5 sm:flex-row lg:justify-start">
-            <Button
-              render={<a href="#workflow" />}
-              nativeButton={false}
-              variant="outline"
-              className="h-9 gap-1.5 rounded-lg px-4 text-[15px]"
-            >
-              <Play className="h-3.5 w-3.5" />
-              {m.hero.ctaSecondary}
-            </Button>
-            <Button render={<a href="#pricing" />} nativeButton={false} className="h-9 rounded-lg bg-violet px-4 text-[15px] text-violet-foreground hover:bg-violet/90">
-              {m.hero.ctaPrimary}
-            </Button>
-          </div>
+        <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
+          <a
+            href={DOWNLOAD_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-11 items-center justify-center rounded-[var(--r)] bg-ink px-6 text-[15px] text-ink-inv transition-opacity hover:opacity-88 active:translate-y-px"
+          >
+            {m.hero.download}
+          </a>
+          <a
+            href="#features"
+            className="group inline-flex items-center gap-1.5 whitespace-nowrap text-[15px] text-ink transition-colors hover:text-ink-2"
+          >
+            {m.hero.ctaSecondary}
+            <ArrowRight
+              className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+              strokeWidth={1.5}
+            />
+          </a>
         </div>
 
-        {/* right — the live product, driven by the same demo script */}
-        <div className="min-w-0">
-          <HeroStage />
+        {/* The canvas is the argument: ask in plain language, watch the grid
+            change. It stays fully inside the column rather than bleeding off
+            the edge, because the agent panel on its right has to be readable.
+            The dock straddles its bottom edge so the whole thing reads as an
+            app running on a machine, not a screenshot pasted on a page. */}
+        <div className="relative mt-14 pb-8 sm:mt-16">
+          <HeroChatTable agent={agent} />
+          <MacDock
+            agent={agent}
+            onAgent={setAgent}
+            className="absolute bottom-0 left-1/2 hidden -translate-x-1/2 sm:flex"
+          />
         </div>
       </div>
     </section>

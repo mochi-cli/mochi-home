@@ -17,5 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         ),
       },
     },
+    { url: `${SITE_URL}/docs`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${SITE_URL}/changelog`, lastModified: now, changeFrequency: "weekly", priority: 0.5 },
   ];
 }

@@ -1,124 +1,138 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Users, BadgeCheck, Box, ListChecks } from "lucide-react";
-import Reveal from "./Reveal";
-import { useLang } from "./LanguageProvider";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { useEffect, useRef, useState } from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  AlignLeft,
+  ArrowLeftRight,
+  Boxes,
+  Calendar,
+  CircleCheck,
+  CircleDot,
+  Flag,
+  Hash,
+  Handshake,
+  ListChecks,
+  MessageSquare,
+  Package,
+  Star,
+  Table2,
+  Timer,
+  Type,
+  Users,
+  Warehouse,
+} from "lucide-react";
+import { useLang } from "./LanguageProvider";
+import CanvasSection from "./CanvasSection";
+import { AppTabs, AppToolbar, Box, Cell, Chip, type Collection, HeadCell, Pill, type Tone } from "./appui";
+import { REPO_URL } from "@/lib/links";
 
-// ---------- cell tone helpers ----------
-// Neutral by default; the one brand accent is reserved for the "positive"
-// outcome in each template (won deal, in-stock, done task, active hire).
-type Tone = "brand" | "neutral" | "outline";
-function StatusBadge({ tone, children }: { tone: Tone; children: ReactNode }) {
-  if (tone === "brand") {
-    return <Badge className="border-transparent bg-brand-soft text-brand-soft-foreground">{children}</Badge>;
-  }
-  if (tone === "outline") {
-    return <Badge variant="outline">{children}</Badge>;
-  }
-  return <Badge variant="secondary">{children}</Badge>;
-}
+/* Four starting points, each shown as the workspace it actually produces:
+   the same collection strip, toolbar and grid as the rest of the page. */
 
-// letter-icon colors for the collection tabs, matching the real Mochi app
-const TAB_TONES = [
-  { bg: "#d1fbe8", fg: "#047857" },
-  { bg: "#dbeafe", fg: "#1d4ed8" },
-  { bg: "#fef3c7", fg: "#b45309" },
-  { bg: "#ede9fe", fg: "#6d28d9" },
-  { bg: "#fee2e2", fg: "#b91c1c" },
-];
+type TplCell = string | { label: string; tone: Tone };
+type ColIcon = typeof Type;
 
-// ---------- per-template mock data ----------
-type Cell = string | { label: string; tone: Tone };
 interface TemplateSpec {
   key: string;
   label: string;
-  icon: ReactNode;
   workspace: string;
   view: string;
-  /** collections this template ships with — shown as the window's tab strip */
   collections: string[];
   cols: string[];
-  rows: Cell[][];
+  colIcons: ColIcon[];
+  rows: TplCell[][];
 }
+
+const COLLECTION_ICONS: Record<string, ColIcon> = {
+  Deals: Handshake,
+  Customers: Users,
+  Leads: CircleCheck,
+  Interactions: MessageSquare,
+  Tasks: ListChecks,
+  Employees: Users,
+  Teams: Users,
+  Attendance: Calendar,
+  Reviews: Star,
+  Products: Package,
+  Stock: Boxes,
+  Warehouses: Warehouse,
+  Movements: ArrowLeftRight,
+  Sprints: Timer,
+  People: Users,
+  Milestones: Flag,
+};
+const TONES: Tone[] = ["green", "amber", "lilac", "blue", "rose", "mint"];
 
 const TEMPLATES: TemplateSpec[] = [
   {
     key: "crm",
     label: "CRM",
-    icon: <Users className="h-4 w-4" />,
     workspace: "Sales CRM",
     collections: ["Deals", "Customers", "Leads", "Interactions", "Tasks"],
     view: "Opportunities / Default",
     cols: ["Deal", "Stage", "Contact", "Value"],
+    colIcons: [Type, CircleDot, AlignLeft, Hash],
     rows: [
-      ["VisionQuest RFQ",       { label: "Discovery",   tone: "outline" }, "James Cooper",    "$14,300"],
-      ["Acetube inquiry",       { label: "Negotiation", tone: "neutral" }, "Charlotte King",  "$48,200"],
-      ["LKS retainer",          { label: "Discovery",   tone: "outline" }, "Benjamin Taylor", "$6,500"],
-      ["Timbershadow expansion",{ label: "Closed won",  tone: "brand"   }, "Casey Park",      "$61,540"],
+      ["VisionQuest RFQ", { label: "Discovery", tone: "blue" }, "James Cooper", "$14,300"],
+      ["Acetube inquiry", { label: "Negotiation", tone: "amber" }, "Charlotte King", "$48,200"],
+      ["Halden & Roe pilot", { label: "Proposal", tone: "lilac" }, "Ava Thompson", "$22,800"],
+      ["LKS retainer", { label: "Discovery", tone: "blue" }, "Benjamin Taylor", "$6,500"],
+      ["Blue Harbour renewal", { label: "Closed won", tone: "mint" }, "Marcus Okafor", "$37,150"],
+      ["Timbershadow expansion", { label: "Closed won", tone: "mint" }, "Casey Park", "$61,540"],
     ],
   },
   {
     key: "hrm",
     label: "HRM",
-    icon: <BadgeCheck className="h-4 w-4" />,
     workspace: "People ops",
     collections: ["Employees", "Teams", "Attendance", "Reviews"],
     view: "Employees / Active",
     cols: ["Name", "Role", "Team", "Joined"],
+    colIcons: [Type, AlignLeft, CircleDot, Calendar],
     rows: [
-      ["Linh Nguyen",   "Senior engineer",     { label: "Platform", tone: "brand"   }, "2024-03-01"],
-      ["Marco Reyes",   "Product designer",    { label: "Design",   tone: "neutral" }, "2024-11-20"],
-      ["Sara Hoffmann", "Ops manager",         { label: "Ops",      tone: "outline" }, "2023-08-14"],
-      ["Kenji Tanaka",  "Data analyst",        { label: "Data",     tone: "neutral" }, "2025-01-09"],
+      ["Linh Nguyen", "Senior engineer", { label: "Platform", tone: "lilac" }, "2024-03-01"],
+      ["Marco Reyes", "Product designer", { label: "Design", tone: "blue" }, "2024-11-20"],
+      ["Sara Hoffmann", "Ops manager", { label: "Ops", tone: "green" }, "2023-08-14"],
+      ["Kenji Tanaka", "Data analyst", { label: "Data", tone: "amber" }, "2025-01-09"],
+      ["Ava Thompson", "Account executive", { label: "Sales", tone: "lilac" }, "2025-04-02"],
+      ["Daniel Novak", "Support lead", { label: "Success", tone: "green" }, "2022-11-15"],
     ],
   },
   {
     key: "inventory",
     label: "Inventory",
-    icon: <Box className="h-4 w-4" />,
     workspace: "Warehouse",
     collections: ["Products", "Stock", "Warehouses", "Movements"],
     view: "Products / Low stock",
     cols: ["SKU", "Product", "Stock", "Status"],
+    colIcons: [Type, AlignLeft, Hash, CircleDot],
     rows: [
-      ["SKU-001", "Ceramic mug, matte white",      "42",  { label: "In stock",    tone: "brand"   }],
-      ["SKU-014", "Notebook A5, dot grid",         "8",   { label: "Low stock",   tone: "outline" }],
-      ["SKU-027", "Cable tidy strap, pack of 5",   "0",   { label: "Backorder",   tone: "neutral" }],
-      ["SKU-039", "Coffee dripper V60",            "126", { label: "In stock",    tone: "brand"   }],
+      ["SKU-001", "Ceramic mug, matte white", "42", { label: "In stock", tone: "mint" }],
+      ["SKU-014", "Notebook A5, dot grid", "8", { label: "Low stock", tone: "amber" }],
+      ["SKU-027", "Cable tidy strap, pack of 5", "0", { label: "Backorder", tone: "rose" }],
+      ["SKU-039", "Coffee dripper V60", "126", { label: "In stock", tone: "mint" }],
+      ["SKU-052", "Cast iron skillet, 26cm", "17", { label: "In stock", tone: "mint" }],
+      ["SKU-063", "Olive wood board", "0", { label: "Backorder", tone: "rose" }],
     ],
   },
   {
     key: "project",
     label: "Projects",
-    icon: <ListChecks className="h-4 w-4" />,
     workspace: "Delivery",
     collections: ["Tasks", "Sprints", "People", "Milestones"],
     view: "Sprint 12 / Kanban",
     cols: ["Task", "Owner", "Deadline", "Status"],
+    colIcons: [Type, AlignLeft, Calendar, CircleDot],
     rows: [
-      ["Migrate auth to MCP",       "Linh",  "Tue 22",  { label: "In review",    tone: "brand"   }],
-      ["Draft billing schema",      "Marco", "Wed 23",  { label: "In progress",  tone: "outline" }],
-      ["Investigate p95 spike",     "Kenji", "Fri 25",  { label: "Blocked",      tone: "neutral" }],
-      ["Ship template gallery",     "Sara",  "Mon 28",  { label: "Todo",         tone: "outline" }],
+      ["Migrate auth to MCP", "Linh", "Tue 22", { label: "In review", tone: "blue" }],
+      ["Draft billing schema", "Marco", "Wed 23", { label: "In progress", tone: "green" }],
+      ["Investigate p95 spike", "Kenji", "Fri 25", { label: "Blocked", tone: "rose" }],
+      ["Wire MCP tool errors", "Ava", "Tue 29", { label: "Todo", tone: "amber" }],
+      ["Ship template gallery", "Sara", "Mon 28", { label: "Todo", tone: "amber" }],
+      ["Cut v0.3 release notes", "Marco", "Thu 31", { label: "In review", tone: "blue" }],
     ],
   },
 ];
-
-function renderCell(cell: Cell) {
-  if (typeof cell === "string") return <span className="text-foreground">{cell}</span>;
-  return <StatusBadge tone={cell.tone}>{cell.label}</StatusBadge>;
-}
 
 const AUTO_MS = 4500;
 
@@ -127,12 +141,11 @@ export default function Templates() {
   const [active, setActive] = useState(TEMPLATES[0].key);
   const pausedRef = useRef(false);
   const previewRef = useRef<HTMLDivElement>(null);
-  const activeIndex = TEMPLATES.findIndex((t) => t.key === active);
-  const activeTpl = TEMPLATES[activeIndex] ?? TEMPLATES[0];
+  const tpl = TEMPLATES.find((t) => t.key === active) ?? TEMPLATES[0];
 
-  // manual taps bring the preview into view — on narrow screens the tabs
-  // stack tall enough that the updated table can otherwise sit off-screen.
-  // The auto-cycle timer never does this; only a deliberate click should move the page.
+  // Manual taps bring the preview into view: on narrow screens the captions
+  // stack tall enough that the updated grid can otherwise sit off-screen. The
+  // auto-cycle never does this; only a deliberate click should move the page.
   const handleTabClick = (key: string) => {
     setActive(key);
     if (window.matchMedia("(max-width: 767px)").matches) {
@@ -140,8 +153,6 @@ export default function Templates() {
     }
   };
 
-  // auto-cycle through templates; restarts its countdown on every active
-  // change, whether that change came from the timer or a manual click
   useEffect(() => {
     const id = setInterval(() => {
       if (pausedRef.current) return;
@@ -153,164 +164,108 @@ export default function Templates() {
     return () => clearInterval(id);
   }, [active]);
 
+  const tabs: Collection[] = tpl.collections.map((name, i) => ({
+    name,
+    tone: TONES[i % TONES.length],
+    icon: COLLECTION_ICONS[name] ?? Table2,
+  }));
+
   return (
-    <section id="templates" className="section-alt relative">
-      <div className="mx-auto max-w-7xl px-6 py-20 md:py-24">
-        <Reveal className="mb-10 flex flex-col items-start gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h2 className="max-w-2xl text-[length:var(--text-h2)] font-semibold tracking-tight text-foreground">
-              {m.tpl.title}
-            </h2>
-            <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
-              {m.tpl.sub}
-            </p>
-          </div>
-          <Button
-            render={<a href="https://github.com/mochi-cli/mochi" target="_blank" rel="noopener noreferrer" />}
-            nativeButton={false}
-            variant="outline"
-            className="rounded-full"
-          >
-            {m.tpl.viewAll}
-          </Button>
-        </Reveal>
-
-        <Reveal variant="soft">
-          <div className="rounded-3xl border border-border bg-card p-6 shadow-[var(--shadow-card)] sm:p-8">
-            {/* Tab row — auto-cycles; hover pauses it */}
-            <div
-              role="tablist"
-              aria-label="Templates"
-              onMouseEnter={() => { pausedRef.current = true; }}
-              onMouseLeave={() => { pausedRef.current = false; }}
-              className="grid gap-4 border-b border-border pb-2 sm:grid-cols-2 lg:grid-cols-4"
-            >
-              {TEMPLATES.map((t, i) => {
-                const isActive = t.key === active;
-                return (
-                  <button
-                    key={t.key}
-                    role="tab"
-                    aria-selected={isActive}
-                    onClick={() => handleTabClick(t.key)}
-                    className={`group relative flex flex-col items-start gap-2 rounded-xl p-4 text-left transition-colors ${
-                      isActive ? "bg-secondary/60" : "hover:bg-secondary/60"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <span
-                        className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors ${
-                          isActive ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"
-                        }`}
-                      >
-                        {t.icon}
-                      </span>
-                      <span className="text-base font-semibold text-foreground">
-                        {t.label}
-                      </span>
-                    </div>
-                    <p className="text-[13px] leading-relaxed text-muted-foreground">{m.tpl.items[i]}</p>
-                    {/* progress track — fills over AUTO_MS while active, like a story bar */}
-                    <span className="absolute inset-x-4 -bottom-[10px] h-[3px] overflow-hidden rounded-full bg-border" aria-hidden>
-                      {isActive && (
-                        <span key={active} className="animate-tabgrow block h-full origin-left rounded-full bg-brand" />
-                      )}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Preview — dressed as a real app window so it reads like a product shot */}
-            <div ref={previewRef} className="mt-8 overflow-hidden rounded-[var(--radius-inset)] border border-border bg-background shadow-[var(--shadow-window)]">
-              {/* window chrome */}
-              <div className="flex h-9 items-center gap-2 border-b border-border bg-secondary/70 px-4">
-                <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-                <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
-                <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-                <span className="ml-3 truncate text-[11px] text-muted-foreground">
-                  {activeTpl.workspace} · Mochi
+    <CanvasSection
+      id="templates"
+      kicker={m.eyebrow.tpl}
+      title={m.tpl.title}
+      sub={m.tpl.sub}
+      captions={
+        <div
+          role="tablist"
+          aria-label="Templates"
+          onMouseEnter={() => { pausedRef.current = true; }}
+          onMouseLeave={() => { pausedRef.current = false; }}
+          className="mt-10 grid border-t border-line sm:grid-cols-2 lg:grid-cols-4"
+        >
+          {TEMPLATES.map((t, i) => {
+            const isActive = t.key === active;
+            return (
+              <button
+                key={t.key}
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => handleTabClick(t.key)}
+                className="group relative border-b border-line py-5 text-left sm:border-b-0 sm:border-l sm:pl-6 sm:pr-6 sm:first:border-l-0 sm:first:pl-0"
+              >
+                <span className={`block text-[16px] tracking-[-0.01em] transition-colors ${isActive ? "text-ink" : "text-ink-3 group-hover:text-ink"}`}>
+                  {t.label}
                 </span>
-              </div>
+                <span className={`mt-2 block max-w-[34ch] text-[14px] leading-relaxed transition-colors ${isActive ? "text-ink-2" : "text-ink-3"}`}>
+                  {m.tpl.items[i]}
+                </span>
+                <span className="absolute inset-x-0 -top-px h-px overflow-hidden sm:left-6 sm:right-6 sm:first:left-0" aria-hidden>
+                  {isActive && <span key={active} className="animate-tabgrow block h-full origin-left bg-ink" />}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      }
+      after={
+        <a
+          href={REPO_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-10 inline-block text-[15px] text-ink underline-offset-4 transition-colors hover:text-ink-2 hover:underline"
+        >
+          {m.tpl.viewAll}
+        </a>
+      }
+    >
+      <div ref={previewRef} className="canvas appui">
+        <AppTabs tabs={tabs} active={tpl.collections[0]} />
+        <AppToolbar view={tpl.view} />
 
-              {/* collection tabs for this template */}
-              <div className="flex h-10 items-center gap-1 overflow-x-auto border-b border-border bg-secondary/40 px-3">
-                {activeTpl.collections.map((c, i) => (
-                  <span
-                    key={c}
-                    className={`flex flex-none items-center gap-1.5 whitespace-nowrap rounded-t-md px-2.5 py-1.5 text-xs font-medium ${
-                      i === 0
-                        ? "bg-card text-foreground shadow-[0_-1px_0_var(--border)_inset]"
-                        : "text-muted-foreground"
-                    }`}
-                  >
-                    <span
-                      className="flex h-4 w-4 items-center justify-center rounded text-[10px] font-semibold"
-                      style={{ backgroundColor: TAB_TONES[i % TAB_TONES.length].bg, color: TAB_TONES[i % TAB_TONES.length].fg }}
-                    >
-                      {c[0]}
-                    </span>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[46rem] border-collapse">
+            <thead>
+              <tr style={{ background: "var(--app-bg)" }}>
+                <th
+                  className="border-b border-r px-3 py-2"
+                  style={{ borderColor: "var(--app-line)", width: 36 }}
+                >
+                  <Box />
+                </th>
+                {tpl.cols.map((c, i) => (
+                  <HeadCell key={c} icon={tpl.colIcons[i]} tag={i === 0 ? "primary" : undefined}>
                     {c}
-                  </span>
+                  </HeadCell>
                 ))}
-              </div>
-
-              {/* Toolbar */}
-              <div className="flex items-center gap-3 border-b border-border bg-card px-4 py-2.5 text-xs text-muted-foreground">
-                <span className="flex h-6 items-center gap-1.5 rounded-md bg-secondary px-2 font-medium text-foreground">
-                  <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-                  {activeTpl.workspace}
-                </span>
-                <span className="text-muted-foreground/60">/</span>
-                <span>{activeTpl.view}</span>
-                <span className="ml-auto flex items-center gap-2 text-[11px] text-muted-foreground">
-                  <span className="hidden sm:inline">Fields · Filter · Group · Sort</span>
-                  <span className="rounded-full border border-border bg-background px-2 py-0.5 text-[9px] font-medium text-muted-foreground">
-                    MOCHI
-                  </span>
-                </span>
-              </div>
-
-              {/* Table */}
-              <Table>
-                <TableHeader>
-                  <TableRow className="hover:bg-transparent">
-                    {activeTpl.cols.map((c) => (
-                      <TableHead key={c} className="text-[11px] uppercase tracking-wider">
-                        {c}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {activeTpl.rows.map((row, i) => (
-                    <TableRow key={i}>
-                      {row.map((cell, j) => (
-                        <TableCell key={j} className="text-[13px]">
-                          {renderCell(cell)}
-                        </TableCell>
-                      ))}
-                    </TableRow>
+              </tr>
+            </thead>
+            <tbody>
+              {tpl.rows.map((row, i) => (
+                <tr key={i}>
+                  <Cell width={36}><Box /></Cell>
+                  {row.map((cell, j) => (
+                    <Cell key={j}>
+                      {typeof cell === "string" ? (
+                        j === 0 ? (
+                          <span className="flex items-center gap-2">
+                            <Chip tone={TONES[i % TONES.length]} letter={tpl.label[0]} />
+                            <span className="text-[12.5px]">{cell}</span>
+                          </span>
+                        ) : (
+                          <span className="text-[12.5px]">{cell}</span>
+                        )
+                      ) : (
+                        <Pill tone={cell.tone}>{cell.label}</Pill>
+                      )}
+                    </Cell>
                   ))}
-                </TableBody>
-              </Table>
-
-              {/* status bar */}
-              <div className="flex h-9 items-center gap-3 border-t border-border bg-card px-4 text-[11px] text-muted-foreground">
-                <span>Showing {activeTpl.rows.length}</span>
-                <span className="flex items-center gap-1.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-                  in sync
-                </span>
-                <span className="ml-auto hidden sm:inline">
-                  {activeTpl.collections.length} collections · local-first
-                </span>
-              </div>
-            </div>
-
-          </div>
-        </Reveal>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </section>
+    </CanvasSection>
   );
 }

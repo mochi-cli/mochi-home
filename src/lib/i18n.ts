@@ -55,6 +55,7 @@ export interface Messages {
     mcp: string;
     about: string;
     star: string;
+    login: string;
     menu: string;
     openMenu: string;
   };
@@ -62,10 +63,19 @@ export interface Messages {
     headline: string;
     sub: string;
     badge: string;
+    download: string;
     ctaPrimary: string;
     ctaSecondary: string;
     copyLabel: string;
     trust: Trust[];
+  };
+  /** The hero demo: Claude driving the workspace table. Three turns, looped. */
+  heroDemo: {
+    agent: string;
+    placeholder: string;
+    /** shown in the grid before the first turn seeds it */
+    empty: string;
+    turns: { ask: string; reply: string }[];
   };
   eyebrow: {
     flow: string;
@@ -76,17 +86,29 @@ export interface Messages {
     compare: string;
     price: string;
     step: string;
+    git: string;
+    audit: string;
   };
-  feat: { title: string; sub: string; items: Feature[] };
-  /** the fifth feature block; the first four come from feat/git above */
-  audit: Feature;
-  git: { title: string; items: Feature[]; agentLabel: string; syncedCaption: string };
+  feat: { title: string; sub: string; items: Feature[]; demo: { ask: string; reply: string }[] };
+  /** the control block: one headline plus the two captions under its canvas */
+  audit: Feature & { points: [string, string] };
+  git: { title: string; sub: string; items: Feature[]; agentLabel: string; syncedCaption: string };
   flow: { title: string; sub: string; steps: Step[] };
   views: { title: string; sub: string; shots: string[] };
   tpl: { title: string; sub: string; items: string[]; viewAll: string };
   char: { title: string; sub: string };
   compare: { yes: string; no: string; rows: CompareRow[] };
-  price: { title: string; sub: string; billed: string; popular: string; soon: string; getPro: string; forever: string; plans: Plan[] };
+  price: {
+    title: string;
+    sub: string;
+    free: string;
+    perMonth: string;
+    perYear: string;
+    cta: string;
+    soon: string;
+    note: string;
+    plans: Plan[];
+  };
   cta: { title: string; sub: string; button: string };
   footer: {
     tagline: string;
@@ -99,6 +121,7 @@ export interface Messages {
   waitlist: {
     title: string;
     sub: string;
+    emailLabel: string;
     placeholder: string;
     button: string;
     sending: string;
@@ -125,22 +148,25 @@ const en: Messages = {
     mcp: "MCP integration",
     about: "About Mochi",
     star: "Star on GitHub",
+    login: "Log in",
     menu: "Menu",
     openMenu: "Open menu",
   },
   eyebrow: {
     flow: "How it works",
-    feat: "Features",
+    feat: "Working together",
     views: "Views",
     tpl: "Templates",
     char: "Why Mochi",
     compare: "Compared with Excel + Copilot and Airtable",
     price: "Pricing",
     step: "Step",
+    git: "History",
+    audit: "Control",
   },
   views: {
-    title: "One dataset, every view your team thinks in",
-    sub: "Grid, Kanban, Calendar, Gallery, and Chart all read the same records. Switch views without copying data or rebuilding a thing.",
+    title: "One set of data, every way your team likes to see it",
+    sub: "Grid, board, calendar, gallery, chart. They all read the same rows, so switching never copies anything.",
     shots: ["Leads by status", "Orders by order date", "Products as cards", "Tasks by priority", "Leads by source"],
   },
   compare: {
@@ -343,56 +369,57 @@ const en: Messages = {
       }
 },
   hero: {
-    headline: "A local-first data workspace. Zero server bills.",
-    sub: "Build a CRM, HR tracker, or any internal tool with Claude, Codex, or OpenCode. No code, no server fees.",
+    headline: "One place for all your work. No servers, no monthly bill.",
+    sub: "Build a customer list, a hiring tracker, anything your team needs. It all lives on your own computer.",
     badge: "Local-first · agent-native",
+    download: "Download Mochi",
     ctaPrimary: "Get started",
     ctaSecondary: "See how it works",
     copyLabel: "Copy install command",
     trust: [
-      { title: "No server.", desc: "Your data stays on your devices." },
-      { title: "Peer-to-peer sync.", desc: "Works offline. Changes sync when you're back." },
-      { title: "Private by default.", desc: "Encrypted in transit. You own your data." },
+      { title: "Nothing to run", desc: "It sits on your computer like any other app." },
+      { title: "Works offline", desc: "Your edits reach the team the moment you are back online." },
+      { title: "Yours alone", desc: "Nothing leaves your machine unless you ask it to." },
+    ],
+  },
+  heroDemo: {
+    agent: "Claude",
+    placeholder: "ask Claude to change the table…",
+    empty: "Empty workspace",
+    turns: [
+      {
+        ask: "seed a CRM database with customers, orders and products",
+        reply: "Created 8 collections with sample data.",
+      },
+      {
+        ask: "generate a cover image for every product",
+        reply: "Added 12 product images.",
+      },
+      {
+        ask: "which products are under 10 in stock?",
+        reply: "5 of them, now filtered in this view.",
+      },
     ],
   },
   feat: {
-    title: "One workspace for your team and your AI agents",
-    sub: "Mochi combines the simplicity of a spreadsheet, the power of a database, and the intelligence of AI.",
+    title: "A workspace your team and your AI both work in",
+    sub: "As easy as a spreadsheet, as capable as a database, and your AI can read and write every row.",
     items: [
-      {
-        title: "Chat with Claude, OpenCode & Hermes-Agent",
-        desc: "AI agents operate your data through typed MCP tools that stay safe, auditable, and Git-backed. Every change is diff-reviewable.",
-      },
-      {
-        title: "Design your data with no code, no prompts",
-        desc: "Pick a template (CRM, HR, Inventory, Projects) or describe your tables in plain Markdown. Mochi builds the schema, relations, and sample data.",
-      },
-      {
-        title: "Real-time team collaboration",
-        desc: "Teammates share the same workspace via peer-to-peer sync. Edit together, no cloud servers, no per-seat billing.",
-      },
-      {
-        title: "Runs on your laptop, no server bills",
-        desc: "Your data lives on your machine. Zero hosting fees, no SaaS lock-in, no waiting on IT to spin up a database.",
-      },
-      {
-        title: "Undo anything, keep the full history",
-        desc: "Every edit is versioned in Git. Review who changed what, and roll back in one command when something goes wrong.",
-      },
+      { title: "Just ask, in plain words", desc: "Claude, Codex and OpenCode can look things up and make changes for you. Every change is written down, so you can always undo it." },
+      { title: "No formulas, no setup", desc: "Start from a workspace that already works, or describe what you need in one sentence and let Mochi build it." },
+    ],
+    demo: [
+      { ask: "open the customers table", reply: "Opened Customers, 6 rows." },
+      { ask: "show only the active ones", reply: "Filtered to 7 active." },
     ],
   },
-  audit: { title: "Auditable, no-code control", desc: "Every agent edit is logged field by field, and filters or groups are built by clicking, not by prompting." },
+  audit: { title: "You can see everything your AI did", desc: "Every edit is listed field by field, and you build a filter by clicking, not by explaining.", points: ["Every AI edit, written down", "Build a filter by clicking"] },
   git: {
-    title: "Git-backed storage control & data history",
+    title: "Every change is kept, so nothing is ever lost",
+    sub: "See who changed what and when. Put anything back the way it was, even a week later.",
     items: [
-      {
-        title: "Sync your database online, via Git",
-        desc: "Every commit updates your local files and your hosted database together. No separate sync step, no drift.",
-      },
-      {
-        title: "Team collab with agent",
-        desc: "Two teammates, two branches, one shared workspace. Mochi keeps every edit in sync, with no merge conflicts.",
-      },
+      { title: "Your work, always backed up", desc: "Every save updates the copy on your machine and the shared one together. There is no separate step to remember." },
+      { title: "Two people, one table", desc: "Work at the same time without stepping on each other. Mochi keeps both sides in step." },
     ],
     agentLabel: "Mochi agent",
     syncedCaption: "synced automatically, zero config",
@@ -408,8 +435,8 @@ const en: Messages = {
   },
   tpl: {
     viewAll: "View all →",
-    title: "Templates for the tools you actually need",
-    sub: "Whether you run sales, HR, ops, or a project team, you start from a template with schema, relations, and sample data. Customize in plain language, or let your agent do it.",
+    title: "Start from something that already works",
+    sub: "Sales, hiring, stock or projects. Each one arrives with sample data, and you can change any of it in plain words.",
     items: [
       "Centralize customer interactions to close more deals",
       "Manage people, roles, and attendance in one workspace",
@@ -422,21 +449,22 @@ const en: Messages = {
     sub: "Mochi is a local-first, AI-native data assistant. It simplifies, secures, and tracks data operations between your team and AI agents, eliminating the hassle of tacked-on AI in spreadsheets or monthly cloud storage fees.",
   },
   price: {
-    title: "Choose your plan",
-    sub: "One plan, one payment. Yours forever.",
-    billed: "One-time payment. Pay once, use forever.",
-    popular: "MOST POPULAR",
-    forever: "/forever",
-    soon: "Soon",
-    getPro: "Get Pro →",
+    title: "Free while it is just you",
+    sub: "Everything on this page works without paying. Pro is for when other people need to be in there with you.",
+    free: "Free",
+    perMonth: "per month",
+    perYear: "per year",
+    cta: "Get Pro",
+    soon: "Coming soon",
+    note: "Billed through Polar. Cancel whenever you like, and your data stays on your machine either way.",
     plans: [
-      { tagline: "For solo hobby projects", features: ["3 workspaces", "Free templates only", "Git bundle deploy", "Community support"] },
-      { tagline: "For individual builders", features: ["Unlimited workspaces", "Mochi Table", "Premium templates", "Git bundle deploy", "Write history & rollback", "Priority support"] },
+      { tagline: "For one person", features: ["Everything runs on your own machine", "As many workspaces and tables as you like", "Full history, and undo that goes back", "Connect Claude, Codex or OpenCode"] },
+      { tagline: "For a team", features: ["Everything in Free", "Seats for the rest of your team", "Shared workspaces that stay in step", "Email support"] },
     ],
   },
-  cta: { title: "Ready to organize your data?", sub: "Install Mochi in seconds. No server, no prompts, no lock-in.", button: "Get started →" },
+  cta: { title: "Ready to get your data in order?", sub: "Download Mochi and start in about a minute. Nothing to set up, nothing to sign up for.", button: "Get started →" },
   footer: {
-    tagline: "Your team's data workspace. No server bills, no lock-in, agent-ready.",
+    tagline: "One place for your team's data. It stays on your machines, and your AI can use it.",
     product: "Product",
     developer: "Developer",
     company: "Company",
@@ -446,6 +474,7 @@ const en: Messages = {
   waitlist: {
     title: "Free plan, coming soon",
     sub: "We'll email you the day it opens. Nothing else.",
+    emailLabel: "Email",
     placeholder: "you@company.com",
     button: "Notify me",
     sending: "Sending…",
@@ -479,22 +508,25 @@ const es: Messages = {
     mcp: "Integración MCP",
     about: "Sobre Mochi",
     star: "Marcar en GitHub",
+    login: "Iniciar sesión",
     menu: "Menú",
     openMenu: "Abrir menú",
   },
   eyebrow: {
     flow: "Cómo funciona",
-    feat: "Funciones",
+    feat: "Trabajar juntos",
     views: "Vistas",
     tpl: "Plantillas",
     char: "Por qué Mochi",
     compare: "Frente a Excel + Copilot y Airtable",
     price: "Precios",
     step: "Paso",
+    git: "Historial",
+    audit: "Control",
   },
   views: {
-    title: "Un solo conjunto de datos, todas las vistas que tu equipo necesita",
-    sub: "Cuadrícula, Kanban, Calendario, Galería, Gráfico: todas leen los mismos registros. Cambia de vista sin copiar datos ni rehacer nada.",
+    title: "Unos mismos datos, cada forma en que tu equipo quiere verlos",
+    sub: "Cuadrícula, tablero, calendario, galería, gráfico. Todos leen las mismas filas, así que cambiar de vista no copia nada.",
     shots: ["Leads por estado", "Pedidos por fecha", "Productos en fichas", "Tareas por prioridad", "Leads por origen"],
   },
   compare: {
@@ -665,48 +697,57 @@ const es: Messages = {
       }
 },
   hero: {
-    headline: "Un espacio de datos local-first. Cero facturas de servidor.",
-    sub: "Crea un CRM, un gestor de RR. HH. o cualquier herramienta interna con Claude, Codex u OpenCode. Sin código, sin servidores.",
+    headline: "Un solo lugar para todo tu trabajo. Sin servidores, sin cuota mensual.",
+    sub: "Crea una lista de clientes, un seguimiento de contrataciones, lo que tu equipo necesite. Todo vive en tu propio ordenador.",
     badge: "Local-first · nativo para IA",
+    download: "Descargar Mochi",
     ctaPrimary: "Empezar",
     ctaSecondary: "Ver cómo funciona",
     copyLabel: "Copiar comando de instalación",
     trust: [
-      { title: "Sin servidor.", desc: "Tus datos se quedan en tus dispositivos." },
-      { title: "Sincronización peer-to-peer.", desc: "Funciona sin conexión. Se sincroniza al volver." },
-      { title: "Privado por defecto.", desc: "Cifrado en tránsito. Los datos son tuyos." },
+      { title: "Nada que montar", desc: "Está en tu ordenador como cualquier otra aplicación." },
+      { title: "Funciona sin conexión", desc: "Tus cambios llegan al equipo en cuanto vuelves a tener red." },
+      { title: "Solo tuyo", desc: "Nada sale de tu máquina si tú no lo pides." },
+    ],
+  },
+  heroDemo: {
+    agent: "Claude",
+    placeholder: "pide a Claude que cambie la tabla…",
+    empty: "Espacio vacío",
+    turns: [
+      {
+        ask: "crea una base de datos CRM con clientes, pedidos y productos",
+        reply: "Creadas 8 colecciones con datos de ejemplo.",
+      },
+      {
+        ask: "genera una imagen de portada para cada producto",
+        reply: "Añadidas 12 imágenes de producto.",
+      },
+      {
+        ask: "¿qué productos tienen menos de 10 en stock?",
+        reply: "5, ya filtrados en esta vista.",
+      },
     ],
   },
   feat: {
-    title: "Todo lo que tu agente necesita para trabajar con datos",
-    sub: "Mochi combina la simplicidad de una hoja de cálculo, la potencia de una base de datos y la inteligencia de la IA.",
+    title: "Un espacio en el que trabajáis tu equipo y tu IA",
+    sub: "Tan fácil como una hoja de cálculo, tan capaz como una base de datos, y tu IA lee y escribe cada fila.",
     items: [
-      {
-        title: "Chatea con naturalidad con Claude, Codex y OpenCode",
-        desc: "Habla directamente en lenguaje natural. Mochi entiende el contexto de tu espacio de trabajo y opera los datos por ti mediante herramientas tipadas.",
-      },
-      {
-        title: "Crea una plantilla con un solo comando",
-        desc: "Esquemas listos para CRM, HRM, inventario y proyectos, con datos de ejemplo incluidos.",
-      },
-      {
-        title: "MULTI-BRANCH · MULTI-USER · REALTIME DB",
-        desc: "Los agentes pueden trabajar en múltiples ramas simultáneamente. Las actualizaciones se transmiten en vivo a la BD en tiempo real sin colisiones.",
-      },
+      { title: "Pídelo con palabras normales", desc: "Claude, Codex y OpenCode pueden consultar y cambiar cosas por ti. Todo queda anotado, así que siempre puedes deshacerlo." },
+      { title: "Sin fórmulas, sin configuración", desc: "Empieza con un espacio que ya funciona, o describe en una frase lo que necesitas y deja que Mochi lo cree." },
+    ],
+    demo: [
+      { ask: "abre la tabla de clientes", reply: "Customers abierta, 6 filas." },
+      { ask: "muestra solo los activos", reply: "Filtrado a 7 activos." },
     ],
   },
-  audit: { title: "Control auditable, sin código", desc: "Cada edición del agente queda registrada campo por campo, y los filtros o grupos se crean haciendo clic, no escribiendo prompts." },
+  audit: { title: "Puedes ver todo lo que hizo tu IA", desc: "Cada edición aparece campo por campo, y los filtros se crean haciendo clic, no explicando.", points: ["Cada edición de la IA, anotada", "Crea un filtro haciendo clic"] },
   git: {
-    title: "Almacenamiento en Git y control del historial de datos",
+    title: "Cada cambio se guarda, así nunca se pierde nada",
+    sub: "Mira quién cambió qué y cuándo. Deja cualquier cosa como estaba, incluso una semana después.",
     items: [
-      {
-        title: "Sincroniza tu base de datos online, vía Git",
-        desc: "Cada commit actualiza tus archivos locales y tu base de datos alojada a la vez, sin paso de sincronización aparte, sin desviaciones.",
-      },
-      {
-        title: "Colabora en equipo con el agente",
-        desc: "Dos compañeros, dos ramas, un espacio de trabajo compartido, Mochi mantiene cada cambio sincronizado, sin conflictos de fusión.",
-      },
+      { title: "Tu trabajo, siempre a salvo", desc: "Cada guardado actualiza a la vez la copia de tu máquina y la compartida. No hay un paso aparte que recordar." },
+      { title: "Dos personas, una tabla", desc: "Trabajad a la vez sin pisaros. Mochi mantiene los dos lados al día." },
     ],
     agentLabel: "Agente Mochi",
     syncedCaption: "sincronizado automáticamente, sin configuración",
@@ -722,8 +763,8 @@ const es: Messages = {
   },
   tpl: {
     viewAll: "Ver todas →",
-    title: "Plantillas para las herramientas que realmente necesitas",
-    sub: "Ya sea que gestiones ventas, RRHH, operaciones o un equipo de proyecto, empieza desde una plantilla con esquema, relaciones y datos de ejemplo. Personaliza en lenguaje natural o deja que tu agente lo haga.",
+    title: "Empieza con algo que ya funciona",
+    sub: "Ventas, personas, inventario o proyectos. Cada uno llega con datos de ejemplo y lo cambias todo con palabras normales.",
     items: [
       "Centraliza las interacciones con clientes para cerrar más ventas",
       "Gestiona personas, roles y asistencia en un solo espacio",
@@ -736,21 +777,22 @@ const es: Messages = {
     sub: "Un pequeño compañero redondo y siempre listo, entre tus agentes de IA y tu base de datos. Mochi nunca decide por ti; solo hace que cada operación de datos sea simple, segura y fácil de seguir.",
   },
   price: {
-    title: "Elige tu plan",
-    sub: "Un plan, un pago. Tuyo para siempre.",
-    billed: "Pago único. Paga una vez, úsalo para siempre.",
-    popular: "MÁS POPULAR",
-    forever: "/para siempre",
-    soon: "Próximamente",
-    getPro: "Obtener Pro →",
+    title: "Gratis mientras seas tú solo",
+    sub: "Todo lo de esta página funciona sin pagar. Pro es para cuando otras personas tienen que estar dentro contigo.",
+    free: "Gratis",
+    perMonth: "al mes",
+    perYear: "al año",
+    cta: "Pasar a Pro",
+    soon: "Muy pronto",
+    note: "Se cobra a través de Polar. Cancela cuando quieras: tus datos se quedan en tu máquina de todas formas.",
     plans: [
-      { tagline: "Para proyectos personales", features: ["3 espacios de trabajo", "Solo plantillas gratuitas", "Despliegue de paquete Git", "Soporte de la comunidad"] },
-      { tagline: "Para creadores individuales", features: ["Espacios ilimitados", "Mochi Table", "Plantillas premium", "Despliegue de paquete Git", "Historial y reversión", "Soporte prioritario"] },
+      { tagline: "Para una persona", features: ["Todo funciona en tu propio ordenador", "Tantos espacios y tablas como quieras", "Historial completo, y deshacer que llega lejos", "Conecta Claude, Codex u OpenCode"] },
+      { tagline: "Para un equipo", features: ["Todo lo de Gratis", "Plazas para el resto del equipo", "Espacios compartidos que van al día", "Soporte por correo"] },
     ],
   },
-  cta: { title: "¿Listo para organizar tus datos?", sub: "Instala Mochi en segundos y empieza con tu primera plantilla.", button: "Empezar →" },
+  cta: { title: "¿Listo para ordenar tus datos?", sub: "Descarga Mochi y empieza en un minuto. Nada que configurar, nada que registrar.", button: "Empezar →" },
   footer: {
-    tagline: "El compañero de datos nativo para agentes: Claude, Codex y OpenCode.",
+    tagline: "Un lugar para los datos de tu equipo. Se quedan en vuestras máquinas y tu IA los usa.",
     product: "Producto",
     developer: "Desarrollo",
     company: "Empresa",
@@ -760,6 +802,7 @@ const es: Messages = {
   waitlist: {
     title: "Plan gratuito, próximamente",
     sub: "Te escribiremos el día que se abra. Nada más.",
+    emailLabel: "Correo electrónico",
     placeholder: "tu@empresa.com",
     button: "Avisarme",
     sending: "Enviando…",
@@ -793,22 +836,25 @@ const fr: Messages = {
     mcp: "Intégration MCP",
     about: "À propos de Mochi",
     star: "Star sur GitHub",
+    login: "Se connecter",
     menu: "Menu",
     openMenu: "Ouvrir le menu",
   },
   eyebrow: {
     flow: "Comment ça marche",
-    feat: "Fonctionnalités",
+    feat: "Travailler ensemble",
     views: "Vues",
     tpl: "Modèles",
     char: "Pourquoi Mochi",
     compare: "Face à Excel + Copilot et Airtable",
     price: "Tarifs",
     step: "Étape",
+    git: "Historique",
+    audit: "Contrôle",
   },
   views: {
-    title: "Un seul jeu de données, toutes les vues dont votre équipe a besoin",
-    sub: "Grille, Kanban, Calendrier, Galerie, Graphique : tous lisent les mêmes enregistrements. Changez de vue sans copier ni reconstruire quoi que ce soit.",
+    title: "Les mêmes données, dans toutes les vues que votre équipe aime",
+    sub: "Tableau, colonnes, calendrier, galerie, graphique. Tous lisent les mêmes lignes, changer de vue ne copie rien.",
     shots: ["Leads par statut", "Commandes par date", "Produits en fiches", "Tâches par priorité", "Leads par source"],
   },
   compare: {
@@ -979,48 +1025,57 @@ const fr: Messages = {
       }
 },
   hero: {
-    headline: "Un espace de données local-first. Zéro facture de serveur.",
-    sub: "Créez un CRM, un outil RH ou n'importe quel outil interne avec Claude, Codex ou OpenCode. Sans code, sans serveur.",
+    headline: "Un seul endroit pour tout votre travail. Sans serveur, sans abonnement.",
+    sub: "Créez une liste de clients, un suivi de recrutement, tout ce dont votre équipe a besoin. Tout reste sur votre ordinateur.",
     badge: "Local-first · nativement IA",
+    download: "Télécharger Mochi",
     ctaPrimary: "Commencer",
     ctaSecondary: "Voir comment ça marche",
     copyLabel: "Copier la commande d'installation",
     trust: [
-      { title: "Aucun serveur.", desc: "Vos données restent sur vos appareils." },
-      { title: "Synchro peer-to-peer.", desc: "Fonctionne hors ligne. Tout se synchronise au retour." },
-      { title: "Privé par défaut.", desc: "Chiffré en transit. Vos données vous appartiennent." },
+      { title: "Rien à installer", desc: "C'est sur votre ordinateur, comme n'importe quelle application." },
+      { title: "Marche hors ligne", desc: "Vos modifications rejoignent l'équipe dès votre retour en ligne." },
+      { title: "À vous seul", desc: "Rien ne quitte votre machine sans que vous le demandiez." },
+    ],
+  },
+  heroDemo: {
+    agent: "Claude",
+    placeholder: "demandez à Claude de modifier le tableau…",
+    empty: "Espace vide",
+    turns: [
+      {
+        ask: "crée une base CRM avec clients, commandes et produits",
+        reply: "8 collections créées avec des données d'exemple.",
+      },
+      {
+        ask: "génère une image de couverture pour chaque produit",
+        reply: "12 images de produit ajoutées.",
+      },
+      {
+        ask: "quels produits ont moins de 10 en stock ?",
+        reply: "5, désormais filtrés dans cette vue.",
+      },
     ],
   },
   feat: {
-    title: "Tout ce dont votre agent a besoin pour travailler avec les données",
-    sub: "Mochi réunit la simplicité d'un tableur, la puissance d'une base de données et l'intelligence de l'IA.",
+    title: "Un espace où travaillent votre équipe et votre IA",
+    sub: "Aussi simple qu'un tableur, aussi solide qu'une base de données, et votre IA lit et écrit chaque ligne.",
     items: [
-      {
-        title: "Discutez naturellement avec Claude, Codex et OpenCode",
-        desc: "Parlez directement en langage naturel. Mochi comprend le contexte de votre espace et manipule les données pour vous via des outils typés.",
-      },
-      {
-        title: "Créez un modèle en une seule commande",
-        desc: "Des schémas prêts à l'emploi pour CRM, RH, inventaire et projets, données d'exemple incluses.",
-      },
-      {
-        title: "MULTI-BRANCH · MULTI-USER · REALTIME DB",
-        desc: "Les agents peuvent travailler sur plusieurs branches simultanément. Les mises à jour en direct sont diffusées sans collision.",
-      },
+      { title: "Demandez avec des mots simples", desc: "Claude, Codex et OpenCode peuvent chercher et modifier à votre place. Tout est noté, vous pouvez donc toujours revenir en arrière." },
+      { title: "Pas de formules, pas de réglages", desc: "Partez d'un espace déjà prêt, ou décrivez en une phrase ce qu'il vous faut et laissez Mochi le construire." },
+    ],
+    demo: [
+      { ask: "ouvre la table clients", reply: "Customers ouverte, 6 lignes." },
+      { ask: "montre seulement les actifs", reply: "Filtré sur 7 actifs." },
     ],
   },
-  audit: { title: "Un contrôle auditable, sans code", desc: "Chaque modification de l'agent est journalisée champ par champ, et les filtres ou groupes se construisent en cliquant, pas en rédigeant des prompts." },
+  audit: { title: "Vous voyez tout ce que votre IA a fait", desc: "Chaque modification est listée champ par champ, et un filtre se construit en cliquant, pas en expliquant.", points: ["Chaque modification de l'IA, notée", "Construisez un filtre en cliquant"] },
   git: {
-    title: "Stockage Git et contrôle de l'historique des données",
+    title: "Chaque changement est gardé, rien ne se perd",
+    sub: "Voyez qui a changé quoi et quand. Remettez les choses comme avant, même une semaine plus tard.",
     items: [
-      {
-        title: "Synchronisez votre base de données en ligne, via Git",
-        desc: "Chaque commit met à jour vos fichiers locaux et votre base de données hébergée en même temps, pas d'étape de synchro séparée, pas de dérive.",
-      },
-      {
-        title: "Collaboration d'équipe avec l'agent",
-        desc: "Deux coéquipiers, deux branches, un espace de travail partagé, Mochi garde chaque modification synchronisée, sans conflit de fusion.",
-      },
+      { title: "Votre travail, toujours sauvegardé", desc: "Chaque enregistrement met à jour votre copie et la copie partagée en même temps. Aucune étape à retenir." },
+      { title: "Deux personnes, une table", desc: "Travaillez en même temps sans vous gêner. Mochi garde les deux côtés d'accord." },
     ],
     agentLabel: "Agent Mochi",
     syncedCaption: "synchronisé automatiquement, sans configuration",
@@ -1036,8 +1091,8 @@ const fr: Messages = {
   },
   tpl: {
     viewAll: "Tout voir →",
-    title: "Des modèles prêts à l'emploi, personnalisables au besoin",
-    sub: "Chaque modèle est livré avec un schéma, des relations de données et des données d'exemple, assez pour démarrer tout de suite, assez simple pour l'adapter à vos besoins.",
+    title: "Partez de quelque chose qui marche déjà",
+    sub: "Ventes, recrutement, stock ou projets. Chacun arrive avec des données d'exemple, et tout se modifie avec des mots simples.",
     items: [
       "Centralisez les interactions clients pour conclure plus d'affaires",
       "Gérez les personnes, les rôles et les présences au même endroit",
@@ -1050,21 +1105,22 @@ const fr: Messages = {
     sub: "Un petit compagnon tout rond et toujours prêt, entre vos agents IA et votre base de données. Mochi ne décide jamais à votre place ; il rend simplement chaque opération sur les données simple, sûre et facile à suivre.",
   },
   price: {
-    title: "Choisissez votre formule",
-    sub: "Une offre, un paiement. À vous pour toujours.",
-    billed: "Paiement unique. Payez une fois, utilisez à vie.",
-    popular: "LE PLUS POPULAIRE",
-    forever: "/à vie",
+    title: "Gratuit tant que vous êtes seul",
+    sub: "Tout ce que montre cette page marche sans payer. Pro sert quand d'autres personnes doivent y être avec vous.",
+    free: "Gratuit",
+    perMonth: "par mois",
+    perYear: "par an",
+    cta: "Passer à Pro",
     soon: "Bientôt",
-    getPro: "Passer à Pro →",
+    note: "Facturé via Polar. Annulez quand vous voulez : vos données restent sur votre machine dans tous les cas.",
     plans: [
-      { tagline: "Pour les projets perso", features: ["3 espaces de travail", "Modèles gratuits uniquement", "Déploiement de bundle Git", "Support communautaire"] },
-      { tagline: "Pour les créateurs individuels", features: ["Espaces illimités", "Mochi Table", "Modèles premium", "Déploiement de bundle Git", "Historique et retour arrière", "Support prioritaire"] },
+      { tagline: "Pour une personne", features: ["Tout tourne sur votre propre ordinateur", "Autant d'espaces et de tables que vous voulez", "Historique complet, et un retour arrière qui remonte loin", "Connectez Claude, Codex ou OpenCode"] },
+      { tagline: "Pour une équipe", features: ["Tout ce qu'il y a dans Gratuit", "Des places pour le reste de l'équipe", "Des espaces partagés qui restent d'accord", "Assistance par e-mail"] },
     ],
   },
-  cta: { title: "Prêt à organiser vos données ?", sub: "Installez Mochi en quelques secondes et démarrez avec votre premier modèle.", button: "Commencer →" },
+  cta: { title: "Prêt à remettre vos données en ordre ?", sub: "Téléchargez Mochi et commencez en une minute. Rien à configurer, aucun compte à créer.", button: "Commencer →" },
   footer: {
-    tagline: "Le compagnon de données natif pour agents : Claude, Codex et OpenCode.",
+    tagline: "Un endroit pour les données de votre équipe. Elles restent sur vos machines, et votre IA s'en sert.",
     product: "Produit",
     developer: "Développeurs",
     company: "Entreprise",
@@ -1074,6 +1130,7 @@ const fr: Messages = {
   waitlist: {
     title: "Offre gratuite, bientôt disponible",
     sub: "Nous vous écrirons le jour de l'ouverture. Rien d'autre.",
+    emailLabel: "E-mail",
     placeholder: "vous@entreprise.com",
     button: "Me prévenir",
     sending: "Envoi…",
@@ -1107,22 +1164,25 @@ const de: Messages = {
     mcp: "MCP-Integration",
     about: "Über Mochi",
     star: "Auf GitHub starren",
+    login: "Anmelden",
     menu: "Menü",
     openMenu: "Menü öffnen",
   },
   eyebrow: {
     flow: "So funktioniert's",
-    feat: "Funktionen",
+    feat: "Zusammenarbeiten",
     views: "Ansichten",
     tpl: "Vorlagen",
     char: "Warum Mochi",
     compare: "Im Vergleich zu Excel + Copilot und Airtable",
     price: "Preise",
     step: "Schritt",
+    git: "Verlauf",
+    audit: "Kontrolle",
   },
   views: {
-    title: "Ein Datensatz, jede Ansicht, in der dein Team denkt",
-    sub: "Grid, Kanban, Kalender, Galerie und Diagramm lesen dieselben Datensätze. Ansicht wechseln, ohne Daten zu kopieren oder etwas neu zu bauen.",
+    title: "Ein Datensatz, jede Ansicht, die dein Team mag",
+    sub: "Tabelle, Board, Kalender, Galerie, Diagramm. Alle lesen dieselben Zeilen, ein Wechsel kopiert also nichts.",
     shots: ["Leads nach Status", "Bestellungen nach Datum", "Produkte als Karten", "Aufgaben nach Priorität", "Leads nach Quelle"],
   },
   compare: {
@@ -1293,48 +1353,57 @@ const de: Messages = {
       }
 },
   hero: {
-    headline: "Ein lokaler Datenraum. Keine Serverkosten.",
-    sub: "Baue ein CRM, HR-Tool oder jedes interne Werkzeug mit Claude, Codex oder OpenCode. Ohne Code, ohne Servergebühren.",
+    headline: "Ein Ort für die ganze Arbeit. Ohne Server, ohne Monatsrechnung.",
+    sub: "Baue eine Kundenliste, ein Bewerbungsboard oder was dein Team sonst braucht. Alles bleibt auf deinem eigenen Rechner.",
     badge: "Local-first · KI-nativ",
+    download: "Mochi herunterladen",
     ctaPrimary: "Loslegen",
     ctaSecondary: "So funktioniert's",
     copyLabel: "Installationsbefehl kopieren",
     trust: [
-      { title: "Kein Server.", desc: "Deine Daten bleiben auf deinen Geräten." },
-      { title: "Peer-to-Peer-Sync.", desc: "Funktioniert offline. Änderungen synchronisieren sich später." },
-      { title: "Privat by default.", desc: "Verschlüsselt bei der Übertragung. Die Daten gehören dir." },
+      { title: "Nichts einzurichten", desc: "Es liegt auf deinem Rechner wie jede andere App." },
+      { title: "Läuft offline", desc: "Deine Änderungen erreichen das Team, sobald du wieder online bist." },
+      { title: "Nur deins", desc: "Nichts verlässt deinen Rechner, außer du willst es." },
+    ],
+  },
+  heroDemo: {
+    agent: "Claude",
+    placeholder: "bitte Claude, die Tabelle zu ändern…",
+    empty: "Leerer Workspace",
+    turns: [
+      {
+        ask: "lege eine CRM-Datenbank mit Kunden, Bestellungen und Produkten an",
+        reply: "8 Sammlungen mit Beispieldaten erstellt.",
+      },
+      {
+        ask: "erzeuge für jedes Produkt ein Titelbild",
+        reply: "12 Produktbilder hinzugefügt.",
+      },
+      {
+        ask: "welche Produkte haben weniger als 10 auf Lager?",
+        reply: "5, jetzt in dieser Ansicht gefiltert.",
+      },
     ],
   },
   feat: {
-    title: "Alles, was dein Agent für die Arbeit mit Daten braucht",
-    sub: "Mochi verbindet die Einfachheit einer Tabelle, die Leistung einer Datenbank und die Intelligenz von KI.",
+    title: "Ein Arbeitsplatz für dein Team und deine KI",
+    sub: "So einfach wie eine Tabelle, so stark wie eine Datenbank, und deine KI liest und schreibt jede Zeile.",
     items: [
-      {
-        title: "Chatte natürlich mit Claude, Codex & OpenCode",
-        desc: "Sprich direkt in natürlicher Sprache. Mochi versteht den Kontext deines Workspace und bearbeitet Daten für dich über typisierte Tools.",
-      },
-      {
-        title: "Erstelle eine Vorlage mit einem Befehl",
-        desc: "Fertige Schemata für CRM, HRM, Inventar und Projekte, Beispieldaten inklusive.",
-      },
-      {
-        title: "MULTI-BRANCH · MULTI-USER · REALTIME DB",
-        desc: "Agenten können gleichzeitig an mehreren Branches arbeiten. Live-Updates werden ohne Kollisionen in die Realtime-DB gestreamt.",
-      },
+      { title: "Frag einfach, mit normalen Worten", desc: "Claude, Codex und OpenCode können nachsehen und für dich ändern. Alles wird mitgeschrieben, du kannst es also jederzeit zurücknehmen." },
+      { title: "Keine Formeln, kein Einrichten", desc: "Starte mit einem Bereich, der schon läuft, oder beschreibe in einem Satz, was du brauchst, und lass Mochi es bauen." },
+    ],
+    demo: [
+      { ask: "öffne die Kundentabelle", reply: "Customers geöffnet, 6 Zeilen." },
+      { ask: "zeig nur die aktiven", reply: "Auf 7 aktive gefiltert." },
     ],
   },
-  audit: { title: "Nachvollziehbare Kontrolle, ganz ohne Code", desc: "Jede Änderung des Agenten wird Feld für Feld protokolliert, und Filter oder Gruppen entstehen per Klick, nicht per Prompt." },
+  audit: { title: "Du siehst alles, was deine KI getan hat", desc: "Jede Änderung steht Feld für Feld da, und einen Filter baust du per Klick, nicht per Erklärung.", points: ["Jede Änderung der KI wird notiert", "Einen Filter per Klick bauen"] },
   git: {
-    title: "Git-gesicherter Speicher & Datenverwaltung",
+    title: "Jede Änderung bleibt erhalten, nichts geht verloren",
+    sub: "Sieh, wer was wann geändert hat. Stell alles wieder her, auch eine Woche später.",
     items: [
-      {
-        title: "Synchronisiere deine Datenbank online, via Git",
-        desc: "Jeder Commit aktualisiert deine lokalen Dateien und deine gehostete Datenbank gleichzeitig, kein separater Sync-Schritt, keine Abweichung.",
-      },
-      {
-        title: "Teamzusammenarbeit mit Agent",
-        desc: "Zwei Kolleg:innen, zwei Branches, ein gemeinsamer Workspace, Mochi hält jede Änderung synchron, ganz ohne Merge-Konflikte.",
-      },
+      { title: "Deine Arbeit ist immer gesichert", desc: "Jedes Speichern bringt deine Kopie und die gemeinsame zugleich auf Stand. Kein Extraschritt, den man vergessen kann." },
+      { title: "Zwei Leute, eine Tabelle", desc: "Arbeitet gleichzeitig, ohne euch in die Quere zu kommen. Mochi hält beide Seiten beisammen." },
     ],
     agentLabel: "Mochi-Agent",
     syncedCaption: "automatisch synchronisiert, ohne Konfiguration",
@@ -1350,8 +1419,8 @@ const de: Messages = {
   },
   tpl: {
     viewAll: "Alle ansehen →",
-    title: "Fertige Vorlagen, bei Bedarf anpassbar",
-    sub: "Jede Vorlage kommt mit Schema, Datenrelationen und Beispieldaten, genug, damit dein Agent sofort loslegt, einfach genug für deine Anpassungen.",
+    title: "Fang mit etwas an, das schon läuft",
+    sub: "Vertrieb, Personal, Lager oder Projekte. Jede Vorlage bringt Beispieldaten mit, und du änderst alles mit normalen Worten.",
     items: [
       "Kundenkontakte bündeln und mehr Abschlüsse erzielen",
       "Menschen, Rollen und Anwesenheit an einem Ort verwalten",
@@ -1364,21 +1433,22 @@ const de: Messages = {
     sub: "Ein kleiner, runder, stets bereiter Begleiter, zwischen deinen KI-Agenten und deiner Datenbank. Mochi entscheidet nie für dich; es macht jede Datenoperation nur einfach, sicher und leicht nachvollziehbar.",
   },
   price: {
-    title: "Wähle deinen Plan",
-    sub: "Ein Tarif, eine Zahlung. Für immer deins.",
-    billed: "Einmalzahlung. Einmal zahlen, für immer nutzen.",
-    popular: "AM BELIEBTESTEN",
-    forever: "/für immer",
+    title: "Kostenlos, solange du allein bist",
+    sub: "Alles auf dieser Seite funktioniert ohne zu zahlen. Pro ist für den Moment, in dem andere mit dabei sein müssen.",
+    free: "Kostenlos",
+    perMonth: "pro Monat",
+    perYear: "pro Jahr",
+    cta: "Pro holen",
     soon: "Bald",
-    getPro: "Pro holen →",
+    note: "Abrechnung über Polar. Jederzeit kündbar, und deine Daten bleiben so oder so auf deinem Rechner.",
     plans: [
-      { tagline: "Für private Hobbyprojekte", features: ["3 Workspaces", "Nur kostenlose Vorlagen", "Git-Bundle-Deploy", "Community-Support"] },
-      { tagline: "Für einzelne Entwickler", features: ["Unbegrenzte Workspaces", "Mochi Table", "Premium-Vorlagen", "Git-Bundle-Deploy", "Schreibverlauf & Rollback", "Priorisierter Support"] },
+      { tagline: "Für eine Person", features: ["Alles läuft auf deinem eigenen Rechner", "So viele Bereiche und Tabellen, wie du willst", "Vollständiger Verlauf, und ein Rückgängig, das weit zurückreicht", "Verbinde Claude, Codex oder OpenCode"] },
+      { tagline: "Für ein Team", features: ["Alles aus Kostenlos", "Plätze für den Rest des Teams", "Geteilte Bereiche, die beisammen bleiben", "Support per E-Mail"] },
     ],
   },
-  cta: { title: "Bereit, deine Daten zu ordnen?", sub: "Installiere Mochi in Sekunden und starte mit deiner ersten Vorlage.", button: "Loslegen →" },
+  cta: { title: "Bereit, Ordnung in deine Daten zu bringen?", sub: "Lade Mochi und leg in etwa einer Minute los. Nichts einzurichten, nichts anzumelden.", button: "Loslegen →" },
   footer: {
-    tagline: "Der agentennative Datenbegleiter für Claude, Codex und OpenCode.",
+    tagline: "Ein Ort für die Daten deines Teams. Sie bleiben auf euren Rechnern, und deine KI kann damit arbeiten.",
     product: "Produkt",
     developer: "Entwickler",
     company: "Unternehmen",
@@ -1388,6 +1458,7 @@ const de: Messages = {
   waitlist: {
     title: "Kostenloser Tarif, bald verfügbar",
     sub: "Wir schreiben dir am Tag der Freischaltung. Sonst nichts.",
+    emailLabel: "E-Mail",
     placeholder: "du@firma.de",
     button: "Benachrichtige mich",
     sending: "Wird gesendet…",
@@ -1421,22 +1492,25 @@ const ja: Messages = {
     mcp: "MCP 連携",
     about: "Mochi について",
     star: "GitHub でスターを付ける",
+    login: "ログイン",
     menu: "メニュー",
     openMenu: "メニューを開く",
   },
   eyebrow: {
     flow: "使い方",
-    feat: "機能",
+    feat: "いっしょに使う",
     views: "ビュー",
     tpl: "テンプレート",
     char: "Mochi を選ぶ理由",
     compare: "Excel + Copilot・Airtable との比較",
     price: "料金",
     step: "ステップ",
+    git: "履歴",
+    audit: "コントロール",
   },
   views: {
-    title: "ひとつのデータを、チームの考え方どおりのビューで",
-    sub: "グリッド、カンバン、カレンダー、ギャラリー、チャートはすべて同じレコードを読みます。データを複製することも作り直すこともなく、ビューだけを切り替えられます。",
+    title: "同じデータを、チームの好きな見え方で",
+    sub: "表、ボード、カレンダー、ギャラリー、グラフ。どれも同じ行を読むので、切り替えても何も複製しません。",
     shots: ["リード（ステータス別）", "注文（注文日別）", "商品（カード表示）", "タスク（優先度別）", "リード（流入元別）"],
   },
   compare: {
@@ -1607,48 +1681,57 @@ const ja: Messages = {
       }
 },
   hero: {
-    headline: "ローカルファーストなデータワークスペース。サーバー費用はゼロ。",
-    sub: "CRM、人事管理、社内ツールを Claude・Codex・OpenCode とともに構築。コードもサーバー費用も不要です。",
+    headline: "仕事のすべてをひとつの場所に。サーバーも月額もいりません。",
+    sub: "顧客リストでも採用管理でも、チームに必要なものを作れます。すべて自分のパソコンの中にあります。",
     badge: "ローカルファースト · AIネイティブ",
+    download: "Mochi をダウンロード",
     ctaPrimary: "はじめる",
     ctaSecondary: "使い方を見る",
     copyLabel: "インストールコマンドをコピー",
     trust: [
-      { title: "サーバー不要。", desc: "データはあなたの端末に残ります。" },
-      { title: "ピアツーピア同期。", desc: "オフラインでも動作し、復帰時に同期します。" },
-      { title: "既定でプライベート。", desc: "通信は暗号化。データの所有者はあなたです。" },
+      { title: "用意するものはなし", desc: "ほかのアプリと同じように、あなたのパソコンで動きます。" },
+      { title: "オフラインでも使える", desc: "オンラインに戻った瞬間、変更がチームに届きます。" },
+      { title: "あなただけのもの", desc: "あなたが望まないかぎり、何もパソコンの外に出ません。" },
+    ],
+  },
+  heroDemo: {
+    agent: "Claude",
+    placeholder: "テーブルの変更を Claude に頼む…",
+    empty: "空のワークスペース",
+    turns: [
+      {
+        ask: "顧客・注文・商品を含む CRM データベースを作って",
+        reply: "8 個のコレクションをサンプルデータ付きで作成しました。",
+      },
+      {
+        ask: "すべての商品にカバー画像を生成して",
+        reply: "商品画像を 12 件追加しました。",
+      },
+      {
+        ask: "在庫が 10 未満の商品は?",
+        reply: "5 件です。このビューで絞り込みました。",
+      },
     ],
   },
   feat: {
-    title: "エージェントがデータを扱うために必要なすべて",
-    sub: "Mochiは、表計算の手軽さ、データベースの性能、そしてAIの知性をひとつにまとめます。",
+    title: "チームと AI が同じ場所で働けます",
+    sub: "表計算のように簡単で、データベースのように頼れて、AI がすべての行を読み書きできます。",
     items: [
-      {
-        title: "Claude・Codex・OpenCodeと自然に対話",
-        desc: "自然言語でそのまま話しかけるだけ。Mochiはワークスペースの文脈を理解し、型付きツールでデータを操作します。",
-      },
-      {
-        title: "1コマンドでテンプレートを作成",
-        desc: "CRM・HRM・在庫・プロジェクト向けのスキーマをすぐに利用可能。サンプルデータ付き。",
-      },
-      {
-        title: "MULTI-BRANCH · MULTI-USER · REALTIME DB",
-        desc: "エージェントは複数のブランチで同時に作業できます。ライブアップデートは衝突することなくリアルタイムDBにストリーミングされます。",
-      },
+      { title: "ふつうの言葉で頼むだけ", desc: "Claude や Codex、OpenCode が調べたり書き換えたりします。すべて記録に残るので、いつでも元に戻せます。" },
+      { title: "数式も設定もいりません", desc: "すでに動くワークスペースから始めるか、必要なものを一文で伝えれば Mochi が作ります。" },
+    ],
+    demo: [
+      { ask: "顧客テーブルを開いて", reply: "Customers を開きました。6 行です。" },
+      { ask: "アクティブだけ表示して", reply: "アクティブ 7 件に絞り込みました。" },
     ],
   },
-  audit: { title: "ノーコードで、監査できる操作", desc: "エージェントの編集はフィールド単位で記録され、フィルターやグループ化はプロンプトではなくクリックで作れます。" },
+  audit: { title: "AI がしたことはすべて見えます", desc: "変更はフィールド単位で並び、絞り込みは説明ではなくクリックで作れます。", points: ["AI の変更はすべて記録されます", "クリックで絞り込みを作る"] },
   git: {
-    title: "Git連携ストレージ制御とデータ履歴管理",
+    title: "変更はすべて残るので、なくなるものはありません",
+    sub: "誰がいつ何を変えたかがわかります。一週間後でも元の状態に戻せます。",
     items: [
-      {
-        title: "Git 経由でデータベースをオンライン同期",
-        desc: "コミットのたびに、ローカルファイルとホスト先のデータベースが同時に更新されます。別途の同期作業もズレも発生しません。",
-      },
-      {
-        title: "エージェントとチームで共同作業",
-        desc: "2人のメンバー、2つのブランチ、1つの共有ワークスペース, Mochi があらゆる変更を同期し、マージの衝突もありません。",
-      },
+      { title: "あなたの仕事はいつも控えがあります", desc: "保存するたびに手元の分と共有の分が同時に更新されます。覚えておく別の手順はありません。" },
+      { title: "二人でひとつの表", desc: "同時に作業してもぶつかりません。Mochi が両方をそろえます。" },
     ],
     agentLabel: "Mochi エージェント",
     syncedCaption: "自動同期・設定不要",
@@ -1664,8 +1747,8 @@ const ja: Messages = {
   },
   tpl: {
     viewAll: "すべて見る →",
-    title: "既製テンプレート、必要に応じてカスタマイズ",
-    sub: "各テンプレートにはスキーマ・データリレーション・サンプルデータが付属。エージェントがすぐ動き出せて、あなたのニーズに合わせて簡単に調整できます。",
+    title: "すでに動くものから始めましょう",
+    sub: "営業、採用、在庫、プロジェクト。どれもサンプルつきで届き、ふつうの言葉で好きなだけ変えられます。",
     items: [
       "顧客とのやり取りを集約して、成約数を伸ばす",
       "人・役割・勤怠をひとつのワークスペースで管理",
@@ -1678,21 +1761,22 @@ const ja: Messages = {
     sub: "小さくて丸い、いつでも頼れる相棒。AIエージェントとデータベースの間に立ちます。Mochiが代わりに判断することはなく、すべてのデータ操作をシンプルで安全、追跡しやすくします。",
   },
   price: {
-    title: "プランを選ぶ",
-    sub: "プランはひとつ、支払いも一度きり。ずっとあなたのものです。",
-    billed: "一度きりのお支払い。一度払えば、ずっと使えます。",
-    popular: "一番人気",
-    forever: "/買い切り",
+    title: "ひとりのうちは無料です",
+    sub: "このページにあることは、払わなくても全部できます。Pro は、ほかの人もいっしょに入る必要が出てきたときのものです。",
+    free: "無料",
+    perMonth: "月あたり",
+    perYear: "年あたり",
+    cta: "Pro にする",
     soon: "近日公開",
-    getPro: "Pro を購入 →",
+    note: "支払いは Polar 経由です。いつでも解約でき、どちらにしてもデータはあなたのパソコンに残ります。",
     plans: [
-      { tagline: "個人の趣味プロジェクト向け", features: ["ワークスペース3つ", "無料テンプレートのみ", "Gitバンドルデプロイ", "コミュニティサポート"] },
-      { tagline: "個人開発者向け", features: ["ワークスペース無制限", "Mochi Table", "プレミアムテンプレート", "Gitバンドルデプロイ", "書き込み履歴とロールバック", "優先サポート"] },
+      { tagline: "ひとり用", features: ["すべて自分のパソコンで動きます", "ワークスペースもテーブルも好きなだけ", "完全な履歴と、さかのぼれる取り消し", "Claude・Codex・OpenCode をつなげます"] },
+      { tagline: "チーム用", features: ["無料プランのすべて", "チームの人数ぶんの席", "ずれない共有ワークスペース", "メールサポート"] },
     ],
   },
-  cta: { title: "データを整理する準備はできましたか？", sub: "数秒でMochiをインストールして、最初のテンプレートから始めましょう。", button: "はじめる →" },
+  cta: { title: "データを整理する準備はできましたか", sub: "Mochi をダウンロードすれば一分ほどで始められます。設定も登録もいりません。", button: "はじめる →" },
   footer: {
-    tagline: "Claude・Codex・OpenCodeのためのエージェントネイティブなデータ相棒。",
+    tagline: "チームのデータを置く場所。みなさんのパソコンの中に残り、AI が使えます。",
     product: "プロダクト",
     developer: "開発者",
     company: "会社情報",
@@ -1702,6 +1786,7 @@ const ja: Messages = {
   waitlist: {
     title: "無料プランは近日公開",
     sub: "公開日にメールでお知らせします。それ以外は送りません。",
+    emailLabel: "メールアドレス",
     placeholder: "you@company.com",
     button: "通知を受け取る",
     sending: "送信中…",
@@ -1735,22 +1820,25 @@ const zh: Messages = {
     mcp: "MCP 集成",
     about: "关于 Mochi",
     star: "在 GitHub 上加星",
+    login: "登录",
     menu: "菜单",
     openMenu: "打开菜单",
   },
   eyebrow: {
     flow: "如何使用",
-    feat: "功能",
+    feat: "一起用",
     views: "视图",
     tpl: "模板",
     char: "为什么选 Mochi",
     compare: "对比 Excel + Copilot 与 Airtable",
     price: "价格",
     step: "步骤",
+    git: "历史",
+    audit: "掌控",
   },
   views: {
-    title: "同一份数据，团队需要的每一种视图",
-    sub: "表格、看板、日历、图库、图表读取的都是同一批记录。切换视图不必复制数据，也不用重新搭一遍。",
+    title: "同一份数据，团队喜欢怎么看就怎么看",
+    sub: "表格、看板、日历、图库、图表。它们读的是同一批数据，换个看法不会复制任何东西。",
     shots: ["线索（按状态）", "订单（按下单日期）", "商品（卡片视图）", "任务（按优先级）", "线索（按来源）"],
   },
   compare: {
@@ -1921,48 +2009,57 @@ const zh: Messages = {
       }
 },
   hero: {
-    headline: "本地优先的数据空间。服务器费用为零。",
-    sub: "用 Claude、Codex 或 OpenCode 搭建 CRM、人事或任何内部工具。无需写代码，没有服务器账单。",
+    headline: "把工作放在一个地方。不用服务器，也没有月费。",
+    sub: "做一份客户名单、一张招聘看板，或者团队需要的任何东西。它们都存在你自己的电脑上。",
     badge: "本地优先 · AI 原生",
+    download: "下载 Mochi",
     ctaPrimary: "开始使用",
     ctaSecondary: "看看怎么用",
     copyLabel: "复制安装命令",
     trust: [
-      { title: "无需服务器。", desc: "数据始终留在你自己的设备上。" },
-      { title: "点对点同步。", desc: "离线可用，恢复联网后自动同步。" },
-      { title: "默认私密。", desc: "传输全程加密，数据归你所有。" },
+      { title: "不用搭建什么", desc: "它像别的应用一样，装在你自己的电脑上。" },
+      { title: "断网也能用", desc: "一回到网上，你的改动就会同步给队友。" },
+      { title: "只属于你", desc: "除非你要求，任何内容都不会离开你的电脑。" },
+    ],
+  },
+  heroDemo: {
+    agent: "Claude",
+    placeholder: "让 Claude 修改这张表…",
+    empty: "空工作区",
+    turns: [
+      {
+        ask: "创建一个包含客户、订单和商品的 CRM 数据库",
+        reply: "已创建 8 个集合并填入示例数据。",
+      },
+      {
+        ask: "为每个商品生成一张封面图",
+        reply: "已添加 12 张商品图片。",
+      },
+      {
+        ask: "哪些商品库存低于 10？",
+        reply: "5 个，已在此视图中筛选出来。",
+      },
     ],
   },
   feat: {
-    title: "智能体处理数据所需的一切",
-    sub: "Mochi 把表格的简单、数据库的能力和 AI 的智能合到了一起。",
+    title: "一个团队和 AI 都能用的工作区",
+    sub: "像表格一样好上手，像数据库一样靠得住，AI 还能读写每一行。",
     items: [
-      {
-        title: "与 Claude、Codex 和 OpenCode 自然对话",
-        desc: "直接用自然语言交流。Mochi 理解你的工作区上下文，并通过类型化工具替你操作数据。",
-      },
-      {
-        title: "一条命令创建模板",
-        desc: "为 CRM、HRM、库存和项目预置的架构，附带示例数据。",
-      },
-      {
-        title: "MULTI-BRANCH · MULTI-USER · REALTIME DB",
-        desc: "代理可以同时在多个分支上工作。实时更新直接流向实时数据库，不会发生冲突。",
-      },
+      { title: "用平常的话说一句就行", desc: "Claude、Codex 和 OpenCode 可以帮你查、帮你改。每次改动都会记下来，你随时能撤回。" },
+      { title: "不用公式，也不用配置", desc: "从一个已经能跑的工作区开始，或者一句话说清你要什么，交给 Mochi 来搭。" },
+    ],
+    demo: [
+      { ask: "打开客户表", reply: "已打开 Customers，共 6 行。" },
+      { ask: "只显示活跃的", reply: "已筛选出 7 个活跃客户。" },
     ],
   },
-  audit: { title: "可审计的无代码控制", desc: "智能体的每一次修改都会逐字段记录，筛选和分组用点击就能完成，不用写提示词。" },
+  audit: { title: "AI 做过的每件事你都看得见", desc: "每次修改都按字段列出来，筛选靠点几下就成，不用解释。", points: ["AI 的每次修改都会记下来", "点几下就能做出筛选"] },
   git: {
-    title: "Git 驱动的存储控制与数据历史管理",
+    title: "每一次改动都留着，什么都不会丢",
+    sub: "看清谁在什么时候改了什么。哪怕过了一周，也能把它放回原样。",
     items: [
-      {
-        title: "通过 Git 在线同步数据库",
-        desc: "每次提交都会同时更新本地文件和托管数据库 ï¼ 无需额外同步步骤，不会产生数据偏差。",
-      },
-      {
-        title: "与智能体团队协作",
-        desc: "两位同事，两条分支，一个共享工作区 ï¼ Mochi 让每一次修改保持同步，没有合并冲突。",
-      },
+      { title: "你的东西一直有备份", desc: "每次保存都会同时更新本机和共享的那份，没有另外要记的步骤。" },
+      { title: "两个人，一张表", desc: "同时做事也不会互相踩到。Mochi 会让两边保持一致。" },
     ],
     agentLabel: "Mochi 智能体",
     syncedCaption: "自动同步，无需配置",
@@ -1978,8 +2075,8 @@ const zh: Messages = {
   },
   tpl: {
     viewAll: "查看全部 →",
-    title: "预置模板，按需定制",
-    sub: "每个模板都自带架构、数据关系和示例数据ï¼足以让智能体立即上手，又简单到可按你的需求调整。",
+    title: "从已经能用的东西开始",
+    sub: "销售、招聘、库存或项目。每份都带着示例数据，你可以用平常的话随便改。",
     items: [
       "集中管理客户往来，提高成交率",
       "在一个空间里管理人员、角色和考勤",
@@ -1992,21 +2089,22 @@ const zh: Messages = {
     sub: "一个小小的、圆滚滚、随时待命的伙伴ï¼站在你的 AI 智能体和数据库之间。Mochi 从不替你做决定，只让每一次数据操作都简单、安全、易于追踪。",
   },
   price: {
-    title: "选择你的方案",
-    sub: "一个套餐，一次付费，终身属于你。",
-    billed: "一次性付款，一次购买，永久使用。",
-    popular: "最受欢迎",
-    forever: "/永久",
+    title: "一个人用，一直免费",
+    sub: "这一页上的东西不花钱就能全用。Pro 是给需要别人一起进来的时候准备的。",
+    free: "免费",
+    perMonth: "每月",
+    perYear: "每年",
+    cta: "升级 Pro",
     soon: "即将推出",
-    getPro: "获取 Pro →",
+    note: "通过 Polar 收款。随时可以取消，无论如何数据都留在你自己的电脑上。",
     plans: [
-      { tagline: "适合个人业余项目", features: ["3 个工作区", "仅限免费模板", "Git 包部署", "社区支持"] },
-      { tagline: "适合独立开发者", features: ["无限工作区", "Mochi Table", "高级模板", "Git 包部署", "写入历史与回滚", "优先支持"] },
+      { tagline: "一个人用", features: ["全部在你自己的电脑上运行", "工作区和表想建多少建多少", "完整历史，撤销能一直往回退", "接上 Claude、Codex 或 OpenCode"] },
+      { tagline: "团队用", features: ["免费版的全部", "给团队其他人的席位", "共享工作区，始终一致", "邮件支持"] },
     ],
   },
-  cta: { title: "准备好整理你的数据了吗？", sub: "几秒钟安装 Mochi，从你的第一个模板开始。", button: "开始使用 →" },
+  cta: { title: "准备好把数据理一理了吗？", sub: "下载 Mochi，大概一分钟就能开始。不用配置，也不用注册。", button: "开始使用 →" },
   footer: {
-    tagline: "面向 Claude、Codex 和 OpenCode 的智能体原生数据伙伴。",
+    tagline: "放团队数据的地方。它留在你们的电脑里，AI 也用得上。",
     product: "产品",
     developer: "开发者",
     company: "公司",
@@ -2016,6 +2114,7 @@ const zh: Messages = {
   waitlist: {
     title: "免费套餐, 即将推出",
     sub: "开放当天我们会发邮件通知你，仅此而已。",
+    emailLabel: "邮箱",
     placeholder: "you@company.com",
     button: "通知我",
     sending: "发送中…",
@@ -2049,22 +2148,25 @@ const vi: Messages = {
     mcp: "Tích hợp MCP",
     about: "Về Mochi",
     star: "Gắn sao trên GitHub",
+    login: "Đăng nhập",
     menu: "Menu",
     openMenu: "Mở menu",
   },
   eyebrow: {
     flow: "Cách hoạt động",
-    feat: "Tính năng",
-    views: "Chế độ xem",
+    feat: "Cùng làm việc",
+    views: "Cách xem",
     tpl: "Mẫu có sẵn",
     char: "Vì sao chọn Mochi",
     compare: "So với Excel + Copilot và Airtable",
     price: "Bảng giá",
     step: "Bước",
+    git: "Lịch sử",
+    audit: "Kiểm soát",
   },
   views: {
-    title: "Một bộ dữ liệu, đủ mọi cách nhìn mà team bạn cần",
-    sub: "Lưới, Kanban, Lịch, Thư viện và Biểu đồ đều đọc cùng một tập bản ghi. Đổi cách xem mà không phải sao chép dữ liệu hay dựng lại từ đầu.",
+    title: "Một bộ dữ liệu, mọi cách nhóm bạn muốn nhìn",
+    sub: "Bảng, cột, lịch, thư viện ảnh, biểu đồ. Tất cả đọc cùng một dữ liệu nên đổi cách xem không sao chép gì cả.",
     shots: ["Khách tiềm năng theo trạng thái", "Đơn hàng theo ngày đặt", "Sản phẩm dạng thẻ", "Công việc theo mức ưu tiên", "Khách tiềm năng theo nguồn"],
   },
   compare: {
@@ -2235,56 +2337,57 @@ const vi: Messages = {
       }
 },
   hero: {
-    headline: "Không gian dữ liệu local-first. Không tốn phí server.",
-    sub: "Tự xây CRM, HR hay bất kỳ công cụ nội bộ nào cùng Claude, Codex hoặc OpenCode. Không cần code, không phí server.",
+    headline: "Một nơi cho mọi việc của cả nhóm. Không máy chủ, không phí hằng tháng.",
+    sub: "Dựng danh sách khách hàng, bảng theo dõi tuyển dụng, hay bất cứ thứ gì nhóm bạn cần. Tất cả nằm trên máy của bạn.",
     badge: "Local-first · thuần AI",
+    download: "Tải Mochi",
     ctaPrimary: "Bắt đầu",
     ctaSecondary: "Xem cách hoạt động",
     copyLabel: "Sao chép lệnh cài đặt",
     trust: [
-      { title: "Không cần server.", desc: "Dữ liệu nằm lại trên máy của bạn." },
-      { title: "Đồng bộ ngang hàng.", desc: "Chạy offline. Có mạng lại là đồng bộ." },
-      { title: "Riêng tư mặc định.", desc: "Mã hoá khi truyền. Dữ liệu là của bạn." },
+      { title: "Không phải dựng gì", desc: "Nó chạy trên máy bạn như mọi ứng dụng khác." },
+      { title: "Dùng được khi mất mạng", desc: "Thay đổi của bạn đến với cả nhóm ngay khi có mạng trở lại." },
+      { title: "Chỉ của riêng bạn", desc: "Không gì rời khỏi máy bạn trừ khi bạn muốn." },
+    ],
+  },
+  heroDemo: {
+    agent: "Claude",
+    placeholder: "nhờ Claude sửa bảng…",
+    empty: "Workspace trống",
+    turns: [
+      {
+        ask: "tạo cơ sở dữ liệu CRM gồm khách hàng, đơn hàng và sản phẩm",
+        reply: "Đã tạo 8 collection kèm dữ liệu mẫu.",
+      },
+      {
+        ask: "tạo ảnh bìa cho từng sản phẩm",
+        reply: "Đã thêm 12 ảnh sản phẩm.",
+      },
+      {
+        ask: "sản phẩm nào còn dưới 10 trong kho?",
+        reply: "5 sản phẩm, đã lọc sẵn trong view này.",
+      },
     ],
   },
   feat: {
-    title: "Một workspace cho cả team và AI agent của bạn",
-    sub: "Mochi gộp lại sự đơn giản của bảng tính, sức mạnh của cơ sở dữ liệu và trí thông minh của AI.",
+    title: "Một nơi làm việc cho cả nhóm bạn lẫn AI của bạn",
+    sub: "Dễ như bảng tính, mạnh như cơ sở dữ liệu, và AI của bạn đọc ghi được từng dòng.",
     items: [
-      {
-        title: "Trò chuyện với Claude, Codex & OpenCode",
-        desc: "AI agent thao tác dữ liệu qua MCP tool có kiểu: an toàn, có audit, lưu trên Git. Mọi thay đổi đều xem được dạng diff.",
-      },
-      {
-        title: "Thiết kế dữ liệu, không cần code, không cần prompt",
-        desc: "Chọn template (CRM, HR, kho vận, dự án) hoặc mô tả bảng bằng Markdown. Mochi tự dựng schema, quan hệ và dữ liệu mẫu.",
-      },
-      {
-        title: "Cộng tác thời gian thực cả team",
-        desc: "Đồng đội dùng chung workspace qua đồng bộ P2P. Cùng chỉnh sửa, không server cloud, không tính phí theo đầu người.",
-      },
-      {
-        title: "Chạy trên laptop, không tốn phí server",
-        desc: "Dữ liệu nằm trên máy bạn. Không phí hosting, không lock-in SaaS, không chờ IT dựng database.",
-      },
-      {
-        title: "Undo bất kỳ lúc nào, giữ nguyên lịch sử",
-        desc: "Mọi chỉnh sửa được version trên Git. Xem ai đã đổi gì, và rollback về trạng thái trước chỉ với một lệnh.",
-      },
+      { title: "Cứ nói bằng lời thường", desc: "Claude, Codex hay OpenCode có thể tra cứu và sửa giúp bạn. Mọi thay đổi đều được ghi lại nên bạn luôn hoàn tác được." },
+      { title: "Không công thức, không cài đặt", desc: "Bắt đầu từ một nơi làm việc đã chạy sẵn, hoặc tả một câu về thứ bạn cần rồi để Mochi dựng." },
+    ],
+    demo: [
+      { ask: "mở bảng khách hàng", reply: "Đã mở Customers, 6 dòng." },
+      { ask: "chỉ hiện những khách đang hoạt động", reply: "Đã lọc còn 7 khách hoạt động." },
     ],
   },
-  audit: { title: "Kiểm soát được, truy vết được, không cần code", desc: "Mọi thay đổi của agent đều được ghi lại theo từng trường, còn bộ lọc và nhóm thì tạo bằng cách bấm chuột chứ không phải viết prompt." },
+  audit: { title: "Bạn thấy được mọi việc AI đã làm", desc: "Từng thay đổi được liệt kê theo từng trường, và bạn dựng bộ lọc bằng cách bấm chọn chứ không phải giải thích.", points: ["Mọi thay đổi của AI đều được ghi lại", "Dựng bộ lọc bằng cách bấm chọn"] },
   git: {
-    title: "Kiểm soát lưu trữ DB trên Git & quản lý lịch sử dữ liệu",
+    title: "Mọi thay đổi đều được giữ lại, không mất gì cả",
+    sub: "Xem ai sửa gì, lúc nào. Trả lại như cũ bất cứ lúc nào, kể cả một tuần sau.",
     items: [
-      {
-        title: "Đồng bộ database online qua Git",
-        desc: "Mỗi commit cập nhật cả file local lẫn database online cùng lúc. Không cần bước đồng bộ riêng, không lệch dữ liệu.",
-      },
-      {
-        title: "Cộng tác nhóm với agent",
-        desc: "Hai người, hai nhánh, một workspace chung. Mochi giữ mọi thay đổi đồng bộ, không xung đột merge.",
-      },
+      { title: "Việc của bạn luôn có bản lưu", desc: "Mỗi lần lưu là cập nhật cả bản trên máy lẫn bản chung. Không có bước riêng nào phải nhớ." },
+      { title: "Hai người, một bảng", desc: "Cùng làm một lúc mà không giẫm chân nhau. Mochi giữ hai bên khớp nhau." },
     ],
     agentLabel: "Mochi agent",
     syncedCaption: "tự động đồng bộ, không cần cấu hình",
@@ -2300,8 +2403,8 @@ const vi: Messages = {
   },
   tpl: {
     viewAll: "Xem tất cả →",
-    title: "Template cho đúng công cụ team bạn cần",
-    sub: "Dù bạn làm sales, HR, vận hành hay điều phối dự án, bạn luôn bắt đầu từ template có sẵn schema, quan hệ và dữ liệu mẫu. Tùy biến bằng ngôn ngữ đời thường, hoặc để agent làm hộ.",
+    title: "Bắt đầu từ thứ đã chạy sẵn",
+    sub: "Bán hàng, tuyển dụng, kho hay dự án. Mỗi mẫu đều có sẵn dữ liệu ví dụ, và bạn đổi được mọi thứ bằng lời thường.",
     items: [
       "Gom mọi tương tác với khách về một chỗ để chốt đơn nhanh hơn",
       "Quản lý nhân sự, vai trò và chấm công trong cùng một nơi",
@@ -2314,21 +2417,22 @@ const vi: Messages = {
     sub: "Một trợ lý nhỏ, tròn trịa và luôn sẵn sàng, đứng giữa team bạn, AI agent và dữ liệu. Mochi không thay bạn quyết định, chỉ giúp mọi thao tác dữ liệu trở nên đơn giản, an toàn và dễ theo dõi.",
   },
   price: {
-    title: "Chọn gói của bạn",
-    sub: "Một gói, trả một lần, dùng mãi mãi.",
-    billed: "Thanh toán một lần. Trả một lần, dùng mãi mãi.",
-    popular: "PHỔ BIẾN NHẤT",
-    forever: "/trọn đời",
+    title: "Một mình thì miễn phí",
+    sub: "Mọi thứ trên trang này dùng không mất tiền. Pro dành cho lúc cần thêm người khác cùng vào.",
+    free: "Miễn phí",
+    perMonth: "mỗi tháng",
+    perYear: "mỗi năm",
+    cta: "Lên Pro",
     soon: "Sắp có",
-    getPro: "Mua Pro →",
+    note: "Thanh toán qua Polar. Huỷ lúc nào cũng được, và dù thế nào dữ liệu vẫn nằm trên máy bạn.",
     plans: [
-      { tagline: "Cho dự án cá nhân", features: ["3 workspace", "Chỉ dùng template miễn phí", "Deploy bundle Git", "Hỗ trợ cộng đồng"] },
-      { tagline: "Cho nhà phát triển cá nhân", features: ["Workspace không giới hạn", "Mochi Table", "Template cao cấp", "Deploy bundle Git", "Lịch sử ghi & rollback", "Hỗ trợ ưu tiên"] },
+      { tagline: "Cho một người", features: ["Mọi thứ chạy trên máy của bạn", "Bao nhiêu workspace và bảng tuỳ bạn", "Lịch sử đầy đủ, hoàn tác lùi được xa", "Nối Claude, Codex hay OpenCode"] },
+      { tagline: "Cho cả nhóm", features: ["Toàn bộ bản Miễn phí", "Chỗ ngồi cho những người còn lại", "Workspace dùng chung luôn khớp nhau", "Hỗ trợ qua email"] },
     ],
   },
-  cta: { title: "Sẵn sàng sắp xếp lại dữ liệu chưa?", sub: "Cài đặt Mochi trong vài giây. Không server, không prompt, không lock-in.", button: "Bắt đầu →" },
+  cta: { title: "Sẵn sàng dọn lại dữ liệu chưa?", sub: "Tải Mochi về và bắt đầu trong khoảng một phút. Không phải cài đặt, không phải đăng ký.", button: "Bắt đầu →" },
   footer: {
-    tagline: "Không gian dữ liệu cho cả team. Không phí server, không lock-in, sẵn sàng cho AI.",
+    tagline: "Một nơi cho dữ liệu của nhóm bạn. Nó nằm trên máy của các bạn, và AI dùng được.",
     product: "Sản phẩm",
     developer: "Nhà phát triển",
     company: "Công ty",
@@ -2338,6 +2442,7 @@ const vi: Messages = {
   waitlist: {
     title: "Gói Free, sắp ra mắt",
     sub: "Mở là chúng tôi gửi email cho bạn ngay. Không gửi gì khác.",
+    emailLabel: "Email",
     placeholder: "ban@congty.com",
     button: "Báo tôi khi có",
     sending: "Đang gửi…",

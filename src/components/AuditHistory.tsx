@@ -1,9 +1,10 @@
-import { Bot, ChevronLeft, ChevronRight, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Chip } from "./appui";
 
-/* A coded recreation of Mochi's record-history panel — same shape and copy as
-   the real one (record LEAD-001, agent "claude-code"), built with our own
-   primitives instead of a screenshot so it stays sharp and theme-aware. */
+/* A coded recreation of Mochi's record-history panel, in the app's own chrome:
+   same shape and copy as the real one (record LEAD-001, agent "claude-code"),
+   built with our primitives instead of a screenshot so it stays sharp and
+   theme-aware. */
 
 interface Entry {
   time: string;
@@ -23,59 +24,51 @@ const ENTRIES: Entry[] = [
 ];
 
 export default function AuditHistory({ compact = false }: { compact?: boolean }) {
+  const line = { borderColor: "var(--app-line)" };
   return (
-    <div className="w-full overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-window)]">
-      {/* window chrome */}
-      <div className="flex h-9 items-center gap-2 border-b border-border bg-secondary/70 px-4">
-        <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
-        <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
-        <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-      </div>
-
-      {/* record header */}
-      <div className={cn("flex items-center gap-3 border-b border-border px-4", compact ? "h-11" : "h-12")}>
-        <span className="flex items-center gap-1 text-muted-foreground">
-          <ChevronLeft className="h-3.5 w-3.5" />
-          <ChevronRight className="h-3.5 w-3.5" />
+    <div className="canvas appui w-full">
+      <div className="flex h-[38px] items-center gap-3 border-b px-4" style={line}>
+        <span className="flex items-center gap-1" style={{ color: "var(--app-faint)" }}>
+          <ChevronLeft className="h-3.5 w-3.5" strokeWidth={1.8} />
+          <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.8} />
         </span>
-        <span className="text-[13px] font-semibold text-foreground">LEAD-001</span>
-        <X className="ml-auto h-3.5 w-3.5 text-muted-foreground" />
+        <span className="mono text-[12px]">LEAD-001</span>
+        <X className="ml-auto h-3.5 w-3.5" strokeWidth={1.8} style={{ color: "var(--app-faint)" }} />
       </div>
 
-      {/* tabs */}
-      <div className="flex items-center gap-5 border-b border-border px-4 text-[13px] text-muted-foreground">
-        <span className="py-2.5">Fields</span>
-        <span className="py-2.5">Comments</span>
-        <span className="border-b-2 border-foreground py-2.5 font-medium text-foreground">History</span>
+      <div className="flex items-center gap-5 border-b px-4 text-[12px]" style={line}>
+        <span className="py-2.5" style={{ color: "var(--app-muted)" }}>Fields</span>
+        <span className="py-2.5" style={{ color: "var(--app-muted)" }}>Comments</span>
+        <span
+          className="border-b-2 py-2.5 font-medium"
+          style={{ borderColor: "var(--app-text)", color: "var(--app-text)" }}
+        >
+          History
+        </span>
       </div>
 
-      {/* history list */}
-      <div className={cn("space-y-4 overflow-y-auto px-4 py-4", compact ? "h-[420px]" : "h-[480px]")}>
+      <div className={`space-y-4 overflow-y-auto px-4 py-4 ${compact ? "h-[380px]" : "h-[440px]"}`}>
         {ENTRIES.map((e, i) => (
           <div key={i} className="flex gap-2.5">
-            <span className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-foreground text-background">
-              <Bot className="h-3 w-3" />
+            <span className="mt-0.5">
+              <Chip tone="lilac" letter="C" />
             </span>
             <div className="min-w-0 flex-1">
               <div className="flex items-baseline gap-2">
-                <span className="mono text-[12px] font-semibold text-foreground">claude-code</span>
-                <span className="text-[11px] text-muted-foreground">{e.time}</span>
+                <span className="mono text-[12px] font-medium">claude-code</span>
+                <span className="text-[11px]" style={{ color: "var(--app-faint)" }}>{e.time}</span>
               </div>
               {e.note ? (
-                <p className="mt-0.5 text-[13px] text-muted-foreground">{e.note}</p>
-              ) : e.from ? (
-                <p className="mt-0.5 text-[13px] text-foreground">
-                  {e.field}{" "}
-                  <span className="text-muted-foreground line-through">{e.from}</span>{" "}
-                  <span className="text-muted-foreground">→</span> {e.to}
-                </p>
-              ) : e.field === "Notes" ? (
-                <p className="mt-0.5 text-[13px] leading-relaxed text-foreground">
-                  {e.field} <span className="text-muted-foreground">→</span> {e.to}
-                </p>
+                <p className="mt-0.5 text-[12.5px]" style={{ color: "var(--app-muted)" }}>{e.note}</p>
               ) : (
-                <p className="mt-0.5 text-[13px] text-foreground">
-                  {e.field} <span className="text-muted-foreground">→</span> {e.to}
+                <p className="mt-0.5 text-[12.5px] leading-relaxed">
+                  <span style={{ color: "var(--app-muted)" }}>{e.field}</span>{" "}
+                  {e.from && (
+                    <>
+                      <span className="line-through" style={{ color: "var(--app-faint)" }}>{e.from}</span>{" "}
+                    </>
+                  )}
+                  <span style={{ color: "var(--app-faint)" }}>&#8594;</span> {e.to}
                 </p>
               )}
             </div>

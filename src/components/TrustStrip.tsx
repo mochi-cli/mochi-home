@@ -1,29 +1,24 @@
 "use client";
 
-import { Lock, RefreshCw, ShieldCheck } from "lucide-react";
 import { useLang } from "./LanguageProvider";
 
-/** The three claims that used to sit inside the hero. Pulled out so the hero
- *  stays a single moment, and given a band of its own directly beneath it. */
-const ICONS = [Lock, RefreshCw, ShieldCheck];
-
+/** Three claims, set as a thin band directly under the hero canvas. No icons
+ *  and no card: at this size the vertical rules carry the grouping, and the
+ *  band's job is to be read in one pass on the way down the page. */
 export default function TrustStrip() {
   const { m } = useLang();
   return (
-    <section className="border-b border-border bg-background">
-      <div className="mx-auto grid max-w-6xl gap-8 px-6 py-9 sm:grid-cols-3">
-        {m.hero.trust.map((t, i) => {
-          const Icon = ICONS[i];
-          return (
-            <div key={t.title} className="flex items-start gap-3">
-              <Icon className="mt-0.5 h-4 w-4 flex-none text-muted-foreground" />
-              <div>
-                <p className="text-[13px] font-semibold text-foreground">{t.title}</p>
-                <p className="mt-0.5 text-[12px] leading-snug text-muted-foreground">{t.desc}</p>
-              </div>
-            </div>
-          );
-        })}
+    <section className="mx-auto mt-20 max-w-[1280px] px-5 sm:mt-24 sm:px-8">
+      <div className="grid border-t border-line sm:grid-cols-3">
+        {m.hero.trust.map((t) => (
+          <div
+            key={t.title}
+            className="border-b border-line py-6 sm:border-b-0 sm:border-l sm:py-7 sm:pl-6 sm:first:border-l-0 sm:first:pl-0"
+          >
+            <p className="label">{t.title}</p>
+            <p className="mt-1.5 max-w-[34ch] text-[15px] leading-relaxed text-ink-2">{t.desc}</p>
+          </div>
+        ))}
       </div>
     </section>
   );

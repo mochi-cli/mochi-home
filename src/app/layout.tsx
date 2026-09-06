@@ -1,28 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageProvider";
-import { EngineProvider } from "@/components/EngineProvider";
 import { Analytics } from "@vercel/analytics/next";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mochi-cli.com";
 const TWITTER_HANDLE = process.env.NEXT_PUBLIC_TWITTER_HANDLE ?? "";
 
-const TITLE = "Mochi · The local-first data workspace for your team and AI agents";
+const TITLE = "Mochi · One place for all your team's work";
 const DESCRIPTION =
-  "Build a CRM, HR tracker, inventory, or any internal tool. No code, no prompts, no monthly server fees. Runs on your laptop, syncs peer-to-peer, and works natively with Claude, Codex, and OpenCode.";
+  "Build a customer list, a hiring tracker, or anything else your team needs. It all lives on your own computer, there is nothing to run and no monthly bill, and Claude, Codex and OpenCode can work in it with you.";
 const SHORT_DESCRIPTION =
-  "The local-first data workspace for your team and AI agents. Zero server bills, agent-native via MCP, peer-to-peer sync.";
+  "One place for your team's data. It stays on your machines, there is no monthly bill, and your AI can work in it too.";
 
 const LOCALES = ["en", "es", "fr", "de", "ja", "zh", "vi"] as const;
 const OG_LOCALE_MAP: Record<(typeof LOCALES)[number], string> = {
@@ -37,8 +26,8 @@ const OG_LOCALE_MAP: Record<(typeof LOCALES)[number], string> = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#131313" },
+    { media: "(prefers-color-scheme: light)", color: "#f6f6f6" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -56,23 +45,27 @@ export const metadata: Metadata = {
   creator: "Mochi",
   publisher: "Mochi",
   generator: "Next.js",
+  // Search terms, not page copy: these are what somebody types, including the
+  // compound words the visible writing deliberately avoids.
   keywords: [
     "Mochi",
-    "agent-native database",
-    "MCP",
-    "Claude",
-    "Codex",
+    "Mochi Table",
+    "local-first database",
+    "offline database app",
+    "spreadsheet alternative",
+    "Airtable alternative",
+    "AI database",
+    "MCP server",
+    "Claude MCP",
+    "Codex MCP",
     "OpenCode",
     "no-code database",
     "CRM template",
-    "ERP template",
-    "team collaboration",
-    "peer-to-peer sync",
-    "Git-backed data",
-    "local-first database",
-    "no server database",
+    "inventory tracker",
+    "hiring tracker",
     "internal tools",
-    "AI data workspace",
+    "team database no server",
+    "Git version history data",
   ],
   category: "developer tools",
   referrer: "origin-when-cross-origin",
@@ -93,27 +86,18 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
+    determiner: "",
     url: SITE_URL,
     siteName: "Mochi",
     title: TITLE,
     description: SHORT_DESCRIPTION,
     locale: "en_US",
     alternateLocale: Object.values(OG_LOCALE_MAP).filter((l) => l !== "en_US"),
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Mochi, the local-first data workspace for your team and AI agents",
-        type: "image/png",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: TITLE,
     description: SHORT_DESCRIPTION,
-    images: [{ url: "/og-image.png", alt: "Mochi, the local-first data workspace for your team and AI agents" }],
     ...(TWITTER_HANDLE ? { site: TWITTER_HANDLE, creator: TWITTER_HANDLE } : {}),
   },
   robots: {
@@ -165,22 +149,7 @@ const jsonLd = {
       operatingSystem: "macOS, Linux, Windows",
       description: DESCRIPTION,
       url: SITE_URL,
-      image: `${SITE_URL}/og-image.png`,
-      offers: [
-        {
-          "@type": "Offer",
-          name: "Free",
-          price: "0",
-          priceCurrency: "USD",
-        },
-        {
-          "@type": "Offer",
-          name: "Pro",
-          price: "19",
-          priceCurrency: "USD",
-          description: "One-time payment. Pay once, use forever.",
-        },
-      ],
+      image: `${SITE_URL}/opengraph-image`,
       publisher: { "@id": `${SITE_URL}/#organization` },
     },
   ],
@@ -194,7 +163,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className="h-full antialiased"
     >
       <head>
         <script
@@ -203,9 +172,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
-        <EngineProvider>
-          <LanguageProvider>{children}</LanguageProvider>
-        </EngineProvider>
+        <LanguageProvider>{children}</LanguageProvider>
         <Analytics />
       </body>
     </html>
