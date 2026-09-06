@@ -59,6 +59,7 @@ export interface Messages {
     account: string;
     menu: string;
     openMenu: string;
+    closeMenu: string;
   };
   hero: {
     headline: string;
@@ -162,6 +163,7 @@ const en: Messages = {
     account: "Account",
     menu: "Menu",
     openMenu: "Open menu",
+    closeMenu: "Close menu",
   },
   eyebrow: {
     flow: "How it works",
@@ -539,6 +541,7 @@ const es: Messages = {
     account: "Cuenta",
     menu: "Menú",
     openMenu: "Abrir menú",
+    closeMenu: "Cerrar menú",
   },
   eyebrow: {
     flow: "Cómo funciona",
@@ -884,6 +887,7 @@ const fr: Messages = {
     account: "Compte",
     menu: "Menu",
     openMenu: "Ouvrir le menu",
+    closeMenu: "Fermer le menu",
   },
   eyebrow: {
     flow: "Comment ça marche",
@@ -1229,6 +1233,7 @@ const de: Messages = {
     account: "Konto",
     menu: "Menü",
     openMenu: "Menü öffnen",
+    closeMenu: "Menü schließen",
   },
   eyebrow: {
     flow: "So funktioniert's",
@@ -1574,6 +1579,7 @@ const ja: Messages = {
     account: "アカウント",
     menu: "メニュー",
     openMenu: "メニューを開く",
+    closeMenu: "メニューを閉じる",
   },
   eyebrow: {
     flow: "使い方",
@@ -1919,6 +1925,7 @@ const zh: Messages = {
     account: "账户",
     menu: "菜单",
     openMenu: "打开菜单",
+    closeMenu: "关闭菜单",
   },
   eyebrow: {
     flow: "如何使用",
@@ -2264,6 +2271,7 @@ const vi: Messages = {
     account: "Tài khoản",
     menu: "Menu",
     openMenu: "Mở menu",
+    closeMenu: "Đóng menu",
   },
   eyebrow: {
     flow: "Cách hoạt động",
