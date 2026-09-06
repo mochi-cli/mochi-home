@@ -33,7 +33,20 @@ function optional(name: string): string | undefined {
 }
 
 export const env = {
-  /** Public origin of this service, e.g. https://account.mochi.example. */
+  /**
+   * Public origin of this deployment, e.g. https://mochi-cli.com. Scheme and
+   * host, no trailing slash and no path.
+   *
+   * Configured rather than read off the request, for two reasons. Google and
+   * Polar hold these URLs already, and the redirect_uri sent to Google has to
+   * match what is registered there exactly. And the Host header is attacker
+   * controlled: building callback URLs from it is how a sign-in ends up
+   * pointing at somebody else's machine.
+   *
+   * The site and the service are one deployment now, so this and
+   * NEXT_PUBLIC_SITE_URL name the same origin. They fail quietly when they
+   * disagree, which is why .env.local keeps them next to each other.
+   */
   get origin() {
     return required('SERVICE_ORIGIN').replace(/\/$/, '');
   },
