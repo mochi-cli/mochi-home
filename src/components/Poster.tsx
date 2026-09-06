@@ -354,8 +354,8 @@ export function Poster({ variant, size }: { variant: VariantName; size: SizeName
             {heading("Free while it is just you.", 0.8)}
             <div style={{ display: "flex", flexDirection: tall ? "column" : "row", gap: 24 * k }}>
               {[
-                ["Free", "For one person", "Everything runs on your own machine"],
-                ["Pro", "For a team", "Seats for the rest of your team"],
+                ["Free", "For one person", "2,000 MCP calls a week"],
+                ["Pro", "For a team", "MCP calls with no limit, and seats for your team"],
               ].map(([name, tagline, note]) => (
                 <div
                   key={name}
