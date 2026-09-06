@@ -89,8 +89,17 @@ export interface Messages {
     step: string;
     git: string;
     audit: string;
+    speed: string;
   };
   feat: { title: string; sub: string; items: Feature[]; demo: { ask: string; reply: string }[] };
+  /** measured facts: light, fast, and cheap for an agent to talk to */
+  speed: {
+    title: string;
+    sub: string;
+    note: string;
+    stats: { value: string; label: string }[];
+    points: Feature[];
+  };
   /** the control block: one headline plus the two captions under its canvas */
   audit: Feature & { points: [string, string] };
   git: { title: string; sub: string; items: Feature[]; agentLabel: string; syncedCaption: string };
@@ -165,6 +174,7 @@ const en: Messages = {
     step: "Step",
     git: "History",
     audit: "Control",
+    speed: "Speed",
   },
   views: {
     title: "One set of data, every way your team likes to see it",
@@ -415,6 +425,21 @@ const en: Messages = {
       { ask: "show only the active ones", reply: "Filtered to 7 active." },
     ],
   },
+  speed: {
+    title: "Small enough to open, quick enough to forget",
+    sub: "It opens before you have finished reaching for it, and an edit lands as fast as you type. Nothing is fetched from anywhere while you work.",
+    note: "Measured on a MacBook, on a table of 10,000 rows and 6 columns.",
+    stats: [
+      { value: "0.3 s", label: "From cold to open" },
+      { value: "1 ms", label: "Edit a cell" },
+      { value: "14 ms", label: "Read a thousand rows" },
+      { value: "0", label: "Requests to anywhere else" },
+    ],
+    points: [
+      { title: "Your agent stops paying to look around", desc: "It asks for the rows and columns it needs and gets a summary back, instead of pulling a whole table into the conversation. A question about a big table costs about what a question about a small one costs." },
+      { title: "Nothing in it you did not ask for", desc: "No telemetry, no auto-update, no plugin store, no account needed to open a file. What it deliberately leaves out is written down, so you can check." },
+    ],
+  },
   audit: { title: "You can see everything your AI did", desc: "Every edit is listed field by field, and you build a filter by clicking, not by explaining.", points: ["Every AI edit, written down", "Build a filter by clicking"] },
   git: {
     title: "Every change is kept, so nothing is ever lost",
@@ -526,6 +551,7 @@ const es: Messages = {
     step: "Paso",
     git: "Historial",
     audit: "Control",
+    speed: "Rapidez",
   },
   views: {
     title: "Unos mismos datos, cada forma en que tu equipo quiere verlos",
@@ -744,6 +770,21 @@ const es: Messages = {
       { ask: "muestra solo los activos", reply: "Filtrado a 7 activos." },
     ],
   },
+  speed: {
+    title: "Bastante pequeño para abrirlo, bastante rápido para olvidarlo",
+    sub: "Se abre antes de que termines de ir a buscarlo, y una edición entra tan rápido como escribes. Mientras trabajas no se descarga nada de ningún sitio.",
+    note: "Medido en un MacBook, sobre una tabla de 10.000 filas y 6 columnas.",
+    stats: [
+      { value: "0,3 s", label: "De frío a abierto" },
+      { value: "1 ms", label: "Editar una celda" },
+      { value: "14 ms", label: "Leer mil filas" },
+      { value: "0", label: "Peticiones a cualquier otro sitio" },
+    ],
+    points: [
+      { title: "Tu IA deja de pagar por mirar alrededor", desc: "Pide las filas y columnas que necesita y recibe un resumen, en vez de arrastrar una tabla entera a la conversación. Preguntar por una tabla grande cuesta más o menos lo que cuesta preguntar por una pequeña." },
+      { title: "Nada que no hayas pedido", desc: "Sin telemetría, sin actualización automática, sin tienda de extensiones, sin cuenta para abrir un archivo. Lo que deja fuera a propósito está escrito, y puedes comprobarlo." },
+    ],
+  },
   audit: { title: "Puedes ver todo lo que hizo tu IA", desc: "Cada edición aparece campo por campo, y los filtros se crean haciendo clic, no explicando.", points: ["Cada edición de la IA, anotada", "Crea un filtro haciendo clic"] },
   git: {
     title: "Cada cambio se guarda, así nunca se pierde nada",
@@ -855,6 +896,7 @@ const fr: Messages = {
     step: "Étape",
     git: "Historique",
     audit: "Contrôle",
+    speed: "Rapidité",
   },
   views: {
     title: "Les mêmes données, dans toutes les vues que votre équipe aime",
@@ -1073,6 +1115,21 @@ const fr: Messages = {
       { ask: "montre seulement les actifs", reply: "Filtré sur 7 actifs." },
     ],
   },
+  speed: {
+    title: "Assez petit pour l'ouvrir, assez rapide pour l'oublier",
+    sub: "Il est ouvert avant que vous ayez fini de le chercher, et une modification arrive aussi vite que vous tapez. Rien n'est téléchargé pendant que vous travaillez.",
+    note: "Mesuré sur un MacBook, sur une table de 10 000 lignes et 6 colonnes.",
+    stats: [
+      { value: "0,3 s", label: "De froid à ouvert" },
+      { value: "1 ms", label: "Modifier une cellule" },
+      { value: "14 ms", label: "Lire mille lignes" },
+      { value: "0", label: "Requêtes vers ailleurs" },
+    ],
+    points: [
+      { title: "Votre IA cesse de payer pour regarder autour", desc: "Elle demande les lignes et colonnes dont elle a besoin et reçoit un résumé, au lieu de tirer une table entière dans la conversation. Une question sur une grande table coûte à peu près ce que coûte une question sur une petite." },
+      { title: "Rien dedans que vous n'ayez demandé", desc: "Pas de télémétrie, pas de mise à jour automatique, pas de boutique d'extensions, pas de compte pour ouvrir un fichier. Ce qu'il laisse volontairement de côté est écrit noir sur blanc." },
+    ],
+  },
   audit: { title: "Vous voyez tout ce que votre IA a fait", desc: "Chaque modification est listée champ par champ, et un filtre se construit en cliquant, pas en expliquant.", points: ["Chaque modification de l'IA, notée", "Construisez un filtre en cliquant"] },
   git: {
     title: "Chaque changement est gardé, rien ne se perd",
@@ -1184,6 +1241,7 @@ const de: Messages = {
     step: "Schritt",
     git: "Verlauf",
     audit: "Kontrolle",
+    speed: "Tempo",
   },
   views: {
     title: "Ein Datensatz, jede Ansicht, die dein Team mag",
@@ -1402,6 +1460,21 @@ const de: Messages = {
       { ask: "zeig nur die aktiven", reply: "Auf 7 aktive gefiltert." },
     ],
   },
+  speed: {
+    title: "Klein genug zum Öffnen, schnell genug zum Vergessen",
+    sub: "Es ist offen, bevor du danach gegriffen hast, und eine Änderung sitzt so schnell, wie du tippst. Während du arbeitest, wird nichts irgendwoher geladen.",
+    note: "Gemessen auf einem MacBook, an einer Tabelle mit 10.000 Zeilen und 6 Spalten.",
+    stats: [
+      { value: "0,3 s", label: "Von kalt zu offen" },
+      { value: "1 ms", label: "Eine Zelle ändern" },
+      { value: "14 ms", label: "Tausend Zeilen lesen" },
+      { value: "0", label: "Anfragen irgendwo anders hin" },
+    ],
+    points: [
+      { title: "Deine KI zahlt nicht mehr fürs Umschauen", desc: "Sie fragt nach den Zeilen und Spalten, die sie braucht, und bekommt eine Zusammenfassung, statt eine ganze Tabelle ins Gespräch zu ziehen. Eine Frage zu einer großen Tabelle kostet ungefähr so viel wie eine zu einer kleinen." },
+      { title: "Nichts drin, worum du nicht gebeten hast", desc: "Keine Telemetrie, kein Auto-Update, kein Plugin-Store, kein Konto, um eine Datei zu öffnen. Was absichtlich fehlt, steht geschrieben, und du kannst es nachlesen." },
+    ],
+  },
   audit: { title: "Du siehst alles, was deine KI getan hat", desc: "Jede Änderung steht Feld für Feld da, und einen Filter baust du per Klick, nicht per Erklärung.", points: ["Jede Änderung der KI wird notiert", "Einen Filter per Klick bauen"] },
   git: {
     title: "Jede Änderung bleibt erhalten, nichts geht verloren",
@@ -1513,6 +1586,7 @@ const ja: Messages = {
     step: "ステップ",
     git: "履歴",
     audit: "コントロール",
+    speed: "速さ",
   },
   views: {
     title: "同じデータを、チームの好きな見え方で",
@@ -1731,6 +1805,21 @@ const ja: Messages = {
       { ask: "アクティブだけ表示して", reply: "アクティブ 7 件に絞り込みました。" },
     ],
   },
+  speed: {
+    title: "開くのが軽く、待つことを忘れる速さ",
+    sub: "手を伸ばし終える前に開き、編集は打つ速さのまま入ります。作業中、どこからも何も取りに行きません。",
+    note: "MacBook で、1 万行 6 列のテーブルを対象に計測。",
+    stats: [
+      { value: "0.3 秒", label: "起動から開くまで" },
+      { value: "1 ms", label: "セルをひとつ編集" },
+      { value: "14 ms", label: "千行を読む" },
+      { value: "0", label: "外部への通信" },
+    ],
+    points: [
+      { title: "AI が「見て回る」ためにお金を払わなくなります", desc: "必要な行と列だけを求め、要約を受け取ります。テーブル全体を会話に引きずり込みません。大きなテーブルへの質問も、小さなテーブルへの質問とだいたい同じ費用です。" },
+      { title: "頼んでいないものは入っていません", desc: "計測送信なし、自動更新なし、拡張ストアなし、ファイルを開くのにアカウントも不要。あえて入れていないものは書き出してあるので、確かめられます。" },
+    ],
+  },
   audit: { title: "AI がしたことはすべて見えます", desc: "変更はフィールド単位で並び、絞り込みは説明ではなくクリックで作れます。", points: ["AI の変更はすべて記録されます", "クリックで絞り込みを作る"] },
   git: {
     title: "変更はすべて残るので、なくなるものはありません",
@@ -1842,6 +1931,7 @@ const zh: Messages = {
     step: "步骤",
     git: "历史",
     audit: "掌控",
+    speed: "速度",
   },
   views: {
     title: "同一份数据，团队喜欢怎么看就怎么看",
@@ -2060,6 +2150,21 @@ const zh: Messages = {
       { ask: "只显示活跃的", reply: "已筛选出 7 个活跃客户。" },
     ],
   },
+  speed: {
+    title: "小到随手打开，快到忘记等待",
+    sub: "你还没伸完手它就开了，改一个格子和打字一样快。工作过程中不会从任何地方取东西。",
+    note: "在 MacBook 上，针对一万行六列的表测得。",
+    stats: [
+      { value: "0.3 秒", label: "冷启动到打开" },
+      { value: "1 毫秒", label: "改一个格子" },
+      { value: "14 毫秒", label: "读一千行" },
+      { value: "0", label: "对外的请求" },
+    ],
+    points: [
+      { title: "你的 AI 不用再为「四处看看」付钱", desc: "它只要它需要的行和列，拿回一份摘要，而不是把整张表拖进对话。问一张大表，花的和问一张小表差不多。" },
+      { title: "里面没有你没要的东西", desc: "没有埋点、没有自动更新、没有插件商店，打开一个文件也不用账号。它刻意不做的事都写下来了，你可以核对。" },
+    ],
+  },
   audit: { title: "AI 做过的每件事你都看得见", desc: "每次修改都按字段列出来，筛选靠点几下就成，不用解释。", points: ["AI 的每次修改都会记下来", "点几下就能做出筛选"] },
   git: {
     title: "每一次改动都留着，什么都不会丢",
@@ -2171,6 +2276,7 @@ const vi: Messages = {
     step: "Bước",
     git: "Lịch sử",
     audit: "Kiểm soát",
+    speed: "Tốc độ",
   },
   views: {
     title: "Một bộ dữ liệu, mọi cách nhóm bạn muốn nhìn",
@@ -2387,6 +2493,21 @@ const vi: Messages = {
     demo: [
       { ask: "mở bảng khách hàng", reply: "Đã mở Customers, 6 dòng." },
       { ask: "chỉ hiện những khách đang hoạt động", reply: "Đã lọc còn 7 khách hoạt động." },
+    ],
+  },
+  speed: {
+    title: "Đủ nhẹ để mở, đủ nhanh để quên là đang chờ",
+    sub: "Nó mở xong trước khi bạn với tay tới, và sửa một ô nhanh bằng tốc độ bạn gõ. Trong lúc bạn làm việc, nó không tải gì từ đâu cả.",
+    note: "Đo trên MacBook, với bảng 10.000 dòng và 6 cột.",
+    stats: [
+      { value: "0,3 giây", label: "Từ nguội đến mở xong" },
+      { value: "1 ms", label: "Sửa một ô" },
+      { value: "14 ms", label: "Đọc một nghìn dòng" },
+      { value: "0", label: "Yêu cầu đi ra ngoài" },
+    ],
+    points: [
+      { title: "AI của bạn thôi phải trả tiền để nhìn quanh", desc: "Nó xin đúng những dòng và cột cần rồi nhận lại bản tóm tắt, thay vì kéo cả bảng vào cuộc hội thoại. Hỏi một bảng lớn tốn xấp xỉ hỏi một bảng nhỏ." },
+      { title: "Không có thứ gì bạn không yêu cầu", desc: "Không đo đạc ngầm, không tự cập nhật, không chợ tiện ích, mở một file cũng chẳng cần tài khoản. Những thứ nó cố tình không làm đều được ghi ra để bạn đối chiếu." },
     ],
   },
   audit: { title: "Bạn thấy được mọi việc AI đã làm", desc: "Từng thay đổi được liệt kê theo từng trường, và bạn dựng bộ lọc bằng cách bấm chọn chứ không phải giải thích.", points: ["Mọi thay đổi của AI đều được ghi lại", "Dựng bộ lọc bằng cách bấm chọn"] },
