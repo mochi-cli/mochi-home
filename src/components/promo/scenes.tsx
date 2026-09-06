@@ -528,18 +528,20 @@ export function Compare({ p }: { p: number }) {
 
 /* ─── the offer ───────────────────────────────────────────────────────────── */
 
+/* The MCP call allowance leads both lists, because it is the line that decides
+   which plan someone is on. The figures are PLAN_LIMITS in the app itself. */
 const PLANS: [string, string, string[]][] = [
   ["Free", "For one person", [
+    "2,000 MCP calls a week",
     "Everything runs on your own machine",
-    "As many workspaces and tables as you like",
     "Full history, and undo that goes back",
     "Connect Claude, Codex or OpenCode",
   ]],
   ["Pro", "For a team", [
+    "MCP calls with no limit",
     "Everything in Free",
     "Seats for the rest of your team",
     "Shared workspaces that stay in step",
-    "Email support",
   ]],
 ];
 
