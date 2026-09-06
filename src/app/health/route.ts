@@ -32,6 +32,7 @@ export async function GET() {
     'usage',
     'handled_events',
     'feedback',
+    'web_sessions',
   ];
 
   let database = false;
