@@ -159,7 +159,7 @@ export function Workspace({
           <Search className="h-3.5 w-3.5 flex-none" strokeWidth={1.8} style={{ color: "var(--app-muted)" }} />
           <span className="text-[13px]" style={{ color: "var(--app-text)" }}>
             {search}
-            <span className="animate-cursor ml-0.5 inline-block h-3 w-[2px] translate-y-[2px] bg-current align-middle" />
+            <span className="ml-0.5 inline-block h-3 w-[2px] translate-y-[2px] bg-current align-middle" />
           </span>
           <span className="mono ml-auto text-[11px]" style={{ color: "var(--app-muted)" }}>
             {matches} of 12 · 1 ms
@@ -226,7 +226,7 @@ export function Workspace({
                             style={{ outline: "2px solid var(--app-btn)", background: "var(--app-bg)" }}
                           >
                             {editing.text}
-                            <span className="animate-cursor ml-[1px] inline-block h-3.5 w-[2px] bg-current align-middle" />
+                            <span className="ml-[1px] inline-block h-3.5 w-[2px] bg-current align-middle" />
                           </span>
                         ) : (
                           <span className="text-[13px] tabular-nums">

@@ -344,10 +344,12 @@ export function ToolCall({
   );
 }
 
+/* Steady, not blinking. This caret only ever appears while text is being
+   produced — a draft being typed, a reply still arriving — and a caret that
+   blinks through that reads as the picture flickering rather than as a cursor.
+   Blinking is what an editor does when it is idle and waiting for you. */
 function Caret() {
-  return (
-    <span className="animate-cursor ml-0.5 inline-block h-3.5 w-1.5 translate-y-0.5 bg-current align-middle" />
-  );
+  return <span className="ml-0.5 inline-block h-3.5 w-1.5 translate-y-0.5 bg-current align-middle" />;
 }
 
 /** Claude, as the product shows it: a card in the app's own chrome. `floating`
