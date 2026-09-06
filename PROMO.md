@@ -112,3 +112,46 @@ than cutting it off, because every scene draws itself from its own progress
 rather than from a timer. Adding a third cut is adding a third array.
 
 `scenes.tsx` holds the pictures, `PromoFilm.tsx` the clock and the staging.
+
+---
+
+# Social and marketing images
+
+`public/social/` holds the posters. They are a **build**, not artwork: the
+source is `/api/poster`, and `scripts/posters.sh` writes the set out of a
+running dev server. Reword a claim in `src/components/Poster.tsx`, run the
+script, and every size is redrawn at once — there is no PNG to hand-edit and
+no design file to keep in step.
+
+```bash
+npm run dev            # in another terminal
+./scripts/posters.sh
+```
+
+| variant | says | sizes |
+|---|---|---|
+| `claim` | Your team's data, in a file your AI can actually work in. | og, x, square, story |
+| `numbers` | Small enough to open. Quick enough to forget. | og, x, square, story |
+| `agent` | It writes into your table. Not into a chat window. | og, x, square |
+| `limits` | It does what you asked, and nothing else. | x, square |
+| `pricing` | Free while it is just you. | x, square |
+
+| size | pixels | for |
+|---|---|---|
+| `og` | 1200×630 | link previews, Facebook, Telegram |
+| `x` | 1600×900 | X posts, blog headers, slides |
+| `square` | 1080×1080 | Instagram, Threads, LinkedIn |
+| `story` | 1080×1920 | Stories and Reels |
+
+Preview any combination live at `/api/poster?v=numbers&s=story`.
+
+The `agent` poster draws the product the way the film does — grid on the left,
+agent beside it, never over it — using the app's real status colours, because
+flattening them to the page's monochrome would misrepresent what the app looks
+like. Every figure on the `numbers` poster is a reading from the benchmark run.
+
+Two details worth knowing before editing `Poster.tsx`: it renders through
+Satori, so it is flexbox and inline styles only — no grid, no class names, and
+every element with children must say `display: "flex"`. And the fallback font
+has no `✳` or `✓`, which render as filled boxes, so those glyphs are drawn as
+SVG instead.
