@@ -1,5 +1,17 @@
 # Kịch bản clip sale 5 phút — dựng theo khung GenSpark/GenOffice
 
+> **Đã dựng xong.** Kịch bản này chạy được tại `/promo`, xem `PROMO.md` để biết
+> cách quay. Bản dựng dài **4:38** thay vì 5:00, và có ba chỗ lệch so với bảng
+> dưới đây, đều là cố ý:
+>
+> - Khối 5 gộp cảnh "tool call gọn" vào luôn cảnh so sánh, vì hai cảnh nói cùng
+>   một điều và đặt cạnh nhau thì thừa.
+> - Cảnh so sánh **không hiện số token**. Con số thật phụ thuộc vào bảng, nên bịa
+>   một con số cho đẹp là nói dối; khối lượng chữ tràn màn hình đã đủ thấy.
+> - Cảnh git cho thấy **chính cú undo là một commit**, thay vì commit sửa giá.
+>   Cảnh trước vừa undo về 22.50 mà git lại khoe 22.50→24.00 thì gãy mạch — và
+>   "undo cũng nằm trong lịch sử" là luận điểm mạnh hơn.
+
 ## Phần 1 — Phân tích clip tham chiếu
 
 `GenOffice`, 87 giây, 1920×1080, 30fps, **câm hoàn toàn** — không lời đọc, không

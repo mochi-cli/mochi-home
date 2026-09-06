@@ -1,35 +1,106 @@
 /* The film, as data. Every scene derives its state from one clock, so a cut is
    nothing but a different list of durations: shortening a scene speeds up what
-   happens inside it rather than truncating it. */
+   happens inside it rather than truncating it.
 
-export type SceneId = "ask" | "build" | "covers" | "history" | "numbers" | "limits" | "logo";
+   The shape is borrowed deliberately. A claim before any product, a logo, one
+   establishing shot, then blocks that all run the same way — chapter card, real
+   interface, a typed request, the result, and one beat of a person editing by
+   hand — closing on how you get it rather than on what it does. The repetition
+   is the point: it turns a long film into several short ones. */
+
+export type SceneId =
+  | "claim"
+  | "chapter"
+  | "overview"
+  | "ask"
+  | "build"
+  | "edit"
+  | "covers"
+  | "handoff"
+  | "history"
+  | "undo"
+  | "git"
+  | "numbers"
+  | "coldstart"
+  | "search"
+  | "compare"
+  | "limits"
+  | "pricing"
+  | "logo";
 
 export interface Scene {
   id: SceneId;
   dur: number;
   /** the line that reads under the picture while this scene plays */
   caption?: string;
+  /** the words on a card: the claim, a chapter name */
+  title?: string;
 }
 
-/** The long cut: the whole argument, for a home page or a send-out. */
-export const LONG: Scene[] = [
-  { id: "ask", dur: 6500, caption: "Ask for a workspace the way you would ask a colleague." },
-  { id: "build", dur: 7500, caption: "It writes into your table. Not into a chat window." },
-  { id: "covers", dur: 8000, caption: "Every cell it touches is a real cell you can edit." },
-  { id: "history", dur: 7000, caption: "Every change is signed. Every change goes back." },
-  { id: "numbers", dur: 8000, caption: "Measured on a table of 10,000 rows." },
-  { id: "limits", dur: 6500, caption: "It does what you asked, and nothing else." },
+const card = (title: string, dur = 5000): Scene => ({ id: "chapter", dur, title });
+
+/** The full cut: five minutes, five blocks, every claim shown rather than said. */
+export const FILM: Scene[] = [
+  { id: "claim", dur: 6000, title: "Your team's data, in a file your AI can actually work in." },
   { id: "logo", dur: 5000 },
+  { id: "overview", dur: 11000 },
+
+  card("Tables"),
+  { id: "ask", dur: 15000, caption: "Ask for a workspace the way you would ask a colleague." },
+  { id: "build", dur: 10000, caption: "It writes into your table. Not into a chat window." },
+  { id: "edit", dur: 20000, caption: "And it is still your table. Type in it." },
+
+  card("Any agent, the same file"),
+  { id: "covers", dur: 21000, caption: "One sentence. One column. Twelve rows." },
+  { id: "handoff", dur: 26000, caption: "Claude, Codex, OpenCode. Nothing moves." },
+
+  card("Nothing happens anonymously"),
+  { id: "history", dur: 15000, caption: "Every change is signed with who made it." },
+  { id: "undo", dur: 14000, caption: "And every change goes back." },
+  { id: "git", dur: 18000, caption: "Underneath it is git. The history is yours." },
+
+  card("Small enough to forget it is running"),
+  { id: "numbers", dur: 11000, caption: "Measured on a table of 10,000 rows." },
+  { id: "coldstart", dur: 12000, caption: "Open it before you finish reaching for it." },
+  { id: "search", dur: 10000, caption: "Search ten thousand rows in a millisecond." },
+
+  card("It stops paying to look around"),
+  { id: "compare", dur: 15000, caption: "It asks for the rows it needs, not for the table." },
+  { id: "limits", dur: 16000, caption: "It does what you asked, and nothing else." },
+
+  { id: "pricing", dur: 12000 },
+  { id: "logo", dur: 16000 },
 ];
 
-/** The short cut: the same footage with the argument cut to the demo. */
+/** The trailer: the same footage, cut to the three strongest blocks. */
+export const LONG: Scene[] = [
+  { id: "claim", dur: 5000, title: "Your team's data, in a file your AI can actually work in." },
+  { id: "logo", dur: 4000 },
+  card("Tables", 4000),
+  { id: "ask", dur: 8000, caption: "Ask for a workspace the way you would ask a colleague." },
+  { id: "build", dur: 7000, caption: "It writes into your table. Not into a chat window." },
+  { id: "edit", dur: 8000, caption: "And it is still your table." },
+  card("Nothing happens anonymously", 4000),
+  { id: "history", dur: 8000, caption: "Every change is signed." },
+  { id: "undo", dur: 8000, caption: "And every change goes back." },
+  card("Small enough to forget it is running", 4000),
+  { id: "numbers", dur: 9000, caption: "Measured on a table of 10,000 rows." },
+  { id: "pricing", dur: 8000 },
+  { id: "logo", dur: 13000 },
+];
+
+/** The social cut: straight to the demo. */
 export const SHORT: Scene[] = [
+  { id: "claim", dur: 3000, title: "Your data, in a file your AI can work in." },
   { id: "ask", dur: 4200, caption: "Ask for a workspace." },
   { id: "build", dur: 4500, caption: "It writes into your table." },
   { id: "covers", dur: 4800, caption: "Real cells. Not a chat window." },
   { id: "numbers", dur: 4000, caption: "10,000 rows. Still instant." },
   { id: "logo", dur: 3000 },
 ];
+
+export const CUTS = { film: FILM, long: LONG, short: SHORT };
+export type CutName = keyof typeof CUTS;
 
 export interface Cue {
   scene: Scene;
@@ -55,6 +126,17 @@ export function cueAt(cut: Scene[], t: number): Cue {
     start += s.dur;
   }
   throw new Error("unreachable: a cut always has a last scene");
+}
+
+/** Whether the agent driving the demo has been handed over yet. Once a scene
+ *  has passed the hand-off the panel stays with the agent it was given to:
+ *  swapping back would undo the very thing that scene demonstrates. */
+export function skinAt(cut: Scene[], index: number, p: number): "claude" | "codex" {
+  const handoff = cut.findIndex((s) => s.id === "handoff");
+  if (handoff === -1) return "claude";
+  if (index > handoff) return "codex";
+  if (index === handoff && p > 0.42) return "codex";
+  return "claude";
 }
 
 export const clamp01 = (n: number) => (n < 0 ? 0 : n > 1 ? 1 : n);

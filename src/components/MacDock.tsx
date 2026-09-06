@@ -79,12 +79,16 @@ export default function MacDock({
 }: {
   /** which agent is driving, when the dock is a control */
   agent?: AgentSkin;
-  /** omit both to get a dock that only sets the scene: no picking, and every
-   *  app shown as running, which is what a second one on the page should be */
+  /** pass to make the dock a control; omit it and `agent` merely reports which
+   *  app is in front. Omit both and every app reads as running, which is what a
+   *  second dock on the page should be. */
   onAgent?: (next: AgentSkin) => void;
   className?: string;
 }) {
-  const live = (id: AgentSkin) => !onAgent || agent === id;
+  // Three modes: with `onAgent` the dock is a control; with `agent` alone it
+  // only reports which app is in front, for a film that drives itself; with
+  // neither, every app reads as running because nothing is picking.
+  const live = (id: AgentSkin) => (agent ? agent === id : true);
   return (
     <div
       className={`flex items-end gap-2 rounded-[18px] border border-line bg-surface/80 px-2.5 py-2 shadow-[0_2px_8px_rgba(0,0,0,0.06),0_20px_50px_-18px_rgba(0,0,0,0.35)] backdrop-blur-md ${className}`}

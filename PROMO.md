@@ -14,8 +14,9 @@ There is no video file in this repo. You record one.
    1 and the type records as sharp as the page it came from. Anything smaller
    still works, it just records smaller.
 2. Open the cut you want:
-   - long, about **48.5 s** — `http://localhost:3000/promo`
-   - short, about **20.5 s** — `http://localhost:3000/promo?cut=short`
+   - the film, **4:38** — `http://localhost:3000/promo`
+   - the trailer, **1:30** — `http://localhost:3000/promo?cut=long`
+   - the social cut, **23 s** — `http://localhost:3000/promo?cut=short`
 3. Add `&theme=light` (or `dark`) to pin the look. Without it the film follows
    the machine's own setting, so a laptop in dark mode shoots a dark film.
 4. Press **R** to restart, then take your hand off the mouse. The control bar
@@ -27,7 +28,8 @@ There is no video file in this repo. You record one.
 
 | | |
 |---|---|
-| `?cut=short` | the 20.5 s cut |
+| `?cut=long` | the 1:30 trailer |
+| `?cut=short` | the 23 s social cut |
 | `?loop=1` | run it again from the top, for a screen at a stand |
 | `?t=33&paused=1` | hold one frame at 33 s — for a poster or a thumbnail |
 | `?theme=light` / `?theme=dark` | pin the look regardless of the machine |
@@ -36,18 +38,41 @@ Space plays and pauses. R restarts.
 
 ## What is in it
 
+The shape is borrowed on purpose, from an ad that works: a claim before any
+product, a logo, one establishing shot, then blocks that all run identically —
+chapter card, real interface, a typed request, the result, and one beat of a
+person editing by hand — closing on how you get it rather than on what it does.
+The repetition is what turns five minutes into five short films, and it is why
+the same material cuts down without being rewritten.
+
 Every number spoken or shown is a reading from the app's own benchmark run over
 a table of 10,000 rows and 6 columns. Nothing here is invented for the ad.
 
-| scene | long cut | short cut |
-|---|---|---|
-| the ask — an empty workspace, the prompt typed in | 0.0 – 6.5 | 0.0 – 4.2 |
-| it builds — collections appear, rows land in groups | 6.5 – 14.0 | 4.2 – 8.7 |
-| covers — a second ask, a whole column filled | 14.0 – 22.0 | 8.7 – 13.5 |
-| history — who changed what, and that it goes back | 22.0 – 29.0 | — |
-| the numbers — 0.3 s, 1 ms, 14 ms, 0 | 29.0 – 37.0 | 13.5 – 17.5 |
-| the limits — what it deliberately does not do | 37.0 – 43.5 | — |
-| logo | 43.5 – 48.5 | 17.5 – 20.5 |
+| | film | trailer | social |
+|---|---|---|---|
+| the claim | 0:00 | 0:00 | 0:00 |
+| logo | 0:06 | 0:05 | — |
+| the workspace, established | 0:11 | — | — |
+| **Tables** | 0:22 | 0:09 | — |
+| an empty file, and the request typed into it | 0:27 | 0:13 | 0:03 |
+| collections appear, rows land in groups | 0:42 | 0:21 | 0:07 |
+| a person edits a cell by hand | 0:52 | 0:28 | — |
+| **Any agent, the same file** | 1:12 | — | — |
+| a second request fills a whole column | 1:17 | — | 0:12 |
+| the dock hands the file to Codex mid-conversation | 1:38 | — | — |
+| **Nothing happens anonymously** | 2:04 | 0:36 | — |
+| the row history: who changed what | 2:09 | 0:40 | — |
+| undo, and the value goes back | 2:24 | 0:48 | — |
+| the same edits as commits, with the undo among them | 2:38 | — | — |
+| **Small enough to forget it is running** | 2:56 | 0:56 | — |
+| the four readings | 3:01 | 1:00 | 0:16 |
+| cold start, on a stopwatch | 3:12 | — | — |
+| search narrowing the grid | 3:24 | — | — |
+| **It stops paying to look around** | 3:34 | — | — |
+| a whole table into the conversation, against a summary of it | 3:39 | — | — |
+| what it deliberately does not do | 3:54 | — | — |
+| Free and Pro | 4:10 | 1:09 | — |
+| logo | 4:22 | 1:17 | 0:20 |
 
 ## Voiceover, long cut
 
