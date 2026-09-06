@@ -45,60 +45,67 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-paper/85 backdrop-blur-md">
-      <nav className="mx-auto flex h-16 max-w-[1280px] items-center gap-8 px-5 sm:px-8">
-        <Link href="/" className="flex flex-none items-center" aria-label="Mochi">
-          <Brand priority />
-        </Link>
+    /* The sheet is a sibling of the header, never a child of it. The header
+       carries backdrop-blur, and backdrop-filter makes an element the
+       containing block for its fixed-position descendants: nested inside, the
+       sheet's inset-0 resolved to the 64px header box and clipped every link
+       out of sight. */
+    <>
+      <header className="sticky top-0 z-50 border-b border-line bg-paper/85 backdrop-blur-md">
+        <nav className="mx-auto flex h-16 max-w-[1280px] items-center gap-8 px-5 sm:px-8">
+          <Link href="/" className="flex flex-none items-center" aria-label="Mochi">
+            <Brand priority />
+          </Link>
 
-        <div className="hidden flex-1 items-center gap-7 lg:flex">
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-              className="text-[15px] text-ink-2 transition-colors hover:text-ink"
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-
-        <div className="ml-auto flex items-center gap-5 lg:ml-0">
-          <div className="hidden sm:block">
-            <LangSwitcher />
+          <div className="hidden flex-1 items-center gap-7 lg:flex">
+            {links.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                className="text-[15px] text-ink-2 transition-colors hover:text-ink"
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
-          {/* Nothing until the answer arrives: showing "Log in" to somebody
-              who is already signed in and then correcting it is worse than a
-              beat of empty space. */}
-          {session && (
-            <div className="hidden items-center gap-4 sm:flex">
-              {session.signedIn && session.plan === "free" && (
+
+          <div className="ml-auto flex items-center gap-5 lg:ml-0">
+            <div className="hidden sm:block">
+              <LangSwitcher />
+            </div>
+            {/* Nothing until the answer arrives: showing "Log in" to somebody
+                who is already signed in and then correcting it is worse than a
+                beat of empty space. */}
+            {session && (
+              <div className="hidden items-center gap-4 sm:flex">
+                {session.signedIn && session.plan === "free" && (
+                  <a
+                    href="/profile"
+                    className="inline-flex h-8 items-center rounded-[var(--r)] bg-ink px-3 text-[15px] text-ink-inv transition-opacity hover:opacity-88"
+                  >
+                    {m.price.cta}
+                  </a>
+                )}
                 <a
                   href="/profile"
-                  className="inline-flex h-8 items-center rounded-[var(--r)] bg-ink px-3 text-[15px] text-ink-inv transition-opacity hover:opacity-88"
+                  className="inline-flex h-8 items-center rounded-[var(--r)] border border-line-strong px-3 text-[15px] text-ink transition-colors hover:bg-paper-sunk"
                 >
-                  {m.price.cta}
+                  {session.signedIn ? m.nav.account : m.nav.login}
                 </a>
-              )}
-              <a
-                href="/profile"
-                className="inline-flex h-8 items-center rounded-[var(--r)] border border-line-strong px-3 text-[15px] text-ink transition-colors hover:bg-paper-sunk"
-              >
-                {session.signedIn ? m.nav.account : m.nav.login}
-              </a>
-            </div>
-          )}
-          <button
-            onClick={() => setOpen(true)}
-            aria-label={m.nav.openMenu}
-            aria-expanded={open}
-            className="-mr-1 flex h-8 w-8 items-center justify-center rounded-[var(--r)] text-ink transition-colors hover:bg-paper-sunk lg:hidden"
-          >
-            <Menu className="h-[18px] w-[18px]" strokeWidth={1.5} />
-          </button>
-        </div>
-      </nav>
+              </div>
+            )}
+            <button
+              onClick={() => setOpen(true)}
+              aria-label={m.nav.openMenu}
+              aria-expanded={open}
+              className="-mr-1 flex h-8 w-8 items-center justify-center rounded-[var(--r)] text-ink transition-colors hover:bg-paper-sunk lg:hidden"
+            >
+              <Menu className="h-[18px] w-[18px]" strokeWidth={1.5} />
+            </button>
+          </div>
+        </nav>
+      </header>
 
       {/* The mobile sheet. It scrolls, because six links plus a language row
           plus a button does not fit on a small phone, and a panel that cannot
@@ -114,7 +121,7 @@ export default function Navbar() {
             <Brand />
             <button
               onClick={() => setOpen(false)}
-              aria-label={m.nav.menu}
+              aria-label={m.nav.closeMenu}
               autoFocus
               className="-mr-1 flex h-8 w-8 items-center justify-center rounded-[var(--r)] text-ink transition-colors hover:bg-paper-sunk"
             >
@@ -168,6 +175,6 @@ export default function Navbar() {
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }
