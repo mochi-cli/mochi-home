@@ -36,6 +36,10 @@ const PROMPT_3 = "Filter to items under 10 in stock.";
 
 const NEW_PRICE = "$24.00";
 
+/** Where the Price cell of the second row lands inside the grid, for the
+ *  pointer to arrive at. Fixed because the stage is. */
+const PRICE_CELL = { x: 858, y: 204 };
+
 /** Scenes that play inside the workspace window. */
 const ON_STAGE: SceneId[] = [
   "overview", "ask", "build", "edit", "covers", "handoff", "history", "undo", "coldstart", "search",
@@ -276,9 +280,13 @@ export default function PromoFilm({
               <Card title={scene.title ?? ""} p={p} big={id === "claim"} />
             )}
 
+            {/* The agent sits beside the table, at the same height, never over
+                it. A panel floating on top of the grid hides the rows it is
+                talking about, which is the one thing this film cannot afford
+                to hide. */}
             {onStage && (
               <div
-                className="relative h-[640px] w-full"
+                className="flex h-[640px] w-full items-stretch gap-6"
                 style={{
                   opacity: fade,
                   transform:
@@ -287,18 +295,37 @@ export default function PromoFilm({
                       : `translateY(${(1 - fade) * 10}px)`,
                 }}
               >
-                <Workspace
-                  rows={rows}
-                  covers={covers}
-                  tabs={tabs}
-                  flash={flash}
-                  editing={editing}
-                  override={override}
-                  filtered={id === "handoff" ? p > 0.84 : false}
-                  search={searchQuery}
-                />
+                <div className="relative min-w-0 flex-1">
+                  <Workspace
+                    rows={rows}
+                    covers={covers}
+                    tabs={tabs}
+                    flash={flash}
+                    editing={editing}
+                    override={override}
+                    filtered={id === "handoff" ? p > 0.84 : false}
+                    search={searchQuery}
+                  />
 
-                <div className="absolute bottom-5 left-5 h-[320px] w-[400px]">
+                  {id === "edit" && (
+                    <Pointer
+                      x={PRICE_CELL.x + 260 * (1 - ease(seg(p, 0, 0.26)))}
+                      y={PRICE_CELL.y + 90 * (1 - ease(seg(p, 0, 0.26)))}
+                    />
+                  )}
+                  {id === "history" && <HistoryCard p={p} />}
+                  {id === "undo" && <UndoToast p={p} />}
+                  {id === "coldstart" && (
+                    <div
+                      className="absolute right-8 top-8 rounded-[10px] bg-ink px-5 py-3"
+                      style={{ opacity: ease(seg(p, 0.12, 0.24)) }}
+                    >
+                      <span className="mono text-[34px] tabular-nums text-ink-inv">{coldMs.toFixed(2)}s</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="w-[420px] flex-none">
                   <ClaudePanel
                     agent={skin === "codex" ? "Codex" : "Claude"}
                     skin={skin}
@@ -315,20 +342,6 @@ export default function PromoFilm({
                     )}
                   </ClaudePanel>
                 </div>
-
-                {id === "edit" && (
-                  <Pointer x={640 + 300 * (1 - ease(seg(p, 0, 0.26)))} y={150 + 60 * (1 - ease(seg(p, 0, 0.26)))} />
-                )}
-                {id === "history" && <HistoryCard p={p} />}
-                {id === "undo" && <UndoToast p={p} />}
-                {id === "coldstart" && (
-                  <div
-                    className="absolute right-8 top-8 rounded-[10px] bg-ink px-5 py-3"
-                    style={{ opacity: ease(seg(p, 0.12, 0.24)) }}
-                  >
-                    <span className="mono text-[34px] tabular-nums text-ink-inv">{coldMs.toFixed(2)}s</span>
-                  </div>
-                )}
               </div>
             )}
 

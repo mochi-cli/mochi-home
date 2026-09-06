@@ -41,35 +41,35 @@ const card = (title: string, dur = 5000): Scene => ({ id: "chapter", dur, title 
 
 /** The full cut: five minutes, five blocks, every claim shown rather than said. */
 export const FILM: Scene[] = [
-  { id: "claim", dur: 6000, title: "Your team's data, in a file your AI can actually work in." },
-  { id: "logo", dur: 5000 },
-  { id: "overview", dur: 11000 },
+  { id: "claim", dur: 4500, title: "Your team's data, in a file your AI can actually work in." },
+  { id: "logo", dur: 3500 },
+  { id: "overview", dur: 7000 },
 
-  card("Tables"),
-  { id: "ask", dur: 15000, caption: "Ask for a workspace the way you would ask a colleague." },
-  { id: "build", dur: 10000, caption: "It writes into your table. Not into a chat window." },
-  { id: "edit", dur: 20000, caption: "And it is still your table. Type in it." },
+  card("Tables", 3500),
+  { id: "ask", dur: 9000, caption: "Ask for a workspace the way you would ask a colleague." },
+  { id: "build", dur: 6500, caption: "It writes into your table. Not into a chat window." },
+  { id: "edit", dur: 12000, caption: "And it is still your table. Type in it." },
 
-  card("Any agent, the same file"),
-  { id: "covers", dur: 21000, caption: "One sentence. One column. Twelve rows." },
-  { id: "handoff", dur: 26000, caption: "Claude, Codex, OpenCode. Nothing moves." },
+  card("Any agent, the same file", 3500),
+  { id: "covers", dur: 11000, caption: "One sentence. One column. Twelve rows." },
+  { id: "handoff", dur: 16000, caption: "Claude, Codex, OpenCode. Nothing moves." },
 
-  card("Nothing happens anonymously"),
-  { id: "history", dur: 15000, caption: "Every change is signed with who made it." },
-  { id: "undo", dur: 14000, caption: "And every change goes back." },
-  { id: "git", dur: 18000, caption: "Underneath it is git. The history is yours." },
+  card("Nothing happens anonymously", 3500),
+  { id: "history", dur: 9000, caption: "Every change is signed with who made it." },
+  { id: "undo", dur: 8000, caption: "And every change goes back." },
+  { id: "git", dur: 11000, caption: "Underneath it is git. The history is yours." },
 
-  card("Small enough to forget it is running"),
-  { id: "numbers", dur: 11000, caption: "Measured on a table of 10,000 rows." },
-  { id: "coldstart", dur: 12000, caption: "Open it before you finish reaching for it." },
-  { id: "search", dur: 10000, caption: "Search ten thousand rows in a millisecond." },
+  card("Small enough to forget it is running", 3500),
+  { id: "numbers", dur: 8000, caption: "Measured on a table of 10,000 rows." },
+  { id: "coldstart", dur: 7000, caption: "Open it before you finish reaching for it." },
+  { id: "search", dur: 6000, caption: "Search ten thousand rows in a millisecond." },
 
-  card("It stops paying to look around"),
-  { id: "compare", dur: 15000, caption: "It asks for the rows it needs, not for the table." },
-  { id: "limits", dur: 16000, caption: "It does what you asked, and nothing else." },
+  card("It stops paying to look around", 3500),
+  { id: "compare", dur: 10000, caption: "It asks for the rows it needs, not for the table." },
+  { id: "limits", dur: 11000, caption: "It does what you asked, and nothing else." },
 
-  { id: "pricing", dur: 12000 },
-  { id: "logo", dur: 16000 },
+  { id: "pricing", dur: 9000 },
+  { id: "logo", dur: 14000 },
 ];
 
 /** The trailer: the same footage, cut to the three strongest blocks. */

@@ -14,7 +14,7 @@ There is no video file in this repo. You record one.
    1 and the type records as sharp as the page it came from. Anything smaller
    still works, it just records smaller.
 2. Open the cut you want:
-   - the film, **4:38** — `http://localhost:3000/promo`
+   - the film, **3:00** — `http://localhost:3000/promo`
    - the trailer, **1:30** — `http://localhost:3000/promo?cut=long`
    - the social cut, **23 s** — `http://localhost:3000/promo?cut=short`
 3. Add `&theme=light` (or `dark`) to pin the look. Without it the film follows
@@ -51,28 +51,32 @@ a table of 10,000 rows and 6 columns. Nothing here is invented for the ad.
 | | film | trailer | social |
 |---|---|---|---|
 | the claim | 0:00 | 0:00 | 0:00 |
-| logo | 0:06 | 0:05 | — |
-| the workspace, established | 0:11 | — | — |
-| **Tables** | 0:22 | 0:09 | — |
-| an empty file, and the request typed into it | 0:27 | 0:13 | 0:03 |
-| collections appear, rows land in groups | 0:42 | 0:21 | 0:07 |
-| a person edits a cell by hand | 0:52 | 0:28 | — |
-| **Any agent, the same file** | 1:12 | — | — |
-| a second request fills a whole column | 1:17 | — | 0:12 |
-| the dock hands the file to Codex mid-conversation | 1:38 | — | — |
-| **Nothing happens anonymously** | 2:04 | 0:36 | — |
-| the row history: who changed what | 2:09 | 0:40 | — |
-| undo, and the value goes back | 2:24 | 0:48 | — |
-| the same edits as commits, with the undo among them | 2:38 | — | — |
-| **Small enough to forget it is running** | 2:56 | 0:56 | — |
-| the four readings | 3:01 | 1:00 | 0:16 |
-| cold start, on a stopwatch | 3:12 | — | — |
-| search narrowing the grid | 3:24 | — | — |
-| **It stops paying to look around** | 3:34 | — | — |
-| a whole table into the conversation, against a summary of it | 3:39 | — | — |
-| what it deliberately does not do | 3:54 | — | — |
-| Free and Pro | 4:10 | 1:09 | — |
-| logo | 4:22 | 1:17 | 0:20 |
+| logo | 0:04 | 0:05 | — |
+| the workspace, established | 0:08 | — | — |
+| **Tables** | 0:15 | 0:09 | — |
+| an empty file, and the request typed into it | 0:18 | 0:13 | 0:03 |
+| collections appear, rows land in groups | 0:27 | 0:21 | 0:07 |
+| a person edits a cell by hand | 0:34 | 0:28 | — |
+| **Any agent, the same file** | 0:46 | — | — |
+| a second request fills a whole column | 0:49 | — | 0:12 |
+| the dock hands the file to Codex mid-conversation | 1:00 | — | — |
+| **Nothing happens anonymously** | 1:16 | 0:36 | — |
+| the row history: who changed what | 1:20 | 0:40 | — |
+| undo, and the value goes back | 1:29 | 0:48 | — |
+| the same edits as commits, with the undo among them | 1:37 | — | — |
+| **Small enough to forget it is running** | 1:48 | 0:56 | — |
+| the four readings | 1:51 | 1:00 | 0:16 |
+| cold start, on a stopwatch | 1:59 | — | — |
+| search narrowing the grid | 2:06 | — | — |
+| **It stops paying to look around** | 2:12 | — | — |
+| a whole table into the conversation, against a summary of it | 2:16 | — | — |
+| what it deliberately does not do | 2:26 | — | — |
+| Free and Pro | 2:37 | 1:09 | — |
+| logo | 2:46 | 1:17 | 0:20 |
+
+The agent panel sits beside the grid at the same height, never over it. A panel
+floating on top hides the rows it is talking about, which is the one thing this
+film cannot afford to hide.
 
 ## Voiceover, long cut
 
