@@ -388,3 +388,42 @@ describe('the two ways Polar signs', () => {
     assert.equal(outcome.error?.code, 'bad_signature');
   });
 });
+
+describe('why a signature was refused', () => {
+  /**
+   * Three different failures used to answer with the same four words. A wrong
+   * secret, a clock that is off, and a sender that is not speaking this
+   * protocol need completely different fixes, and "that signature does not
+   * check out" is the right answer to exactly one of them.
+   *
+   * The cost was an afternoon: every delivery in Polar's log said `400
+   * bad_signature`, so no hypothesis could be ruled out by looking. The reason
+   * now travels in the response body, which is where the sender records it —
+   * so it lands in the log the person debugging is already reading.
+   */
+  const deps = { secret: SECRET, claim: async () => true, handle: async () => {} };
+
+  test('a timestamp too far from now says so', async () => {
+    const old = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const { payload, headers } = delivery({ type: 'benefit.created', data: {} }, { timestamp: old });
+    const outcome = await receiveWebhook(payload, headers, deps);
+    assert.equal(outcome.status, 400);
+    assert.equal(outcome.error?.code, 'stale_timestamp');
+  });
+
+  test('a missing header says which are needed', async () => {
+    const outcome = await receiveWebhook('{}', { 'webhook-id': 'msg_x' }, deps);
+    assert.equal(outcome.status, 400);
+    assert.equal(outcome.error?.code, 'missing_headers');
+  });
+
+  test('a key that does not match is the one that says bad signature', async () => {
+    const { payload, headers } = delivery(
+      { type: 'benefit.created', data: {} },
+      { secret: 'a-completely-different-secret-value' }
+    );
+    const outcome = await receiveWebhook(payload, headers, deps);
+    assert.equal(outcome.status, 400);
+    assert.equal(outcome.error?.code, 'bad_signature');
+  });
+});

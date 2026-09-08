@@ -86,6 +86,29 @@ function verify(payload: string, headers: Record<string, string>, secret: string
 }
 
 /**
+ * Which of the three ways a signature check can fail.
+ *
+ * The library says which in prose; this turns that into something a caller can
+ * act on. A message it has never seen stays `bad_signature`, because guessing
+ * would be worse than the honest fallback.
+ */
+function signatureRefusal(message: string): { code: string; message: string } {
+  if (/timestamp/i.test(message)) {
+    return {
+      code: 'stale_timestamp',
+      message: 'that delivery is signed for a time too far from now',
+    };
+  }
+  if (/missing|header/i.test(message)) {
+    return {
+      code: 'missing_headers',
+      message: 'this needs webhook-id, webhook-timestamp and webhook-signature',
+    };
+  }
+  return { code: 'bad_signature', message: 'that signature does not check out' };
+}
+
+/**
  * One word for what happened, for the counters.
  *
  * Read off the outcome rather than passed alongside it, so a new branch in
@@ -120,8 +143,18 @@ export async function receiveWebhook(
     verify(payload, headers, deps.secret);
   } catch (error) {
     if (error instanceof WebhookVerificationError) {
-      console.error('[service] webhook signature rejected');
-      return refuse(400, 'bad_signature', 'that signature does not check out');
+      // Named, not lumped together. These three fail for reasons needing
+      // completely different fixes — a wrong secret, a clock, a sender that is
+      // not speaking this protocol — and calling all of them "bad signature"
+      // cost most of an afternoon: every delivery said the same thing, so every
+      // hypothesis looked equally likely.
+      //
+      // The reason travels in the response body, so it also lands in the
+      // sender's own delivery log, which is where whoever is debugging this is
+      // already looking.
+      const refusal = signatureRefusal(error.message);
+      console.error('[service] webhook refused:', refusal.code, error.message);
+      return refuse(400, refusal.code, refusal.message);
     }
     throw error;
   }
