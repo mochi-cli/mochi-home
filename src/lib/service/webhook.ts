@@ -135,4 +135,17 @@ export const SUBSCRIPTION_EVENTS = new Set([
   'subscription.uncanceled',
   'subscription.past_due',
   'subscription.revoked',
+  // The three below were missing, and the reason they matter is that the
+  // handler does not read the event: it takes the subscription id and re-reads
+  // the current state from Polar. So an event type here is a *trigger*, not a
+  // meaning, and one that is absent is simply a change nobody is told about
+  // until the 24-hour reconcile notices.
+  //
+  // `paused` is the one that costs money: `isActive` correctly refuses a paused
+  // subscription, but nothing asked, so somebody who paused kept Pro for up to
+  // a day. `cycled` is a renewal, which leaves `current_period_end` stale for
+  // the same window. `resumed` is the way back.
+  'subscription.cycled',
+  'subscription.paused',
+  'subscription.resumed',
 ]);

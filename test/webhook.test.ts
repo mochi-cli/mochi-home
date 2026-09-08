@@ -236,17 +236,27 @@ describe('a payload this build does not understand', () => {
 });
 
 describe('which events count', () => {
-  test('the seven subscription events are the whole list', () => {
+  test('every subscription event Polar sends is one we listen for', () => {
     // Pinned because the vocabulary already changed once, when billing moved
     // from Stripe to Polar. A status that quietly stops being recognised does
     // not throw — it just leaves a paying customer on Free.
+    //
+    // This was seven, and Polar's dashboard lists ten. The three that were
+    // missing — cycled, paused, resumed — are not new: they were never here.
+    // The handler re-reads the subscription rather than reading the event, so
+    // a missing type is a change nobody is told about until the 24-hour
+    // reconcile finds it, and `paused` in that window is Pro nobody is paying
+    // for.
     assert.deepEqual(
       [...SUBSCRIPTION_EVENTS].sort(),
       [
         'subscription.active',
         'subscription.canceled',
         'subscription.created',
+        'subscription.cycled',
         'subscription.past_due',
+        'subscription.paused',
+        'subscription.resumed',
         'subscription.revoked',
         'subscription.uncanceled',
         'subscription.updated',
