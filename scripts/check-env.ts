@@ -17,6 +17,11 @@ const checks: Array<[string, () => unknown]> = [
   ['POLAR_* (token, webhook secret, two products, server)', () => env.polar],
   ['CLAIM_KID', () => env.signing.kid],
   ['CLAIM_LIFETIME_DAYS', () => env.claimLifetimeDays],
+  // Optional, and normally unset — but a typo in one is signed into every
+  // claim, so it belongs in the same list. `limitsFor` throws on a value that
+  // is not a limit; unset returns undefined and passes quietly.
+  ['LIMIT_FREE_* (calls per week, attachment MB)', () => env.limitsFor('free')],
+  ['LIMIT_PRO_* (calls per week, attachment MB)', () => env.limitsFor('pro')],
 ];
 
 /**
