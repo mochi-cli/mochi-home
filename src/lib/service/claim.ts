@@ -27,6 +27,14 @@ export interface Claim {
   /** When the app stops believing it — also the offline grace period. */
   expiresAt: string;
   fetchedAt: string;
+  /**
+   * What this account is allowed, when we want to say so.
+   *
+   * Absent is the normal case: the app uses the numbers it shipped with. Set,
+   * it overrides them — signed, so it cannot be edited on the machine that
+   * receives it, and cached, so it holds with the network unplugged.
+   */
+  limits?: { mcpCallsPerWeek?: number | null; attachmentBytes?: number };
 }
 
 export interface SignedClaim {
@@ -44,6 +52,7 @@ export function buildClaim(input: {
 }): Claim {
   const now = input.now ?? new Date();
   const expires = new Date(now.getTime() + env.claimLifetimeDays * 86_400_000);
+  const limits = env.limitsFor(input.plan);
   return {
     kid: env.signing.kid,
     plan: input.plan,
@@ -51,6 +60,9 @@ export function buildClaim(input: {
     seats: input.seats,
     expiresAt: expires.toISOString(),
     fetchedAt: now.toISOString(),
+    // Omitted rather than set to undefined: the claim is signed as its exact
+    // JSON bytes, and a key with no value would change them for no reason.
+    ...(limits ? { limits } : {}),
   };
 }
 

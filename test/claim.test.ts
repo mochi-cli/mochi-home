@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { createPublicKey, generateKeyPairSync, sign, verify } from 'node:crypto';
 import test, { describe } from 'node:test';
 import { env } from '../src/lib/service/env.ts';
+import { buildClaim } from '../src/lib/service/claim.ts';
 
 /**
  * The one test that has to hold: a claim signed here must verify in Mochi
@@ -163,5 +164,73 @@ describe('how long a claim is believed', () => {
 
   test('a fortnight is fine', () => {
     assert.equal(withLifetime('14', () => env.claimLifetimeDays), 14);
+  });
+});
+
+describe('limits signed into a claim', () => {
+  /**
+   * The number the app enforces used to be compiled into it. Changing one meant
+   * a release, and with no auto-updater an installed copy kept the old value
+   * for as long as it was installed — so raising a limit was slow and lowering
+   * one was impossible. Set here, it travels on a claim that is already signed
+   * and already cached, so it arrives without a build and holds offline.
+   */
+  const around = <T>(only: Record<string, string | undefined>, run: () => T): T => {
+    // A claim needs a kid to be built at all; these tests are about the limits
+    // on it, not about signing configuration.
+    const vars = { CLAIM_KID: 'limits-test', ...only };
+    const before = Object.fromEntries(Object.keys(vars).map((k) => [k, process.env[k]]));
+    for (const [k, v] of Object.entries(vars)) {
+      if (v === undefined) delete process.env[k];
+      else process.env[k] = v;
+    }
+    try {
+      return run();
+    } finally {
+      for (const [k, v] of Object.entries(before)) {
+        if (v === undefined) delete process.env[k];
+        else process.env[k] = v;
+      }
+    }
+  };
+
+  test('unset says nothing, so the app keeps what it shipped with', () => {
+    around({ LIMIT_FREE_MCP_CALLS_PER_WEEK: undefined, LIMIT_FREE_ATTACHMENT_MB: undefined }, () => {
+      assert.equal('limits' in buildClaim({ plan: 'free', email: null, seats: 1 }), false);
+    });
+  });
+
+  test('a number set here rides along on the claim', () => {
+    around({ LIMIT_FREE_MCP_CALLS_PER_WEEK: '5000', LIMIT_FREE_ATTACHMENT_MB: '50' }, () => {
+      const claim = buildClaim({ plan: 'free', email: null, seats: 1 });
+      assert.deepEqual(claim.limits, { mcpCallsPerWeek: 5000, attachmentBytes: 50 * 1024 * 1024 });
+    });
+  });
+
+  test('"unlimited" is spelled out, because empty already means unset', () => {
+    around({ LIMIT_PRO_MCP_CALLS_PER_WEEK: 'unlimited' }, () => {
+      assert.equal(buildClaim({ plan: 'pro', email: null, seats: 1 }).limits?.mcpCallsPerWeek, null);
+    });
+  });
+
+  test('one plan is not the other', () => {
+    around({ LIMIT_FREE_MCP_CALLS_PER_WEEK: '5000', LIMIT_PRO_MCP_CALLS_PER_WEEK: undefined }, () => {
+      assert.equal(buildClaim({ plan: 'pro', email: null, seats: 1 }).limits, undefined);
+    });
+  });
+
+  test('a value that is not a limit is refused here, loudly', () => {
+    // Signing would otherwise make nonsense authoritative: every machine would
+    // believe a zero, all at once, and refuse every agent call.
+    for (const bad of ['0', '-1', '1.5', 'lots', '']) {
+      around({ LIMIT_FREE_MCP_CALLS_PER_WEEK: bad }, () => {
+        if (bad === '') {
+          // An empty variable is unset, not zero.
+          assert.equal(buildClaim({ plan: 'free', email: null, seats: 1 }).limits, undefined);
+          return;
+        }
+        assert.throws(() => buildClaim({ plan: 'free', email: null, seats: 1 }), /positive whole number/);
+      });
+    }
   });
 });
