@@ -378,9 +378,22 @@ describe('the two ways Polar signs', () => {
     assert.equal(outcome.status, 200, JSON.stringify(outcome.body));
   });
 
-  test('a wrong secret is still refused under either derivation', async () => {
-    // Accepting both must not become accepting anything: two chances to match
-    // is still no chance when the key is wrong.
+  test('the prefix stripped, used literally, is a third key worth trying', async () => {
+    // The one that had never been tried. Polar picks a derivation by the shape
+    // of the secret and does not say which; the shape changed when a secret was
+    // regenerated, and every delivery started failing.
+    const body = STANDARD.slice('whsec_'.length);
+    const { payload, headers } = signedWith(
+      Buffer.from(body, 'utf-8').toString('base64'),
+      { type: 'benefit.created', data: {} }
+    );
+    const outcome = await receiveWebhook(payload, headers, deps(STANDARD));
+    assert.equal(outcome.status, 200, JSON.stringify(outcome.body));
+  });
+
+  test('a wrong secret is still refused under every derivation', async () => {
+    // Accepting several must not become accepting anything: three chances to
+    // match is still no chance when the key is wrong.
     const { payload, headers } = signedWith(STANDARD, { type: 'benefit.created', data: {} });
     const other = `whsec_${Buffer.from('b'.repeat(32)).toString('base64')}`;
     const outcome = await receiveWebhook(payload, headers, deps(other));
