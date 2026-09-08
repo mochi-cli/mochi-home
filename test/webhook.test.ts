@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
 import { Webhook } from 'standardwebhooks';
-import { receiveWebhook, SUBSCRIPTION_EVENTS } from '../src/lib/service/webhook.ts';
+import { SUBSCRIPTION_EVENTS, outcomeLabel, receiveWebhook } from '../src/lib/service/webhook.ts';
 
 /**
  * The billing endpoint strangers can reach.
@@ -262,5 +262,59 @@ describe('which events count', () => {
         'subscription.updated',
       ]
     );
+  });
+});
+
+describe('counting what arrives, including what is turned away', () => {
+  /**
+   * `handled_events` counts successes and nothing else, and for one whole
+   * afternoon that made two very different situations identical: "Polar has
+   * never sent anything" and "Polar has been sending for days and every one is
+   * refused" both read as zero. Four separate questions during that session
+   * could not be answered from this side at all — each one needed somebody to
+   * open Polar's dashboard and look.
+   *
+   * So every outcome gets a word, and the word is read off the outcome rather
+   * than passed beside it: a new branch in `receiveWebhook` cannot be added
+   * without also being counted as something.
+   */
+  test('each outcome has its own word', () => {
+    assert.equal(outcomeLabel({ status: 200, body: { received: true } }), 'handled');
+    assert.equal(
+      outcomeLabel({ status: 200, body: { received: true, duplicate: true } }),
+      'duplicate'
+    );
+    assert.equal(
+      outcomeLabel({ status: 200, body: { received: true, ignored: true } }),
+      'ignored'
+    );
+  });
+
+  test('a refusal is counted as the reason it was refused', () => {
+    // Not just "refused": the difference between a wrong secret and a stale
+    // timestamp is the difference between a config error and a clock.
+    for (const code of ['unsigned', 'bad_signature']) {
+      assert.equal(
+        outcomeLabel({
+          status: 400,
+          body: { error: { code, message: 'x' } },
+          error: { code, message: 'x' },
+        }),
+        code
+      );
+    }
+  });
+
+  test('the label survives a real trip through receiveWebhook', () => {
+    // The three success shapes come from three different `ok(...)` calls, and
+    // reading them back is the only thing that says they still differ.
+    const shapes = [
+      { body: { received: true }, expected: 'handled' },
+      { body: { received: true, duplicate: true }, expected: 'duplicate' },
+      { body: { received: true, ignored: true }, expected: 'ignored' },
+    ];
+    for (const { body, expected } of shapes) {
+      assert.equal(outcomeLabel({ status: 200, body }), expected);
+    }
   });
 });

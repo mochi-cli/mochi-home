@@ -69,6 +69,32 @@ CREATE TABLE IF NOT EXISTS handled_events (
   handled_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- What has been arriving at the webhook endpoint, and what became of it.
+--
+-- `handled_events` counts successes and nothing else, which made two very
+-- different situations look identical for a whole afternoon: "Polar has never
+-- sent anything" and "Polar has been sending for days and every one is
+-- refused" both read as zero. In the billing path, where being wrong costs
+-- money, that is the wrong number to have.
+--
+-- One row, forever. Upserted rather than appended on purpose: this endpoint is
+-- unauthenticated, so anything that grows per request is something a stranger
+-- can grow.
+CREATE TABLE IF NOT EXISTS webhook_health (
+  -- The trick that makes a single row a constraint rather than a convention.
+  id            BOOLEAN PRIMARY KEY DEFAULT TRUE CHECK (id),
+  received      INTEGER NOT NULL DEFAULT 0,
+  handled       INTEGER NOT NULL DEFAULT 0,
+  duplicate     INTEGER NOT NULL DEFAULT 0,
+  ignored       INTEGER NOT NULL DEFAULT 0,
+  refused       INTEGER NOT NULL DEFAULT 0,
+  -- The last one, whatever it was: the answer to "is anything arriving at all",
+  -- which a count alone cannot give once it has stopped moving.
+  last_at       TIMESTAMPTZ,
+  last_outcome  TEXT,
+  last_status   INTEGER
+);
+
 -- What a paying customer typed into the feedback box, and nothing else.
 --
 -- Note what is absent, the same way it is absent everywhere above: no

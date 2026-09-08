@@ -60,6 +60,21 @@ function verify(payload: string, headers: Record<string, string>, secret: string
   new Webhook(Buffer.from(secret, 'utf-8').toString('base64')).verify(payload, headers);
 }
 
+/**
+ * One word for what happened, for the counters.
+ *
+ * Read off the outcome rather than passed alongside it, so a new branch in
+ * `receiveWebhook` cannot be added without also being counted as something —
+ * the alternative is a fifth outcome that silently lands in whichever bucket
+ * the last `else` points at.
+ */
+export function outcomeLabel(outcome: WebhookOutcome): string {
+  if (outcome.error) return outcome.error.code;
+  if (outcome.body.duplicate === true) return 'duplicate';
+  if (outcome.body.ignored === true) return 'ignored';
+  return 'handled';
+}
+
 export async function receiveWebhook(
   payload: string,
   headers: Record<string, string>,
