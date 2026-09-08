@@ -116,16 +116,27 @@ function signLocally(bytes: Buffer, pem: string): Buffer {
   return nodeSign(null, bytes, createPrivateKey(pem));
 }
 
+/**
+ * Signs bytes with whatever key this deployment has.
+ *
+ * Split out so the policy document signs the same way a claim does, through
+ * the same KMS path in production. Two signing routines would be two places to
+ * get key handling wrong, and only one of them would be exercised often enough
+ * to notice.
+ */
+export async function signBytes(bytes: Buffer): Promise<Buffer> {
+  const { kmsKey, localKey } = env.signing;
+  if (kmsKey) return signWithKms(bytes, kmsKey);
+  if (localKey) return signLocally(bytes, localKey);
+  throw new Error('no signing key configured — set CLAIM_KMS_KEY or CLAIM_SIGNING_KEY');
+}
+
 export async function signClaim(claim: Claim): Promise<SignedClaim> {
   const bytes = Buffer.from(JSON.stringify(claim), 'utf8');
-  const { kmsKey, localKey } = env.signing;
-
-  let signature: Buffer;
-  if (kmsKey) signature = await signWithKms(bytes, kmsKey);
-  else if (localKey) signature = signLocally(bytes, localKey);
-  else throw new Error('no signing key configured — set CLAIM_KMS_KEY or CLAIM_SIGNING_KEY');
-
-  return { claim: bytes.toString('base64'), signature: signature.toString('base64') };
+  return {
+    claim: bytes.toString('base64'),
+    signature: (await signBytes(bytes)).toString('base64'),
+  };
 }
 
 /** The free tier, which is also every failure this service can have. */
