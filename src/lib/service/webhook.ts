@@ -48,15 +48,40 @@ const refuse = (status: number, code: string, message: string): WebhookOutcome =
 });
 
 /**
- * The signature, checked ourselves.
+ * The signature, checked ourselves, against both key derivations Polar uses.
  *
  * Polar's `validateEvent` verifies *and* parses in one call, which makes "the
  * signature was wrong" and "this build does not recognise the payload"
  * indistinguishable to the caller — and those two need opposite answers.
- * Same scheme and same secret handling as the SDK: Standard Webhooks over the
- * raw bytes, with the secret base64'd first.
+ *
+ * Two derivations, because Polar picks one by the shape of the secret:
+ *
+ * - **Standard Webhooks**, when the part after `whsec_` is valid base64: the
+ *   key is those decoded bytes. `new Webhook(secret)` does this itself.
+ * - **The older scheme**, when it is not: the key is the literal characters of
+ *   the secret, which is why the SDK base64-encodes the whole string first —
+ *   the library then decodes it straight back.
+ *
+ * Only the second was here, and it worked until a secret was regenerated. The
+ * old one was `whsec_` plus 43 characters, which is not base64 and could only
+ * ever be signed the old way; the new one is `whsec_` plus 44, which is, so
+ * Polar switched — and every delivery started coming back 400 while the
+ * endpoint, the URL, the secret and the payload were all correct. The
+ * `uses_standard_webhook_signature` flag on the endpoint says which is in
+ * force, but reading a flag to decide how to check a signature is a way to get
+ * it wrong later: try both, accept either.
+ *
+ * Trying both costs one extra HMAC on a request that was going to be rejected
+ * anyway, and nothing at all on one that verifies first time.
  */
 function verify(payload: string, headers: Record<string, string>, secret: string): void {
+  try {
+    // Standard Webhooks: the library strips `whsec_` and base64-decodes.
+    new Webhook(secret).verify(payload, headers);
+    return;
+  } catch {
+    // Fall through: an older endpoint whose secret is not base64.
+  }
   new Webhook(Buffer.from(secret, 'utf-8').toString('base64')).verify(payload, headers);
 }
 

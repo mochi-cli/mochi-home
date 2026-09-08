@@ -318,3 +318,73 @@ describe('counting what arrives, including what is turned away', () => {
     }
   });
 });
+
+describe('the two ways Polar signs', () => {
+  /**
+   * Polar picks a key derivation by the shape of the secret, and this only had
+   * one of them.
+   *
+   * The secret in use was `whsec_` plus 43 characters — not base64, so Polar
+   * could only sign it the older way, using the literal characters as the key.
+   * That is what this code did, and it worked. Then the secret was regenerated
+   * as `whsec_` plus 44 characters, which *is* base64, so Polar switched to
+   * Standard Webhooks and used the 32 decoded bytes instead.
+   *
+   * Every delivery came back 400 while the endpoint, the URL, the secret and
+   * the payload were all correct — and the three deliveries that had succeeded
+   * an hour earlier were the reason the derivation looked innocent. They ran
+   * under the old secret and could not have failed.
+   */
+  const LEGACY = 'mochi-test-webhook-secret-0123456789';
+  const STANDARD = `whsec_${Buffer.from('a'.repeat(32)).toString('base64')}`;
+
+  const signedWith = (key: string, body: unknown) => {
+    const payload = JSON.stringify(body);
+    const id = 'msg_' + Math.random().toString(36).slice(2);
+    const timestamp = new Date();
+    return {
+      payload,
+      headers: {
+        'webhook-id': id,
+        'webhook-timestamp': Math.floor(timestamp.getTime() / 1000).toString(),
+        'webhook-signature': new Webhook(key).sign(id, timestamp, payload),
+      },
+    };
+  };
+
+  const deps = (secret: string) => ({
+    secret,
+    claim: async () => true,
+    handle: async () => {},
+    parse: (payload: string) => JSON.parse(payload) as unknown,
+  });
+
+  test('a secret that is not base64 is accepted, signed the older way', async () => {
+    // The key is the literal characters, which is what base64-encoding the
+    // whole string and letting the library decode it back amounts to.
+    const { payload, headers } = signedWith(
+      Buffer.from(LEGACY, 'utf-8').toString('base64'),
+      { type: 'benefit.created', data: {} }
+    );
+    const outcome = await receiveWebhook(payload, headers, deps(LEGACY));
+    assert.equal(outcome.status, 200, JSON.stringify(outcome.body));
+  });
+
+  test('a base64 secret is accepted, signed the Standard Webhooks way', async () => {
+    // This is the one that was failing in production: the key is the decoded
+    // bytes, not the characters.
+    const { payload, headers } = signedWith(STANDARD, { type: 'benefit.created', data: {} });
+    const outcome = await receiveWebhook(payload, headers, deps(STANDARD));
+    assert.equal(outcome.status, 200, JSON.stringify(outcome.body));
+  });
+
+  test('a wrong secret is still refused under either derivation', async () => {
+    // Accepting both must not become accepting anything: two chances to match
+    // is still no chance when the key is wrong.
+    const { payload, headers } = signedWith(STANDARD, { type: 'benefit.created', data: {} });
+    const other = `whsec_${Buffer.from('b'.repeat(32)).toString('base64')}`;
+    const outcome = await receiveWebhook(payload, headers, deps(other));
+    assert.equal(outcome.status, 400);
+    assert.equal(outcome.error?.code, 'bad_signature');
+  });
+});
