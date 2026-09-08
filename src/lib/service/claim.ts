@@ -27,6 +27,14 @@ export interface Claim {
   /** When the app stops believing it — also the offline grace period. */
   expiresAt: string;
   fetchedAt: string;
+  /**
+   * What this account is allowed, when we want to say so.
+   *
+   * Absent is the normal case: the app uses the numbers it shipped with. Set,
+   * it overrides them — signed, so it cannot be edited on the machine that
+   * receives it, and cached, so it holds with the network unplugged.
+   */
+  limits?: { mcpCallsPerWeek?: number | null; attachmentBytes?: number };
 }
 
 export interface SignedClaim {
@@ -44,6 +52,7 @@ export function buildClaim(input: {
 }): Claim {
   const now = input.now ?? new Date();
   const expires = new Date(now.getTime() + env.claimLifetimeDays * 86_400_000);
+  const limits = env.limitsFor(input.plan);
   return {
     kid: env.signing.kid,
     plan: input.plan,
@@ -51,6 +60,9 @@ export function buildClaim(input: {
     seats: input.seats,
     expiresAt: expires.toISOString(),
     fetchedAt: now.toISOString(),
+    // Omitted rather than set to undefined: the claim is signed as its exact
+    // JSON bytes, and a key with no value would change them for no reason.
+    ...(limits ? { limits } : {}),
   };
 }
 
@@ -104,16 +116,27 @@ function signLocally(bytes: Buffer, pem: string): Buffer {
   return nodeSign(null, bytes, createPrivateKey(pem));
 }
 
+/**
+ * Signs bytes with whatever key this deployment has.
+ *
+ * Split out so the policy document signs the same way a claim does, through
+ * the same KMS path in production. Two signing routines would be two places to
+ * get key handling wrong, and only one of them would be exercised often enough
+ * to notice.
+ */
+export async function signBytes(bytes: Buffer): Promise<Buffer> {
+  const { kmsKey, localKey } = env.signing;
+  if (kmsKey) return signWithKms(bytes, kmsKey);
+  if (localKey) return signLocally(bytes, localKey);
+  throw new Error('no signing key configured — set CLAIM_KMS_KEY or CLAIM_SIGNING_KEY');
+}
+
 export async function signClaim(claim: Claim): Promise<SignedClaim> {
   const bytes = Buffer.from(JSON.stringify(claim), 'utf8');
-  const { kmsKey, localKey } = env.signing;
-
-  let signature: Buffer;
-  if (kmsKey) signature = await signWithKms(bytes, kmsKey);
-  else if (localKey) signature = signLocally(bytes, localKey);
-  else throw new Error('no signing key configured — set CLAIM_KMS_KEY or CLAIM_SIGNING_KEY');
-
-  return { claim: bytes.toString('base64'), signature: signature.toString('base64') };
+  return {
+    claim: bytes.toString('base64'),
+    signature: (await signBytes(bytes)).toString('base64'),
+  };
 }
 
 /** The free tier, which is also every failure this service can have. */

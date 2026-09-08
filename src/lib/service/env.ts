@@ -140,6 +140,55 @@ export const env = {
    * than a deliberate ten years, and this number is how long a cancelled
    * subscription keeps working.
    */
+  /**
+   * Per-plan limits to sign into a claim, or nothing.
+   *
+   * The point of these living here rather than in the app: the app's copy is a
+   * constant compiled into every build, and with no auto-updater an installed
+   * copy keeps it for as long as it is installed. Raising a limit that way is
+   * slow and lowering one is impossible. Set here, it reaches every signed-in
+   * machine on its next daily refresh, is believed offline until the claim
+   * expires, and needs no release.
+   *
+   * Unset is the normal state and means "say nothing": the app then uses its
+   * own shipped numbers. That is deliberate — an empty variable must not read
+   * as zero, which would cut everybody off.
+   *
+   * A signed-out person has no claim, so nothing here reaches them. That is not
+   * a hole to plug: an install nobody signed in to does not talk to us at all.
+   */
+  limitsFor(plan: 'free' | 'pro'): { mcpCallsPerWeek?: number | null; attachmentBytes?: number } | undefined {
+    const upper = plan.toUpperCase();
+    const limits: { mcpCallsPerWeek?: number | null; attachmentBytes?: number } = {};
+
+    const calls = optional(`LIMIT_${upper}_MCP_CALLS_PER_WEEK`);
+    if (calls !== undefined) {
+      // "unlimited" spelled out, because an empty value already means "unset"
+      // and the two must not collapse into each other.
+      if (calls.trim().toLowerCase() === 'unlimited') limits.mcpCallsPerWeek = null;
+      else {
+        const n = Number(calls);
+        if (!Number.isInteger(n) || n <= 0) {
+          throw new Error(
+            `LIMIT_${upper}_MCP_CALLS_PER_WEEK must be a positive whole number or "unlimited", not "${calls}"`
+          );
+        }
+        limits.mcpCallsPerWeek = n;
+      }
+    }
+
+    const mb = optional(`LIMIT_${upper}_ATTACHMENT_MB`);
+    if (mb !== undefined) {
+      const n = Number(mb);
+      if (!Number.isInteger(n) || n <= 0) {
+        throw new Error(`LIMIT_${upper}_ATTACHMENT_MB must be a positive whole number of MB, not "${mb}"`);
+      }
+      limits.attachmentBytes = n * 1024 * 1024;
+    }
+
+    return Object.keys(limits).length > 0 ? limits : undefined;
+  },
+
   get claimLifetimeDays() {
     const raw = optional('CLAIM_LIFETIME_DAYS');
     if (raw === undefined) return 7;
