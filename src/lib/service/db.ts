@@ -110,6 +110,58 @@ export async function claimEvent(eventId: string): Promise<boolean> {
   return rows.length > 0;
 }
 
+/**
+ * One row, counting what arrives at the webhook endpoint.
+ *
+ * Called for every request including the refused ones, which is the whole
+ * point: a refusal used to leave no trace anywhere, so "nothing was sent" and
+ * "everything sent was rejected" were the same observation.
+ *
+ * Never throws. This is bookkeeping beside the billing path, not in it — a
+ * failure to count must not turn a webhook Polar would otherwise stop retrying
+ * into a 5xx it retries forever.
+ */
+export async function recordWebhook(outcome: WebhookRecord): Promise<void> {
+  const { label, status } = outcome;
+  const handled = label === 'handled' ? 1 : 0;
+  const duplicate = label === 'duplicate' ? 1 : 0;
+  const ignored = label === 'ignored' ? 1 : 0;
+  const refused = status >= 400 ? 1 : 0;
+  try {
+    await sql()`
+      INSERT INTO webhook_health
+        (id, received, handled, duplicate, ignored, refused, last_at, last_outcome, last_status)
+      VALUES (TRUE, 1, ${handled}, ${duplicate}, ${ignored}, ${refused}, now(), ${label}, ${status})
+      ON CONFLICT (id) DO UPDATE SET
+        received     = webhook_health.received + 1,
+        handled      = webhook_health.handled + ${handled},
+        duplicate    = webhook_health.duplicate + ${duplicate},
+        ignored      = webhook_health.ignored + ${ignored},
+        refused      = webhook_health.refused + ${refused},
+        last_at      = now(),
+        last_outcome = ${label},
+        last_status  = ${status}
+    `;
+  } catch (error) {
+    console.error('[service] could not record the webhook outcome', error);
+  }
+}
+
+export interface WebhookRecord {
+  /** `handled`, `duplicate`, `ignored`, a refusal code, or `wrong_method`. */
+  label: string;
+  status: number;
+}
+
+/** What the endpoint has been seeing. Null when nothing ever has. */
+export async function webhookHealth(): Promise<Record<string, unknown> | null> {
+  const rows = await sql()`
+    SELECT received, handled, duplicate, ignored, refused, last_at, last_outcome, last_status
+    FROM webhook_health WHERE id = TRUE
+  `;
+  return (rows[0] as Record<string, unknown> | undefined) ?? null;
+}
+
 export async function recordUsage(accountId: string, week: string, calls: number): Promise<void> {
   // GREATEST, not assignment: the app sends a running total, so an out-of-order
   // or replayed request must never move the number backwards.

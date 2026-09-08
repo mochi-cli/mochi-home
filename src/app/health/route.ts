@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { env } from '@/lib/service/env';
 import { sql } from '@/lib/service/db';
+import { webhookHealth } from '@/lib/service/db.ts';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -31,6 +32,7 @@ export async function GET() {
     'refresh_tokens',
     'usage',
     'handled_events',
+    'webhook_health',
     'feedback',
     'web_sessions',
   ];
@@ -50,6 +52,7 @@ export async function GET() {
    * one thing nothing else here can tell you.
    */
   let webhooksHandled: number | null = null;
+  let webhooks: Record<string, unknown> | null = null;
   try {
     const rows = await sql()`
       SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'
@@ -60,6 +63,12 @@ export async function GET() {
     if (present.has('handled_events')) {
       const counted = await sql()`SELECT count(*)::int AS n FROM handled_events`;
       webhooksHandled = (counted[0]?.n as number | undefined) ?? 0;
+    }
+    // What has been arriving, including what was turned away. The count above
+    // is successes only, and on its own it cannot tell "nothing was sent" from
+    // "everything sent was refused".
+    if (present.has('webhook_health')) {
+      webhooks = await webhookHealth();
     }
   } catch {
     // Deliberately swallowed: see above. The boolean is the whole answer.
@@ -117,6 +126,7 @@ export async function GET() {
     missingTables,
     /** Zero means no webhook has ever been delivered successfully. */
     webhooksHandled,
+    webhooks,
     origin: has(() => env.origin),
     google: has(() => env.google.clientId) && has(() => env.google.clientSecret),
     polar:
