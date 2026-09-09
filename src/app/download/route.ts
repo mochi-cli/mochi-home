@@ -1,27 +1,43 @@
 import { NextResponse } from 'next/server';
-import { CURRENT, SITE } from '@/lib/service/release.ts';
+import { CURRENT, signedAssetUrl } from '@/lib/service/release.ts';
 
 export const runtime = 'nodejs';
 
 /**
  * Sends somebody to the macOS build.
  *
- * Served from this site rather than from GitHub Releases, because the source
- * repository is private: `github.com/mochi-cli/mochi/releases/latest` answers
- * 404 to everybody who does not work here, which is what the download button
- * had been doing to every visitor.
+ * The builds live in a private repository, so `github.com/mochi-cli/mochi/
+ * releases/latest` answers 404 to everybody who does not work here — which is
+ * what the download button on the landing page had been doing to every
+ * visitor, silently, because GitHub's 404 is a page rather than an error.
+ *
+ * This asks GitHub for the asset with a token and hands back the short-lived
+ * signed URL it answers with. The bytes come off GitHub's CDN, not through
+ * this function; the token stays here; the repository stays private.
  *
  * Apple Silicon only, and that is the honest state of the product rather than
  * an omission to paper over — there is no Intel or Windows build to redirect
- * to yet, and pretending otherwise would send somebody a file that cannot run.
+ * to, and sending somebody a file that cannot run is worse than telling them.
  */
-export function GET() {
-  return NextResponse.redirect(new URL(CURRENT.file, SITE), {
+export async function GET() {
+  const asset = await signedAssetUrl();
+
+  if (!asset.ok) {
+    // Said out loud, on the page and in the log. A download button that
+    // quietly does nothing is the failure this whole route exists to end, and
+    // replacing one silent 404 with a silent 500 would be no improvement.
+    console.error('[site] download unavailable:', asset.reason);
+    return new NextResponse(
+      'The download is temporarily unavailable. This has been logged — please try again shortly.',
+      { status: 503, headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' } }
+    );
+  }
+
+  return NextResponse.redirect(asset.url, {
     status: 302,
     headers: {
-      // Not cached: the whole point of the indirection is that this answer
-      // changes, and a browser holding a 301 would keep handing out an old
-      // build long after it stopped being current.
+      // Never cached: the address expires within minutes, and a browser or an
+      // edge holding on to it would hand out a dead link.
       'cache-control': 'no-store',
       'x-mochi-version': CURRENT.version,
     },
