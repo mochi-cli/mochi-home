@@ -61,6 +61,47 @@ export async function signedAssetUrl(
 
   const headers = { authorization: `Bearer ${token}`, 'user-agent': 'mochi-cli.com' };
 
+  const found = await assetId(arch, headers);
+  if (!found.ok) return found;
+
+  const signed = await sign(found.id, headers);
+  if (signed.ok) return signed;
+
+  // The id was remembered and is gone — an asset replaced under the same tag,
+  // which is what re-uploading a build looks like from here. Forget it and ask
+  // once more, so a re-upload costs one failed request rather than every
+  // download until this instance happens to be recycled.
+  if (!found.cached) return signed;
+  assetIds.delete(`${CURRENT.tag}:${arch}`);
+  const again = await assetId(arch, headers);
+  return again.ok ? await sign(again.id, headers) : again;
+}
+
+/**
+ * The asset's id, remembered for as long as this instance lives.
+ *
+ * Every download used to cost two authenticated GitHub calls, and the
+ * authenticated budget is 5,000 an hour *for the account the token belongs
+ * to* — so the download button had a ceiling of about 2,500 people an hour,
+ * shared with everything else that token does. The traffic shape that reaches
+ * it is a front page or a launch, which is the hour it can least afford to
+ * answer 503.
+ *
+ * Safe to keep because the id of a published asset does not change, and the
+ * key carries the tag: publishing a release moves CURRENT.version, which moves
+ * the key, so nothing has to remember to clear this. Failures are not cached —
+ * only an id that was actually found.
+ */
+const assetIds = new Map<string, number>();
+
+async function assetId(
+  arch: Arch,
+  headers: Record<string, string>
+): Promise<{ ok: true; id: number; cached: boolean } | { ok: false; reason: string }> {
+  const key = `${CURRENT.tag}:${arch}`;
+  const known = assetIds.get(key);
+  if (known !== undefined) return { ok: true, id: known, cached: true };
+
   const release = await fetch(
     `https://api.github.com/repos/${REPO}/releases/tags/${CURRENT.tag}`,
     { headers: { ...headers, accept: 'application/vnd.github+json' }, cache: 'no-store' }
@@ -78,7 +119,16 @@ export async function signedAssetUrl(
   );
   if (!asset) return { ok: false, reason: `no ${arch} .dmg on ${CURRENT.tag}` };
 
-  const signed = await fetch(`https://api.github.com/repos/${REPO}/releases/assets/${asset.id}`, {
+  assetIds.set(key, asset.id);
+  return { ok: true, id: asset.id, cached: false };
+}
+
+/** Trades an asset id for the short-lived CDN address of the file itself. */
+async function sign(
+  id: number,
+  headers: Record<string, string>
+): Promise<{ ok: true; url: string } | { ok: false; reason: string }> {
+  const signed = await fetch(`https://api.github.com/repos/${REPO}/releases/assets/${id}`, {
     headers: { ...headers, accept: 'application/octet-stream' },
     // The redirect *is* the answer. Following it here would pull the file
     // into this function, which is exactly what this avoids.
@@ -86,7 +136,6 @@ export async function signedAssetUrl(
     cache: 'no-store',
   });
   const location = signed.headers.get('location');
-  if (!location) return { ok: false, reason: `asset ${asset.id}: HTTP ${signed.status}, no redirect` };
-
+  if (!location) return { ok: false, reason: `asset ${id}: HTTP ${signed.status}, no redirect` };
   return { ok: true, url: location };
 }
