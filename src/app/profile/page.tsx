@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { sql } from "@/lib/service/db.ts";
 import { currentSubscription, planFor } from "@/lib/service/billing.ts";
+import { plansOrNull } from "@/lib/service/plans.ts";
 import { currentAccount } from "@/lib/service/web.ts";
 import PageShell from "@/components/PageShell";
 import { openCheckout, openPortal, signOut } from "./actions";
@@ -21,6 +22,18 @@ function thisWeek(): string {
   const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
   const week = Math.ceil(((target.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
   return `${target.getUTCFullYear()}-W${String(week).padStart(2, "0")}`;
+}
+
+/**
+ * Polar quotes minor units; the price beside a button has to be the price
+ * charged, so it comes from the same read the pricing page uses.
+ */
+function money(amount: number, currency: string) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: amount % 1 === 0 ? 0 : 2,
+  }).format(amount);
 }
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
@@ -72,6 +85,9 @@ export default async function ProfilePage({
     SELECT mcp_calls FROM usage WHERE account_id = ${account.id} AND week = ${thisWeek()}
   `;
   const calls = (usage[0]?.mcp_calls as number | undefined) ?? 0;
+  // Null when Polar cannot be reached. Both buttons still render: a checkout
+  // that cannot be started is a bug, a price that cannot be shown is a gap.
+  const plans = plan === "pro" ? null : await plansOrNull();
 
   return (
     <PageShell
@@ -105,15 +121,30 @@ export default async function ProfilePage({
               </button>
             </form>
           ) : (
-            <form action={openCheckout}>
-              <input type="hidden" name="cadence" value="monthly" />
-              <button
-                type="submit"
-                className="inline-flex h-11 items-center justify-center rounded-[var(--r)] bg-ink px-6 text-[15px] text-ink-inv transition-opacity hover:opacity-88 active:translate-y-px"
-              >
-                Get Pro
-              </button>
-            </form>
+            <>
+              <form action={openCheckout}>
+                <input type="hidden" name="cadence" value="monthly" />
+                <button
+                  type="submit"
+                  className="inline-flex h-11 items-center justify-center rounded-[var(--r)] bg-ink px-6 text-[15px] text-ink-inv transition-opacity hover:opacity-88 active:translate-y-px"
+                >
+                  {plans?.monthly
+                    ? `Get Pro — ${money(plans.monthly.amount, plans.monthly.currency)} a month`
+                    : "Get Pro monthly"}
+                </button>
+              </form>
+              <form action={openCheckout}>
+                <input type="hidden" name="cadence" value="yearly" />
+                <button
+                  type="submit"
+                  className="inline-flex h-11 items-center justify-center rounded-[var(--r)] border border-line-strong px-6 text-[15px] text-ink transition-colors hover:bg-paper-sunk active:translate-y-px"
+                >
+                  {plans?.yearly
+                    ? `${money(plans.yearly.amount, plans.yearly.currency)} a year`
+                    : "Get Pro yearly"}
+                </button>
+              </form>
+            </>
           )}
 
           <form action={signOut}>
