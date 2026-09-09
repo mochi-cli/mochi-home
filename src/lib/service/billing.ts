@@ -129,6 +129,19 @@ export async function currentSubscription(accountId: string): Promise<Subscripti
   const cached = await subscriptionFor(accountId);
   if (!cached) return await discoverSubscription(accountId);
 
+  // A subscription that has ended is not an answer worth keeping for a day.
+  //
+  // Somebody whose plan lapsed is exactly the person most likely to have just
+  // started a new one — and a new subscription has a new id, which the id in
+  // this row can never find. Reading it back only ever confirms that the dead
+  // one is still dead, however long you wait.
+  //
+  // That is how a paying customer sat on Free with a live subscription: the
+  // events that would have told us were dropped, and the net underneath was
+  // looking up the wrong subscription. Asking "does this account have an
+  // active one" is the question that has an answer.
+  if (!isActive(cached.status)) return (await discoverSubscription(accountId)) ?? cached;
+
   const age = Date.now() - Date.parse(cached.syncedAt);
   if (Number.isFinite(age) && age < RECONCILE_AFTER_MS) return cached;
 
