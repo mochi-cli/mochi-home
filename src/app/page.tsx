@@ -11,6 +11,20 @@ import Pricing from "@/components/Pricing";
 import StickyCTA from "@/components/StickyCTA";
 import { plansOrNull } from "@/lib/service/plans";
 
+/**
+ * Rebuild the page at most once an hour.
+ *
+ * Without this the page is fully static, and the price is whatever Polar said
+ * at deploy time — so raising it in Polar changes /v1/plans and the app, while
+ * this page, the one somebody reads before clicking Get Pro, keeps quoting the
+ * old number until an unrelated commit happens to redeploy. That is the exact
+ * drift readPlans() exists to prevent, reintroduced by the cache.
+ *
+ * An hour rather than seconds: a price is read here far more often than it is
+ * changed, and a stale hour after a change costs nothing next to rendering the
+ * marketing page from scratch for every visitor.
+ */
+export const revalidate = 3600;
 
 export default async function Home() {
   // Read once on the server so the price on the page is the price Polar charges.
