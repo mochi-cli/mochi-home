@@ -263,6 +263,16 @@ describe('an end date on a plan that will not renew', () => {
     assert.equal(claim.endsAt, '2026-10-03T16:08:23.715Z');
   });
 
+  test('never on a Free claim, however the flag arrived', () => {
+    // Polar leaves `cancel_at_period_end` true on a revoked subscription, so
+    // a caller reading it straight off will hand one in for somebody who is
+    // now on Free. There is no Pro for it to be the end of.
+    const claim = withKid(() =>
+      buildClaim({ plan: 'free', email: 'a@b.c', seats: 1, endsAt: '2027-09-09T04:58:01.263Z' })
+    );
+    assert.equal('endsAt' in claim, false);
+  });
+
   test('omitted, not null, while it renews', () => {
     // The claim is signed as its exact JSON bytes, so a key carrying nothing
     // changes the signature for no reason — and `endsAt: null` would have to

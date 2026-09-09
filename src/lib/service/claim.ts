@@ -81,7 +81,11 @@ export function buildClaim(input: {
     // Omitted rather than set to undefined: the claim is signed as its exact
     // JSON bytes, and a key with no value would change them for no reason.
     ...(limits ? { limits } : {}),
-    ...(input.endsAt ? { endsAt: input.endsAt } : {}),
+    // Pro only. Polar keeps `cancel_at_period_end` set on a subscription it
+    // has already revoked, so the flag outlives the thing it describes — and a
+    // Free claim carrying "Pro ends in September 2027" is a signed statement
+    // that is simply not true, whatever the interface does with it.
+    ...(input.endsAt && input.plan === 'pro' ? { endsAt: input.endsAt } : {}),
   };
 }
 
