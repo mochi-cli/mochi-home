@@ -80,14 +80,18 @@ export default function DocsPage() {
       body: (
         <>
           <p>
-            Nothing is created until you name it. The easiest way is to ask the agent once it is
-            connected:
+            Nothing is created until you name it. Press{" "}
+            <strong className="text-ink">New workspace</strong>, give it a short name — a name, not
+            a path — and pick what to start from: an empty workspace, or one of the samples (CRM,
+            HR, Inventory, Projects) which arrives with tables and a few rows in it, so there is
+            something to look at straight away.
+          </p>
+          <p className="mt-4">
+            Each workspace is a separate database file on your machine. Or ask the agent, once it
+            is connected, and it does the same thing:
           </p>
           <CodeBlock>{`Create a workspace named sales-demo,
 seed the CRM template, and open it.`}</CodeBlock>
-          <p className="mt-4">Or do it yourself before you start:</p>
-          <CodeBlock>{`mochi-table create --template crm \\
-  --db ~/.mochi/workspaces/default.sqlite`}</CodeBlock>
         </>
       ),
     },
@@ -122,9 +126,13 @@ seed the CRM template, and open it.`}</CodeBlock>
           <p>
             <InlineCode text="Every change is attributed to whoever made it, whether that was a person or an agent. Undo puts things back without erasing the record of what happened." />
           </p>
-          <p className="mt-4">You can take the whole history with you:</p>
-          <CodeBlock>{`mochi-table bundle --out history.bundle
-git bundle verify history.bundle
+          <p className="mt-4">
+            You can take the whole history with you. Open{" "}
+            <strong className="text-ink">More actions → History</strong> and press{" "}
+            <strong className="text-ink">Export as a Git bundle</strong>. What you get is one
+            ordinary file that Git understands on its own — no Mochi needed to read it back:
+          </p>
+          <CodeBlock>{`git bundle verify history.bundle
 git clone history.bundle history`}</CodeBlock>
         </>
       ),

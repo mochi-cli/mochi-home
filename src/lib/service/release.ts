@@ -7,18 +7,16 @@
  * bumped once.
  */
 export const CURRENT = {
-  version: '0.1.0',
+  version: '0.1.1',
   /** The tag the asset hangs off. Derived, so there is still one number. */
   get tag() {
     return `v${CURRENT.version}`;
   },
-  publishedAt: '2026-09-09T00:00:00.000Z',
+  publishedAt: '2026-09-10T00:00:00.000Z',
   notes: [
-    'Sign in opens a real browser from the desktop window.',
-    'The account card stays on screen when the workspace list is long.',
-    'Deleting a column can be undone from History.',
-    'Cancelling a plan says so, and shows when Pro ends.',
-    'One account is limited to three machines, and says why when one is signed out.',
+    'Paying anywhere other than the app is noticed when you switch back to it, instead of within a day.',
+    'Free accounts are no longer told to sign in again to restore a Pro they never bought.',
+    'On Pro the agent calls line says unlimited rather than counting up against nothing.',
   ].join('\n'),
 };
 
