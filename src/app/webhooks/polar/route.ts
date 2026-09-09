@@ -76,16 +76,17 @@ export const DELETE = wrongMethod;
  * function whose first line is "is this one of ours". The two fields actually
  * read are asserted below, where they are read.
  */
-async function handle(event: { type: string; data: unknown }): Promise<void> {
+async function handle(event: { type: string; data: unknown }): Promise<boolean> {
   // Everything outside the set is acknowledged and ignored — deliberately not
-  // logged as a problem, because most of what Polar sends is not ours.
-  if (!SUBSCRIPTION_EVENTS.has(event.type)) return;
+  // logged as a problem, because most of what Polar sends is not ours. Said
+  // out loud, so `/health` counts it as ignored rather than as work done.
+  if (!SUBSCRIPTION_EVENTS.has(event.type)) return false;
 
   // The account id travels inside the event, because checkout set it as the
   // customer's external id. No lookup table, and nothing to be out of date.
   const data = event.data as { id: string; customer?: { externalId?: string | null } };
   const accountId = data.customer?.externalId;
-  if (!accountId) return;
+  if (!accountId) return false;
 
   // Re-read rather than trusting the event's snapshot: `subscription.updated`
   // can arrive before `subscription.created`, and by the time this runs the
@@ -94,4 +95,5 @@ async function handle(event: { type: string; data: unknown }): Promise<void> {
   // enormously.
   const fresh = await polar().subscriptions.get({ id: data.id });
   await syncSubscription(accountId, fresh);
+  return true;
 }
