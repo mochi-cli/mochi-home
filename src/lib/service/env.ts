@@ -189,6 +189,24 @@ export const env = {
     return Object.keys(limits).length > 0 ? limits : undefined;
   },
 
+  /**
+   * How many machines one account may be signed in on at once.
+   *
+   * Not the unit of sale — seats are counted per person, so one person on a
+   * laptop, a desktop and a spare is ordinary. This is the number at which
+   * "one person with several machines" stops being a believable description,
+   * and it should sit far enough above real use that nobody honest meets it.
+   */
+  get sessionLimit() {
+    const raw = optional('LIMIT_SESSIONS');
+    if (raw === undefined) return 3;
+    const count = Number(raw);
+    if (!Number.isInteger(count) || count < 1) {
+      throw new Error(`LIMIT_SESSIONS must be a whole number of machines, not "${raw}"`);
+    }
+    return count;
+  },
+
   get claimLifetimeDays() {
     const raw = optional('CLAIM_LIFETIME_DAYS');
     if (raw === undefined) return 7;

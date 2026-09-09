@@ -10,6 +10,19 @@ import { sameSecret } from '@/lib/service/tokens.ts';
 
 export const runtime = 'nodejs';
 
+/**
+ * A short name for the machine that just signed in.
+ *
+ * Taken from the user-agent because that is what we already have; nothing new
+ * is collected for it. Truncated, because this is shown to a person and a
+ * hundred characters of browser string is not a name.
+ */
+function label(request: Request): string | null {
+  const agent = request.headers.get('user-agent')?.trim();
+  if (!agent) return null;
+  return agent.slice(0, 80);
+}
+
 const body = z.object({
   code: z.string().min(1),
   /** Proof the caller is the app that started this, not whoever read the code. */
@@ -51,7 +64,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       ...(await signClaim(buildClaim({ plan, email: account.email, seats, endsAt: subscription?.cancelAtPeriodEnd ? subscription.currentPeriodEnd : null }))),
-      refreshToken: await issueRefreshToken(account.id),
+      // Labelled from the app's own user-agent, which already carries the
+      // platform and version. A list of sessions reading "unknown, unknown,
+      // unknown" is a list nobody can act on.
+      refreshToken: await issueRefreshToken(account.id, label(request)),
     });
   });
 }
