@@ -19,13 +19,6 @@ interface Section {
   body: React.ReactNode;
 }
 
-const CLIENTS = [
-  "npx --yes github:mochi-cli/mochi#v0.2.20 install claude-code",
-  "npx --yes github:mochi-cli/mochi#v0.2.20 install claude-desktop",
-  "npx --yes github:mochi-cli/mochi#v0.2.20 install codex",
-  "npx --yes github:mochi-cli/mochi#v0.2.20 install opencode",
-].join("\n");
-
 export default function DocsPage() {
   const sections: Section[] = [
     {
@@ -54,13 +47,29 @@ export default function DocsPage() {
       body: (
         <>
           <p>
-            One command per client. It creates the local store and writes the configuration the
-            client needs; it does not install or sign in to the client itself.
+            In the app. Open <strong className="text-ink">Settings</strong> — the gear beside your
+            account, at the foot of the sidebar — and stay on the{" "}
+            <strong className="text-ink">Agents</strong> tab it opens on.
           </p>
-          <CodeBlock>{CLIENTS}</CodeBlock>
           <p className="mt-4">
-            Restart the client afterwards. The agent talks to Mochi over a pipe on your own
-            machine, so there is no port to open, no token to paste and nothing in between.
+            It lists the clients it can find on this machine: Claude Code, Claude Desktop, Codex,
+            OpenCode, Hermes Agent and OpenClaw. Anything it cannot find is marked{" "}
+            <em>Not installed</em> rather than hidden, so a client you expected to see and do not
+            tells you something. Press <strong className="text-ink">Connect</strong> on the one you
+            use, then restart that client so it notices.
+          </p>
+          <p className="mt-4">
+            Connecting writes Mochi into that client&rsquo;s own MCP configuration, alongside
+            whatever is already in it. Nothing else in the file is touched, and the panel names the
+            other servers it found there so you can see that for yourself. Disconnect removes just
+            that entry.
+          </p>
+          <Note>
+            <InlineCode text="For a client that is not in the list, the same panel shows the command to add by hand, with a button to copy it." />
+          </Note>
+          <p className="mt-4">
+            The agent talks to Mochi over a pipe on your own machine, so there is no port to open,
+            no token to paste and nothing in between.
           </p>
         </>
       ),

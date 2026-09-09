@@ -75,9 +75,17 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    // The SVG first, a 32px raster after it: the mark is cut rather than
+    // stroked, and the handful of clients that still refuse SVG would
+    // otherwise show nothing at all.
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+    ],
     shortcut: "/favicon.svg",
-    apple: "/favicon.svg",
+    // PNG, not the SVG: iOS ignores an SVG here and screenshots the page
+    // instead, so a bookmarked Mochi would carry a picture of the hero.
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
   manifest: "/manifest.webmanifest",
   alternates: {

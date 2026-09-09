@@ -204,7 +204,7 @@ const en: Messages = {
       { feature: "Runs without a server or account", excel: "Copilot needs a Microsoft account", airtable: "", mochi: "" },
       { feature: "Every write is versioned, traceable & reversible", excel: "Undo history only", airtable: "Paid tiers only", mochi: "" },
       { feature: "Real-time collab for teammates and agents", excel: "Needs Microsoft 365", airtable: "", mochi: "" },
-      { feature: "Pricing", excel: "Per seat + Copilot add-on", airtable: "Per seat, monthly", mochi: "$19 once, forever" },
+      { feature: "Pricing", excel: "Per seat + Copilot add-on", airtable: "Per seat, monthly", mochi: "Flat monthly, not per seat" },
     ],
   },
 
@@ -591,7 +591,7 @@ const es: Messages = {
       { feature: "Funciona sin servidor ni cuenta", excel: "Copilot exige una cuenta de Microsoft", airtable: "", mochi: "" },
       { feature: "Cada escritura queda versionada, trazable y reversible", excel: "Solo historial de deshacer", airtable: "Solo en planes de pago", mochi: "" },
       { feature: "Colaboración en tiempo real: equipo y agentes", excel: "Requiere Microsoft 365", airtable: "", mochi: "" },
-      { feature: "Precio", excel: "Por usuario + complemento Copilot", airtable: "Por usuario, mensual", mochi: "19 $ una vez, para siempre" },
+      { feature: "Precio", excel: "Por usuario + complemento Copilot", airtable: "Por usuario, mensual", mochi: "Tarifa plana mensual, no por usuario" },
     ],
   },
 
@@ -946,7 +946,7 @@ const fr: Messages = {
       { feature: "Fonctionne sans serveur ni compte", excel: "Copilot exige un compte Microsoft", airtable: "", mochi: "" },
       { feature: "Chaque écriture est versionnée, traçable et réversible", excel: "Historique d'annulation seulement", airtable: "Offres payantes uniquement", mochi: "" },
       { feature: "Collaboration en temps réel : équipe et agents", excel: "Nécessite Microsoft 365", airtable: "", mochi: "" },
-      { feature: "Tarif", excel: "Par siège + option Copilot", airtable: "Par siège, mensuel", mochi: "19 $ une fois, pour toujours" },
+      { feature: "Tarif", excel: "Par siège + option Copilot", airtable: "Par siège, mensuel", mochi: "Forfait mensuel, pas par siège" },
     ],
   },
 
@@ -1301,7 +1301,7 @@ const de: Messages = {
       { feature: "Läuft ohne Server und ohne Konto", excel: "Copilot braucht ein Microsoft-Konto", airtable: "", mochi: "" },
       { feature: "Jeder Schreibvorgang ist versioniert, nachvollziehbar und umkehrbar", excel: "Nur Undo-Verlauf", airtable: "Nur in bezahlten Tarifen", mochi: "" },
       { feature: "Echtzeit-Zusammenarbeit, Team und Agenten", excel: "Benötigt Microsoft 365", airtable: "", mochi: "" },
-      { feature: "Preis", excel: "Pro Platz + Copilot-Zusatz", airtable: "Pro Platz, monatlich", mochi: "Einmalig 19 $, für immer" },
+      { feature: "Preis", excel: "Pro Platz + Copilot-Zusatz", airtable: "Pro Platz, monatlich", mochi: "Monatlicher Pauschalpreis, nicht pro Platz" },
     ],
   },
 
@@ -1656,7 +1656,7 @@ const ja: Messages = {
       { feature: "サーバーもアカウントも不要で動作", excel: "Copilot には Microsoft アカウントが必要", airtable: "", mochi: "" },
       { feature: "すべての書き込みがバージョン管理・追跡・巻き戻し可能", excel: "元に戻す履歴のみ", airtable: "有料プランのみ", mochi: "" },
       { feature: "リアルタイム共同編集, メンバーとエージェント", excel: "Microsoft 365 が必要", airtable: "", mochi: "" },
-      { feature: "料金", excel: "1席ごと + Copilot 追加料金", airtable: "1席ごとの月額", mochi: "買い切り 19 ドル、ずっと使える" },
+      { feature: "料金", excel: "1席ごと + Copilot 追加料金", airtable: "1席ごとの月額", mochi: "席数に関係なく月額定額" },
     ],
   },
 
@@ -2011,7 +2011,7 @@ const zh: Messages = {
       { feature: "无需服务器和账号即可运行", excel: "Copilot 需要微软账号", airtable: "", mochi: "" },
       { feature: "每次写入都有版本、可追溯、可回滚", excel: "仅有撤销历史", airtable: "仅限付费套餐", mochi: "" },
       { feature: "实时协作, 队友与智能体", excel: "需要 Microsoft 365", airtable: "", mochi: "" },
-      { feature: "价格", excel: "按席位收费 + Copilot 加购", airtable: "按席位，按月付费", mochi: "19 美元买断，终身可用" },
+      { feature: "价格", excel: "按席位收费 + Copilot 加购", airtable: "按席位，按月付费", mochi: "按月定额，不按席位" },
     ],
   },
 
@@ -2366,7 +2366,7 @@ const vi: Messages = {
       { feature: "Chạy được mà không cần server hay tài khoản", excel: "Copilot đòi tài khoản Microsoft", airtable: "", mochi: "" },
       { feature: "Mọi thao tác ghi đều có phiên bản, truy vết và hoàn tác được", excel: "Chỉ có lịch sử hoàn tác", airtable: "Chỉ có ở gói trả phí", mochi: "" },
       { feature: "Cộng tác thời gian thực, cả người lẫn agent", excel: "Cần Microsoft 365", airtable: "", mochi: "" },
-      { feature: "Giá", excel: "Theo đầu người + phụ phí Copilot", airtable: "Theo đầu người, hàng tháng", mochi: "19 $ một lần, dùng mãi mãi" },
+      { feature: "Giá", excel: "Theo đầu người + phụ phí Copilot", airtable: "Theo đầu người, hàng tháng", mochi: "Trả theo tháng, không tính theo đầu người" },
     ],
   },
 

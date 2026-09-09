@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
       "Build a customer list, a hiring tracker, anything your team needs. It all lives on your own computer.",
     start_url: "/",
     display: "standalone",
-    background_color: "#f0efe4",
+    background_color: "#f6f6f6",
     theme_color: "#0a0a0a",
     orientation: "portrait-primary",
     icons: [
