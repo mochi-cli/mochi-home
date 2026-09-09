@@ -149,7 +149,6 @@ export interface Messages {
     error: string;
     invalid: string;
   };
-  success: { title: string; sub: string; order: string; cta: string; back: string; note: string };
 }
 
 const en: Messages = {
@@ -497,7 +496,7 @@ const en: Messages = {
   },
   price: {
     title: "Free while it is just you",
-    sub: "Everything on this page works without paying, up to 500 MCP calls a week. Pro lifts that limit and adds seats for the rest of your team.",
+    sub: "Everything on this page works without paying, up to 500 MCP calls a week. Pro removes that limit and takes larger attachments.",
     free: "Free",
     perMonth: "per month",
     perYear: "per year",
@@ -505,8 +504,8 @@ const en: Messages = {
     soon: "Coming soon",
     note: "Billed through Polar. Cancel whenever you like, and your data stays on your machine either way.",
     plans: [
-      { tagline: "For one person", features: ["500 MCP calls a week", "Everything runs on your own machine", "As many workspaces and tables as you like", "Full history, and undo that goes back", "Connect Claude, Codex or OpenCode"] },
-      { tagline: "For a team", features: ["MCP calls with no limit", "Everything in Free", "Seats for the rest of your team", "Shared workspaces that stay in step", "Email support"] },
+      { tagline: "For one person", features: ["500 MCP calls a week", "Attachments up to 25 MB", "Everything runs on your own machine", "As many workspaces and tables as you like", "Full history, and undo that goes back", "Connect Claude, Codex or OpenCode"] },
+      { tagline: "When you use it every day", features: ["MCP calls with no limit", "Attachments up to 100 MB", "Everything in Free", "Email support"] },
     ],
   },
   cta: { title: "Ready to get your data in order?", sub: "Download Mochi and start in about a minute. Nothing to set up, nothing to sign up for.", button: "Get started →" },
@@ -528,14 +527,6 @@ const en: Messages = {
     success: "You're on the list.",
     error: "Something went wrong. Please try again.",
     invalid: "Enter a valid email address.",
-  },
-  success: {
-    title: "You're all set!",
-    sub: "Your Pro license is on its way to your inbox. Install Mochi and start building your workspace.",
-    order: "Order reference:",
-    cta: "View on GitHub",
-    back: "Back to home",
-    note: "Didn't get the email? Check spam, or reach out on GitHub.",
   },
 };
 
@@ -852,7 +843,7 @@ const es: Messages = {
   },
   price: {
     title: "Gratis mientras seas tú solo",
-    sub: "Todo lo de esta página funciona sin pagar, hasta 500 llamadas MCP por semana. Pro quita ese límite y añade plazas para el resto del equipo.",
+    sub: "Todo lo de esta página funciona sin pagar, hasta 500 llamadas MCP por semana. Pro quita ese límite y acepta adjuntos más grandes.",
     free: "Gratis",
     perMonth: "al mes",
     perYear: "al año",
@@ -860,8 +851,8 @@ const es: Messages = {
     soon: "Muy pronto",
     note: "Se cobra a través de Polar. Cancela cuando quieras: tus datos se quedan en tu máquina de todas formas.",
     plans: [
-      { tagline: "Para una persona", features: ["500 llamadas MCP por semana", "Todo funciona en tu propio ordenador", "Tantos espacios y tablas como quieras", "Historial completo, y deshacer que llega lejos", "Conecta Claude, Codex u OpenCode"] },
-      { tagline: "Para un equipo", features: ["Llamadas MCP sin límite", "Todo lo de Gratis", "Plazas para el resto del equipo", "Espacios compartidos que van al día", "Soporte por correo"] },
+      { tagline: "Para una persona", features: ["500 llamadas MCP por semana", "Adjuntos de hasta 25 MB", "Todo funciona en tu propio ordenador", "Tantos espacios y tablas como quieras", "Historial completo, y deshacer que llega lejos", "Conecta Claude, Codex u OpenCode"] },
+      { tagline: "Cuando lo usas a diario", features: ["Llamadas MCP sin límite", "Adjuntos de hasta 100 MB", "Todo lo de Gratis", "Soporte por correo"] },
     ],
   },
   cta: { title: "¿Listo para ordenar tus datos?", sub: "Descarga Mochi y empieza en un minuto. Nada que configurar, nada que registrar.", button: "Empezar →" },
@@ -883,14 +874,6 @@ const es: Messages = {
     success: "Ya estás en la lista.",
     error: "Algo salió mal. Inténtalo de nuevo.",
     invalid: "Introduce un correo electrónico válido.",
-  },
-  success: {
-    title: "¡Todo listo!",
-    sub: "Tu licencia Pro va de camino a tu correo. Instala Mochi y empieza a construir tu espacio de trabajo.",
-    order: "Referencia del pedido:",
-    cta: "Ver en GitHub",
-    back: "Volver al inicio",
-    note: "¿No recibiste el correo? Revisa spam o contáctanos en GitHub.",
   },
 };
 
@@ -1207,7 +1190,7 @@ const fr: Messages = {
   },
   price: {
     title: "Gratuit tant que vous êtes seul",
-    sub: "Tout ce que montre cette page marche sans payer, jusqu'à 500 appels MCP par semaine. Pro lève cette limite et ajoute des places pour le reste de l'équipe.",
+    sub: "Tout ce que montre cette page marche sans payer, jusqu'à 500 appels MCP par semaine. Pro lève cette limite et accepte des pièces jointes plus grandes.",
     free: "Gratuit",
     perMonth: "par mois",
     perYear: "par an",
@@ -1215,8 +1198,8 @@ const fr: Messages = {
     soon: "Bientôt",
     note: "Facturé via Polar. Annulez quand vous voulez : vos données restent sur votre machine dans tous les cas.",
     plans: [
-      { tagline: "Pour une personne", features: ["500 appels MCP par semaine", "Tout tourne sur votre propre ordinateur", "Autant d'espaces et de tables que vous voulez", "Historique complet, et un retour arrière qui remonte loin", "Connectez Claude, Codex ou OpenCode"] },
-      { tagline: "Pour une équipe", features: ["Appels MCP sans limite", "Tout ce qu'il y a dans Gratuit", "Des places pour le reste de l'équipe", "Des espaces partagés qui restent d'accord", "Assistance par e-mail"] },
+      { tagline: "Pour une personne", features: ["500 appels MCP par semaine", "Pièces jointes jusqu'à 25 Mo", "Tout tourne sur votre propre ordinateur", "Autant d'espaces et de tables que vous voulez", "Historique complet, et un retour arrière qui remonte loin", "Connectez Claude, Codex ou OpenCode"] },
+      { tagline: "Quand vous l'utilisez tous les jours", features: ["Appels MCP sans limite", "Pièces jointes jusqu'à 100 Mo", "Tout ce qu'il y a dans Gratuit", "Assistance par e-mail"] },
     ],
   },
   cta: { title: "Prêt à remettre vos données en ordre ?", sub: "Téléchargez Mochi et commencez en une minute. Rien à configurer, aucun compte à créer.", button: "Commencer →" },
@@ -1238,14 +1221,6 @@ const fr: Messages = {
     success: "Vous êtes sur la liste.",
     error: "Une erreur est survenue. Réessayez.",
     invalid: "Saisissez une adresse e-mail valide.",
-  },
-  success: {
-    title: "Tout est prêt !",
-    sub: "Votre licence Pro est en route vers votre boîte mail. Installez Mochi et commencez à construire votre espace de travail.",
-    order: "Référence de commande :",
-    cta: "Voir sur GitHub",
-    back: "Retour à l'accueil",
-    note: "Vous n'avez pas reçu l'e-mail ? Vérifiez vos spams ou contactez-nous sur GitHub.",
   },
 };
 
@@ -1562,7 +1537,7 @@ const de: Messages = {
   },
   price: {
     title: "Kostenlos, solange du allein bist",
-    sub: "Alles auf dieser Seite funktioniert ohne zu zahlen, bis zu 500 MCP-Aufrufe pro Woche. Pro hebt diese Grenze auf und bringt Plätze für den Rest des Teams.",
+    sub: "Alles auf dieser Seite funktioniert ohne zu zahlen, bis zu 500 MCP-Aufrufe pro Woche. Pro hebt diese Grenze auf und nimmt größere Anhänge.",
     free: "Kostenlos",
     perMonth: "pro Monat",
     perYear: "pro Jahr",
@@ -1570,8 +1545,8 @@ const de: Messages = {
     soon: "Bald",
     note: "Abrechnung über Polar. Jederzeit kündbar, und deine Daten bleiben so oder so auf deinem Rechner.",
     plans: [
-      { tagline: "Für eine Person", features: ["500 MCP-Aufrufe pro Woche", "Alles läuft auf deinem eigenen Rechner", "So viele Bereiche und Tabellen, wie du willst", "Vollständiger Verlauf, und ein Rückgängig, das weit zurückreicht", "Verbinde Claude, Codex oder OpenCode"] },
-      { tagline: "Für ein Team", features: ["MCP-Aufrufe ohne Limit", "Alles aus Kostenlos", "Plätze für den Rest des Teams", "Geteilte Bereiche, die beisammen bleiben", "Support per E-Mail"] },
+      { tagline: "Für eine Person", features: ["500 MCP-Aufrufe pro Woche", "Anhänge bis 25 MB", "Alles läuft auf deinem eigenen Rechner", "So viele Bereiche und Tabellen, wie du willst", "Vollständiger Verlauf, und ein Rückgängig, das weit zurückreicht", "Verbinde Claude, Codex oder OpenCode"] },
+      { tagline: "Wenn du es täglich nutzt", features: ["MCP-Aufrufe ohne Limit", "Anhänge bis 100 MB", "Alles aus Kostenlos", "Support per E-Mail"] },
     ],
   },
   cta: { title: "Bereit, Ordnung in deine Daten zu bringen?", sub: "Lade Mochi und leg in etwa einer Minute los. Nichts einzurichten, nichts anzumelden.", button: "Loslegen →" },
@@ -1593,14 +1568,6 @@ const de: Messages = {
     success: "Du stehst auf der Liste.",
     error: "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
     invalid: "Bitte gib eine gültige E-Mail-Adresse ein.",
-  },
-  success: {
-    title: "Alles bereit!",
-    sub: "Deine Pro-Lizenz ist auf dem Weg in dein Postfach. Installiere Mochi und starte mit deinem Workspace.",
-    order: "Bestellreferenz:",
-    cta: "Auf GitHub ansehen",
-    back: "Zur Startseite",
-    note: "E-Mail nicht erhalten? Schau im Spam nach oder melde dich auf GitHub.",
   },
 };
 
@@ -1917,7 +1884,7 @@ const ja: Messages = {
   },
   price: {
     title: "ひとりのうちは無料です",
-    sub: "このページにあることは、MCP 呼び出し週 500 回まで、払わなくても全部できます。Pro はその上限をなくし、チームの人数ぶんの席を足します。",
+    sub: "このページにあることは、MCP 呼び出し週 500 回まで、払わなくても全部できます。Pro はその上限をなくし、より大きな添付ファイルを扱えます。",
     free: "無料",
     perMonth: "月あたり",
     perYear: "年あたり",
@@ -1925,8 +1892,8 @@ const ja: Messages = {
     soon: "近日公開",
     note: "支払いは Polar 経由です。いつでも解約でき、どちらにしてもデータはあなたのパソコンに残ります。",
     plans: [
-      { tagline: "ひとり用", features: ["MCP 呼び出しは週 500 回まで", "すべて自分のパソコンで動きます", "ワークスペースもテーブルも好きなだけ", "完全な履歴と、さかのぼれる取り消し", "Claude・Codex・OpenCode をつなげます"] },
-      { tagline: "チーム用", features: ["MCP 呼び出しは無制限", "無料プランのすべて", "チームの人数ぶんの席", "ずれない共有ワークスペース", "メールサポート"] },
+      { tagline: "ひとり用", features: ["MCP 呼び出しは週 500 回まで", "添付ファイルは 25 MB まで", "すべて自分のパソコンで動きます", "ワークスペースもテーブルも好きなだけ", "完全な履歴と、さかのぼれる取り消し", "Claude・Codex・OpenCode をつなげます"] },
+      { tagline: "毎日使うなら", features: ["MCP 呼び出しは無制限", "添付ファイルは 100 MB まで", "無料プランのすべて", "メールサポート"] },
     ],
   },
   cta: { title: "データを整理する準備はできましたか", sub: "Mochi をダウンロードすれば一分ほどで始められます。設定も登録もいりません。", button: "はじめる →" },
@@ -1948,14 +1915,6 @@ const ja: Messages = {
     success: "登録が完了しました。",
     error: "問題が発生しました。もう一度お試しください。",
     invalid: "有効なメールアドレスを入力してください。",
-  },
-  success: {
-    title: "準備完了です！",
-    sub: "Proライセンスはまもなくメールに届きます。Mochiをインストールしてワークスペースの構築を始めましょう。",
-    order: "注文番号：",
-    cta: "GitHubで見る",
-    back: "ホームに戻る",
-    note: "メールが届きませんか？迷惑メールフォルダをご確認いただくか、GitHubでお問い合わせください。",
   },
 };
 
@@ -2272,7 +2231,7 @@ const zh: Messages = {
   },
   price: {
     title: "一个人用，一直免费",
-    sub: "这一页上的东西不花钱就能全用，每周 500 次 MCP 调用以内。Pro 取消这个上限，并为团队其他人加席位。",
+    sub: "这一页上的东西不花钱就能全用，每周 500 次 MCP 调用以内。Pro 取消这个上限，并支持更大的附件。",
     free: "免费",
     perMonth: "每月",
     perYear: "每年",
@@ -2280,8 +2239,8 @@ const zh: Messages = {
     soon: "即将推出",
     note: "通过 Polar 收款。随时可以取消，无论如何数据都留在你自己的电脑上。",
     plans: [
-      { tagline: "一个人用", features: ["每周 500 次 MCP 调用", "全部在你自己的电脑上运行", "工作区和表想建多少建多少", "完整历史，撤销能一直往回退", "接上 Claude、Codex 或 OpenCode"] },
-      { tagline: "团队用", features: ["MCP 调用不限次数", "免费版的全部", "给团队其他人的席位", "共享工作区，始终一致", "邮件支持"] },
+      { tagline: "一个人用", features: ["每周 500 次 MCP 调用", "附件最大 25 MB", "全部在你自己的电脑上运行", "工作区和表想建多少建多少", "完整历史，撤销能一直往回退", "接上 Claude、Codex 或 OpenCode"] },
+      { tagline: "每天都在用", features: ["MCP 调用不限次数", "附件最大 100 MB", "免费版的全部", "邮件支持"] },
     ],
   },
   cta: { title: "准备好把数据理一理了吗？", sub: "下载 Mochi，大概一分钟就能开始。不用配置，也不用注册。", button: "开始使用 →" },
@@ -2303,14 +2262,6 @@ const zh: Messages = {
     success: "已加入名单。",
     error: "出了点问题，请重试。",
     invalid: "请输入有效的邮箱地址。",
-  },
-  success: {
-    title: "一切就绪！",
-    sub: "你的 Pro 许可证正发送到你的邮箱。安装 Mochi，开始搭建你的工作区。",
-    order: "订单编号：",
-    cta: "在 GitHub 上查看",
-    back: "返回首页",
-    note: "没收到邮件？请检查垃圾邮件文件夹，或通过 GitHub 联系我们。",
   },
 };
 
@@ -2627,7 +2578,7 @@ const vi: Messages = {
   },
   price: {
     title: "Một mình thì miễn phí",
-    sub: "Mọi thứ trên trang này dùng không mất tiền, trong 500 lượt gọi MCP mỗi tuần. Pro bỏ giới hạn đó và thêm chỗ cho những người còn lại trong nhóm.",
+    sub: "Mọi thứ trên trang này dùng không mất tiền, trong 500 lượt gọi MCP mỗi tuần. Pro bỏ giới hạn đó và nhận tệp đính kèm lớn hơn.",
     free: "Miễn phí",
     perMonth: "mỗi tháng",
     perYear: "mỗi năm",
@@ -2635,8 +2586,8 @@ const vi: Messages = {
     soon: "Sắp có",
     note: "Thanh toán qua Polar. Huỷ lúc nào cũng được, và dù thế nào dữ liệu vẫn nằm trên máy bạn.",
     plans: [
-      { tagline: "Cho một người", features: ["500 lượt gọi MCP mỗi tuần", "Mọi thứ chạy trên máy của bạn", "Bao nhiêu workspace và bảng tuỳ bạn", "Lịch sử đầy đủ, hoàn tác lùi được xa", "Nối Claude, Codex hay OpenCode"] },
-      { tagline: "Cho cả nhóm", features: ["Gọi MCP không giới hạn", "Toàn bộ bản Miễn phí", "Chỗ ngồi cho những người còn lại", "Workspace dùng chung luôn khớp nhau", "Hỗ trợ qua email"] },
+      { tagline: "Cho một người", features: ["500 lượt gọi MCP mỗi tuần", "Tệp đính kèm tối đa 25 MB", "Mọi thứ chạy trên máy của bạn", "Bao nhiêu workspace và bảng tuỳ bạn", "Lịch sử đầy đủ, hoàn tác lùi được xa", "Nối Claude, Codex hay OpenCode"] },
+      { tagline: "Khi bạn dùng hằng ngày", features: ["Gọi MCP không giới hạn", "Tệp đính kèm tối đa 100 MB", "Toàn bộ bản Miễn phí", "Hỗ trợ qua email"] },
     ],
   },
   cta: { title: "Sẵn sàng dọn lại dữ liệu chưa?", sub: "Tải Mochi về và bắt đầu trong khoảng một phút. Không phải cài đặt, không phải đăng ký.", button: "Bắt đầu →" },
@@ -2658,14 +2609,6 @@ const vi: Messages = {
     success: "Đã ghi tên bạn vào danh sách.",
     error: "Có lỗi xảy ra. Vui lòng thử lại.",
     invalid: "Vui lòng nhập email hợp lệ.",
-  },
-  success: {
-    title: "Xong rồi!",
-    sub: "License Pro của bạn đang được gửi tới email. Cài Mochi và bắt đầu xây workspace của bạn.",
-    order: "Mã đơn hàng:",
-    cta: "Xem trên GitHub",
-    back: "Về trang chủ",
-    note: "Chưa nhận được email? Kiểm tra hộp thư spam, hoặc liên hệ qua GitHub.",
   },
 };
 
