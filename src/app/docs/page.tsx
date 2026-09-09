@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import PageShell from "@/components/PageShell";
 import { CodeBlock, InlineCode, Note } from "@/components/Prose";
-import { DOWNLOAD_URL } from "@/lib/links";
+import DownloadLink from "@/components/DownloadLink";
 
 export const metadata: Metadata = {
   title: "Docs",
@@ -35,14 +35,11 @@ export default function DocsPage() {
         <>
           <p>
             Download the app from{" "}
-            <a
-              href={DOWNLOAD_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+        <DownloadLink
               className="text-ink underline-offset-4 transition-colors hover:text-ink-2 hover:underline"
-            >
+        >
               the latest release
-            </a>
+        </DownloadLink>
             , open it, and you have a workspace. Nothing to sign up for and nothing to configure.
           </p>
           <Note>

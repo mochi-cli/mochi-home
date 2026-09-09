@@ -7,7 +7,7 @@ import Brand from "./Brand";
 import { Menu, X } from "lucide-react";
 import LangSwitcher from "./LangSwitcher";
 import { useLang } from "./LanguageProvider";
-import { DOWNLOAD_URL } from "@/lib/links";
+import { useDownloadHref } from "@/lib/useDownloadHref";
 import { useSession } from "./useSession";
 
 
@@ -33,6 +33,8 @@ export default function Navbar() {
   }, [open]);
 
   const { m } = useLang();
+
+  const { href: downloadHref } = useDownloadHref();
 
   // Absolute rather than bare hashes: this nav also renders on /docs and
   // /changelog, where "#features" would scroll to nothing.
@@ -160,7 +162,7 @@ export default function Navbar() {
             )}
 
             <a
-              href={DOWNLOAD_URL}
+              href={downloadHref}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setOpen(false)}

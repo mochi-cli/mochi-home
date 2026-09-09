@@ -6,7 +6,7 @@ import { useLang } from "./LanguageProvider";
 import HeroChatTable from "./HeroChatTable";
 import MacDock from "./MacDock";
 import type { AgentSkin } from "./appui";
-import { DOWNLOAD_URL } from "@/lib/links";
+import DownloadButton from "./DownloadButton";
 
 /** Splits a headline into its lead clause and a final clause, so the second
  *  clause can drop to grey. Handles CJK terminators too: Japanese and Chinese
@@ -42,14 +42,7 @@ export default function Hero() {
         <p className="lead mt-6 max-w-[54ch]">{m.hero.sub}</p>
 
         <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
-          <a
-            href={DOWNLOAD_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-11 items-center justify-center rounded-[var(--r)] bg-ink px-6 text-[15px] text-ink-inv transition-opacity hover:opacity-88 active:translate-y-px"
-          >
-            {m.hero.download}
-          </a>
+            <DownloadButton className="inline-flex h-11 items-center justify-center rounded-[var(--r)] bg-ink px-6 text-[15px] text-ink-inv transition-opacity hover:opacity-88 active:translate-y-px" />
           <a
             href="#features"
             className="group inline-flex items-center gap-1.5 whitespace-nowrap text-[15px] text-ink transition-colors hover:text-ink-2"
@@ -62,23 +55,6 @@ export default function Hero() {
           </a>
         </div>
 
-          {/* Said before the click, not after the download.
-              Deliberately not detected: Safari on Apple Silicon reports
-              "Intel Mac OS X" in its user agent, so sniffing would warn the
-              people the build is *for*. A sentence is more honest than a
-              guess that is wrong half the time. */}
-          <p className="mt-4 text-[13px] text-ink-3">
-            {m.hero.requirements}{" "}
-            {/* Named rather than detected. Safari on Apple Silicon reports
-                "Intel Mac OS X", so a sniff would send most people the wrong
-                build — the one thing worse than making them choose. */}
-            <a
-              href={`${DOWNLOAD_URL}?arch=x64`}
-              className="text-ink underline underline-offset-4 transition-colors hover:text-ink-2"
-            >
-              {m.hero.intel}
-            </a>
-          </p>
 
         {/* The canvas is the argument: ask in plain language, watch the grid
             change. It stays fully inside the column rather than bleeding off

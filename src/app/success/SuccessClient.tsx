@@ -5,10 +5,11 @@ import { track } from "@vercel/analytics";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useLang } from "@/components/LanguageProvider";
-import { DOWNLOAD_URL } from "@/lib/links";
+import { useDownloadHref } from "@/lib/useDownloadHref";
 
 function SuccessContent() {
   const { m } = useLang();
+  const { href: downloadHref } = useDownloadHref();
   const searchParams = useSearchParams();
   const checkoutId = searchParams.get("checkout_id");
 
@@ -32,7 +33,7 @@ function SuccessContent() {
 
         <div className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-4">
           <a
-            href={DOWNLOAD_URL}
+            href={downloadHref}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex h-11 items-center justify-center rounded-[var(--r)] bg-ink px-6 text-[15px] text-ink-inv transition-opacity hover:opacity-88 active:translate-y-px"
@@ -40,7 +41,7 @@ function SuccessContent() {
             {m.hero.download}
           </a>
           <a
-            href={DOWNLOAD_URL}
+            href={downloadHref}
             className="text-[15px] text-ink underline-offset-4 transition-colors hover:text-ink-2 hover:underline"
           >
             {m.hero.download}

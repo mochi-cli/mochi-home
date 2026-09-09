@@ -70,7 +70,11 @@ export interface Messages {
     badge: string;
     download: string;
     requirements: string;
-    intel: string;
+    archApple: string;
+    archIntel: string;
+    detected: string;
+    switchTo: string;
+    chooseUnknown: string;
     ctaPrimary: string;
     ctaSecondary: string;
     copyLabel: string;
@@ -396,7 +400,11 @@ const en: Messages = {
     badge: "Local-first · agent-native",
     download: "Download Mochi",
     requirements: "macOS 13 or newer. No Windows or Linux build yet.",
-    intel: "Intel Mac?",
+    archApple: "Apple Silicon",
+    archIntel: "Intel",
+    detected: "We think you need the {arch} build.",
+    switchTo: "Get {arch} instead",
+    chooseUnknown: "Choose your Mac:",
     ctaPrimary: "Get started",
     ctaSecondary: "See how it works",
     copyLabel: "Copy install command",
@@ -747,7 +755,11 @@ const es: Messages = {
     badge: "Local-first · nativo para IA",
     download: "Descargar Mochi",
     requirements: "macOS 13 o posterior. Aún no hay versión para Windows ni Linux.",
-    intel: "¿Mac con Intel?",
+    archApple: "Apple Silicon",
+    archIntel: "Intel",
+    detected: "Creemos que necesitas la versión {arch}.",
+    switchTo: "Descargar {arch}",
+    chooseUnknown: "Elige tu Mac:",
     ctaPrimary: "Empezar",
     ctaSecondary: "Ver cómo funciona",
     copyLabel: "Copiar comando de instalación",
@@ -1098,7 +1110,11 @@ const fr: Messages = {
     badge: "Local-first · nativement IA",
     download: "Télécharger Mochi",
     requirements: "macOS 13 ou plus récent. Pas encore de version Windows ou Linux.",
-    intel: "Mac Intel ?",
+    archApple: "Apple Silicon",
+    archIntel: "Intel",
+    detected: "Nous pensons qu’il vous faut la version {arch}.",
+    switchTo: "Prendre {arch}",
+    chooseUnknown: "Choisissez votre Mac :",
     ctaPrimary: "Commencer",
     ctaSecondary: "Voir comment ça marche",
     copyLabel: "Copier la commande d'installation",
@@ -1449,7 +1465,11 @@ const de: Messages = {
     badge: "Local-first · KI-nativ",
     download: "Mochi herunterladen",
     requirements: "macOS 13 oder neuer. Noch keine Version für Windows oder Linux.",
-    intel: "Intel-Mac?",
+    archApple: "Apple Silicon",
+    archIntel: "Intel",
+    detected: "Vermutlich brauchen Sie die {arch}-Version.",
+    switchTo: "Stattdessen {arch}",
+    chooseUnknown: "Wählen Sie Ihren Mac:",
     ctaPrimary: "Loslegen",
     ctaSecondary: "So funktioniert's",
     copyLabel: "Installationsbefehl kopieren",
@@ -1800,7 +1820,11 @@ const ja: Messages = {
     badge: "ローカルファースト · AIネイティブ",
     download: "Mochi をダウンロード",
     requirements: "macOS 13 以降。Windows 版と Linux 版はまだありません。",
-    intel: "Intel Mac をお使いですか？",
+    archApple: "Apple Silicon",
+    archIntel: "Intel",
+    detected: "{arch} 版が必要と思われます。",
+    switchTo: "{arch} 版を入手",
+    chooseUnknown: "Mac を選択:",
     ctaPrimary: "はじめる",
     ctaSecondary: "使い方を見る",
     copyLabel: "インストールコマンドをコピー",
@@ -2151,7 +2175,11 @@ const zh: Messages = {
     badge: "本地优先 · AI 原生",
     download: "下载 Mochi",
     requirements: "macOS 13 或更高版本。暂无 Windows 与 Linux 版本。",
-    intel: "使用 Intel Mac？",
+    archApple: "Apple Silicon",
+    archIntel: "Intel",
+    detected: "您可能需要 {arch} 版本。",
+    switchTo: "改用 {arch} 版",
+    chooseUnknown: "选择您的 Mac：",
     ctaPrimary: "开始使用",
     ctaSecondary: "看看怎么用",
     copyLabel: "复制安装命令",
@@ -2502,7 +2530,11 @@ const vi: Messages = {
     badge: "Local-first · thuần AI",
     download: "Tải Mochi",
     requirements: "macOS 13 trở lên. Chưa có bản cho Windows hay Linux.",
-    intel: "Dùng Mac Intel?",
+    archApple: "Apple Silicon",
+    archIntel: "Intel",
+    detected: "Có vẻ bạn cần bản {arch}.",
+    switchTo: "Lấy bản {arch}",
+    chooseUnknown: "Chọn máy của bạn:",
     ctaPrimary: "Bắt đầu",
     ctaSecondary: "Xem cách hoạt động",
     copyLabel: "Sao chép lệnh cài đặt",
