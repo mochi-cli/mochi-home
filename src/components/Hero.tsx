@@ -67,7 +67,18 @@ export default function Hero() {
               "Intel Mac OS X" in its user agent, so sniffing would warn the
               people the build is *for*. A sentence is more honest than a
               guess that is wrong half the time. */}
-          <p className="mt-4 text-[13px] text-ink-3">{m.hero.requirements}</p>
+          <p className="mt-4 text-[13px] text-ink-3">
+            {m.hero.requirements}{" "}
+            {/* Named rather than detected. Safari on Apple Silicon reports
+                "Intel Mac OS X", so a sniff would send most people the wrong
+                build — the one thing worse than making them choose. */}
+            <a
+              href={`${DOWNLOAD_URL}?arch=x64`}
+              className="text-ink underline underline-offset-4 transition-colors hover:text-ink-2"
+            >
+              {m.hero.intel}
+            </a>
+          </p>
 
         {/* The canvas is the argument: ask in plain language, watch the grid
             change. It stays fully inside the column rather than bleeding off

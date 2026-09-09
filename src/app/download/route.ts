@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { CURRENT, signedAssetUrl } from '@/lib/service/release.ts';
+import { CURRENT, DEFAULT_ARCH, signedAssetUrl, type Arch } from '@/lib/service/release.ts';
 
 export const runtime = 'nodejs';
 
@@ -19,8 +19,14 @@ export const runtime = 'nodejs';
  * an omission to paper over — there is no Intel or Windows build to redirect
  * to, and sending somebody a file that cannot run is worse than telling them.
  */
-export async function GET() {
-  const asset = await signedAssetUrl();
+export async function GET(request: Request) {
+  // Asked for, never sniffed. `?arch=x64` is what the Intel link on the page
+  // sends; anything else falls back rather than failing, because a download
+  // button is the wrong place to be strict about a query string.
+  const wanted = new URL(request.url).searchParams.get('arch');
+  const arch: Arch = wanted === 'x64' ? 'x64' : DEFAULT_ARCH;
+
+  const asset = await signedAssetUrl(arch);
 
   if (!asset.ok) {
     // Said out loud, on the page and in the log. A download button that
@@ -40,6 +46,7 @@ export async function GET() {
       // edge holding on to it would hand out a dead link.
       'cache-control': 'no-store',
       'x-mochi-version': CURRENT.version,
+      'x-mochi-arch': arch,
     },
   });
 }

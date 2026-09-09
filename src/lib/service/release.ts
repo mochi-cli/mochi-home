@@ -41,9 +41,21 @@ const REPO = 'mochi-cli/mochi';
  * The token never leaves this process. What the visitor receives is a link
  * that expires and grants nothing but this one file.
  */
-export async function signedAssetUrl(): Promise<
-  { ok: true; url: string } | { ok: false; reason: string }
-> {
+export type Arch = 'arm64' | 'x64';
+
+/**
+ * Which build to hand out when nobody said.
+ *
+ * Apple Silicon, because that is every Mac sold since 2020 — and because the
+ * one thing that cannot be done is *guess*: Safari on Apple Silicon reports
+ * "Intel Mac OS X" in its user agent, so sniffing would send the majority the
+ * wrong file. The page names both and lets somebody choose.
+ */
+export const DEFAULT_ARCH: Arch = 'arm64';
+
+export async function signedAssetUrl(
+  arch: Arch = DEFAULT_ARCH
+): Promise<{ ok: true; url: string } | { ok: false; reason: string }> {
   const token = process.env.GITHUB_RELEASE_TOKEN?.trim();
   if (!token) return { ok: false, reason: 'GITHUB_RELEASE_TOKEN is not set' };
 
@@ -58,8 +70,13 @@ export async function signedAssetUrl(): Promise<
   const body = (await release.json()) as { assets?: Array<{ id: number; name: string }> };
   // By extension rather than by name: GitHub rewrites spaces in an uploaded
   // filename, and a build renamed upstream should not take the page down.
-  const asset = (body.assets ?? []).find((candidate) => candidate.name.endsWith('.dmg'));
-  if (!asset) return { ok: false, reason: `no .dmg on ${CURRENT.tag}` };
+  // By architecture in the name. Matching the first .dmg would have worked
+  // while there was one, and quietly handed Intel users the Apple Silicon
+  // build the moment there were two.
+  const asset = (body.assets ?? []).find(
+    (candidate) => candidate.name.endsWith('.dmg') && candidate.name.includes(arch)
+  );
+  if (!asset) return { ok: false, reason: `no ${arch} .dmg on ${CURRENT.tag}` };
 
   const signed = await fetch(`https://api.github.com/repos/${REPO}/releases/assets/${asset.id}`, {
     headers: { ...headers, accept: 'application/octet-stream' },
