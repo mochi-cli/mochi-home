@@ -35,6 +35,7 @@ export async function GET() {
     'webhook_health',
     'feedback',
     'web_sessions',
+    'revoked_tokens',
   ];
 
   /**
@@ -49,6 +50,7 @@ export async function GET() {
    */
   const EXPECTED_COLUMNS: Array<[string, string]> = [
     ['subscriptions', 'cancel_at_period_end'],
+    ['refresh_tokens', 'label'],
   ];
 
   let database = false;
