@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { recordUsage } from '@/lib/service/db.ts';
-import { accountForRefreshToken } from '@/lib/service/tokens.ts';
+import { accountForRefreshToken, tokenRefusal } from '@/lib/service/tokens.ts';
 import { bearer, fail, guarded } from '@/lib/service/http.ts';
 
 export const runtime = 'nodejs';
@@ -28,7 +28,10 @@ export async function POST(request: Request) {
     const token = bearer(request);
     if (!token) return fail(401, 'no_token', 'a refresh token is required');
     const accountId = await accountForRefreshToken(token);
-    if (!accountId) return fail(401, 'unknown_token', 'sign in again');
+    if (!accountId) {
+    const refusal = await tokenRefusal(token);
+      return fail(401, refusal.code, refusal.message);
+    }
 
     const parsed = body.safeParse(await request.json().catch(() => null));
     if (!parsed.success) return fail(400, 'invalid_input', 'week and mcpCalls are required');

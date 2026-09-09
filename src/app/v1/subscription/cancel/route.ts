@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { accountForRefreshToken } from '@/lib/service/tokens.ts';
+import { accountForRefreshToken, tokenRefusal } from '@/lib/service/tokens.ts';
 import { cancelSubscription, planFor } from '@/lib/service/billing.ts';
 import { buildClaim, signClaim } from '@/lib/service/claim.ts';
 import { sql } from '@/lib/service/db.ts';
@@ -19,7 +19,10 @@ export async function POST(request: Request) {
     const token = bearer(request);
     if (!token) return fail(401, 'no_token', 'sign in first');
     const accountId = await accountForRefreshToken(token);
-    if (!accountId) return fail(401, 'unknown_token', 'sign in again');
+    if (!accountId) {
+    const refusal = await tokenRefusal(token);
+      return fail(401, refusal.code, refusal.message);
+    }
 
     const subscription = await cancelSubscription(accountId);
     if (!subscription) return fail(404, 'no_subscription', 'there is nothing to cancel');

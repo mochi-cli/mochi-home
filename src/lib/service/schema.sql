@@ -142,3 +142,25 @@ CREATE INDEX IF NOT EXISTS web_sessions_expiry ON web_sessions (expires_at);
 -- it is their last.
 ALTER TABLE subscriptions
   ADD COLUMN IF NOT EXISTS cancel_at_period_end BOOLEAN NOT NULL DEFAULT FALSE;
+
+-- Why a machine stopped working, kept after its token is gone.
+--
+-- Signing somebody out without saying why is the failure this project keeps
+-- finding: nothing errors, and the only symptom is that the app is Free again.
+-- A row here lets the refresh that fails say "you signed in on another
+-- machine" instead of "sign in again", which is a different sentence for the
+-- person reading it.
+--
+-- Only the hash, same as refresh_tokens: this table can be read by whoever
+-- reads that one and must not be worth more.
+CREATE TABLE IF NOT EXISTS revoked_tokens (
+  token_sha256  TEXT PRIMARY KEY,
+  account_id    TEXT NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
+  reason        TEXT NOT NULL,
+  revoked_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS revoked_tokens_account ON revoked_tokens(account_id);
+
+-- What a session is on, so a list of them means something to the person
+-- reading it. Null on sessions issued before this existed.
+ALTER TABLE refresh_tokens ADD COLUMN IF NOT EXISTS label TEXT;

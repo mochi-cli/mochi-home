@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { sql, subscriptionFor } from '@/lib/service/db.ts';
-import { accountForRefreshToken } from '@/lib/service/tokens.ts';
+import { accountForRefreshToken, tokenRefusal } from '@/lib/service/tokens.ts';
 import { portalUrl } from '@/lib/service/billing.ts';
 import { bearer, fail, guarded } from '@/lib/service/http.ts';
 
@@ -20,7 +20,10 @@ export async function POST(request: Request) {
     const token = bearer(request);
     if (!token) return fail(401, 'no_token', 'sign in first');
     const accountId = await accountForRefreshToken(token);
-    if (!accountId) return fail(401, 'unknown_token', 'sign in again');
+    if (!accountId) {
+    const refusal = await tokenRefusal(token);
+      return fail(401, refusal.code, refusal.message);
+    }
 
     const rows = await sql()`SELECT id, email FROM accounts WHERE id = ${accountId}`;
     const row = rows[0];

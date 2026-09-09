@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { sql } from '@/lib/service/db.ts';
-import { accountForRefreshToken, revokeRefreshToken } from '@/lib/service/tokens.ts';
+import { accountForRefreshToken, revokeRefreshToken, tokenRefusal } from '@/lib/service/tokens.ts';
 import { currentSubscription, planFor } from '@/lib/service/billing.ts';
 import { buildClaim, signClaim } from '@/lib/service/claim.ts';
 import { bearer, fail, guarded } from '@/lib/service/http.ts';
@@ -23,7 +23,10 @@ export async function GET(request: Request) {
     if (!token) return fail(401, 'no_token', 'a refresh token is required');
 
     const accountId = await accountForRefreshToken(token);
-    if (!accountId) return fail(401, 'unknown_token', 'sign in again');
+    if (!accountId) {
+    const refusal = await tokenRefusal(token);
+      return fail(401, refusal.code, refusal.message);
+    }
 
     const rows = await sql()`SELECT email FROM accounts WHERE id = ${accountId}`;
     const email = (rows[0]?.email as string | undefined) ?? null;
