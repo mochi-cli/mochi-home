@@ -180,38 +180,54 @@ describe('a webhook that arrives', () => {
 });
 
 /**
- * The bug this file found on the way past.
+ * Events this build was never told about.
  *
- * The route had a `default:` branch commented "acknowledged so Polar stops
- * retrying it". It never ran: Polar's validator throws on an unknown event
- * type before any switch is reached, so the whole request 500'd and Polar
- * retried it for ever. Polar adds event types, and adds fields to existing
- * ones — either would have turned the billing endpoint into a permanent retry
- * loop whose only symptom is error noise nobody is reading.
+ * Two bugs have lived here. The route once had a `default:` branch commented
+ * "acknowledged so Polar stops retrying it" that never ran, because Polar's
+ * validator threw on an unknown type first and 500'd the request into an
+ * endless retry. Then the validator itself became the bug: it re-verifies the
+ * signature with the legacy key derivation only, so under a modern `whsec_`
+ * secret it rejected every delivery, and the catch around it filed each one as
+ * a payload we did not understand.
  *
- * These use the real validator, no seam, because the real validator is the
- * thing that was wrong.
+ * Reading the payload is now a JSON parse — nothing downstream depends on its
+ * shape, because the handler re-reads the subscription from Polar — and
+ * whether an event is ours is the handler's answer, given out loud so the
+ * counters can tell work from noise.
  */
 describe('a payload this build does not understand', () => {
   const real = (body: unknown, id: string) => delivery(body, { id });
 
-  test('an event type nobody here has heard of is acknowledged, not retried', async () => {
+  test('an event type nobody here has heard of still reaches the handler', async () => {
+    // Not dropped on the way in. A type absent from this build is a type Polar
+    // added, and the handler is the only thing that knows whether it matters.
     const { deps, handled } = spy();
     delete (deps as { parse?: unknown }).parse;
     const { payload, headers } = real({ type: 'invoice.teleported', data: {} }, 'msg_future');
 
     const outcome = await receiveWebhook(payload, headers, deps);
     assert.equal(outcome.status, 200, 'a 5xx here is an infinite retry loop');
-    assert.equal(outcome.body.ignored, true);
-    assert.deepEqual(handled, []);
+    assert.deepEqual(handled, ['invoice.teleported']);
   });
 
-  test('a known event type with a body the schema rejects is acknowledged too', async () => {
-    // Retrying cannot fix a payload we cannot read, and reconcile-on-read
-    // picks the subscription up on the next request anyway.
+  test('a handler that says it did nothing is counted as ignored', async () => {
+    // What keeps `/health` honest: most of what Polar sends is somebody else's
+    // business, and it must not be counted as a plan change we applied.
+    const { payload, headers } = real({ type: 'order.paid', data: {} }, 'msg_not_ours');
+
+    const outcome = await receiveWebhook(payload, headers, {
+      secret: SECRET,
+      claim: async () => true,
+      handle: async () => false,
+    });
+    assert.equal(outcome.status, 200);
+    assert.equal(outcome.body.ignored, true);
+  });
+
+  test('a body with no event type in it is the case ignored is really for', async () => {
     const { deps, handled } = spy();
     delete (deps as { parse?: unknown }).parse;
-    const { payload, headers } = real({ type: 'subscription.updated', data: {} }, 'msg_shape');
+    const { payload, headers } = real({ nothing: 'here' }, 'msg_shapeless');
 
     const outcome = await receiveWebhook(payload, headers, deps);
     assert.equal(outcome.status, 200);
@@ -389,6 +405,37 @@ describe('the two ways Polar signs', () => {
     );
     const outcome = await receiveWebhook(payload, headers, deps(STANDARD));
     assert.equal(outcome.status, 200, JSON.stringify(outcome.body));
+  });
+
+  test('a modern secret survives the whole path, with nothing stubbed', async () => {
+    /**
+     * The gap every test above walked over.
+     *
+     * They all injected `parse`, and `parse` was where this broke. The real
+     * default used to be the SDK's `validateEvent`, which verifies the
+     * signature a *second* time and knows only the legacy derivation — so a
+     * `whsec_` secret passed the verify these tests exercise and failed the
+     * step they replaced. Production counted every delivery as "ignored" while
+     * the suite stayed green.
+     *
+     * So: no `parse`, and an assertion on what the handler was actually given.
+     */
+    const seen: string[] = [];
+    const { payload, headers } = signedWith(STANDARD, {
+      type: 'subscription.revoked',
+      data: { id: 'sub_1', customer: { externalId: 'acct_1' } },
+    });
+    const outcome = await receiveWebhook(payload, headers, {
+      secret: STANDARD,
+      claim: async () => true,
+      handle: async (event) => {
+        seen.push(event.type);
+      },
+    });
+
+    assert.equal(outcome.status, 200, JSON.stringify(outcome.body));
+    assert.equal(outcome.body.ignored, undefined, 'a real event must not be written off as ignored');
+    assert.deepEqual(seen, ['subscription.revoked']);
   });
 
   test('a wrong secret is still refused under every derivation', async () => {

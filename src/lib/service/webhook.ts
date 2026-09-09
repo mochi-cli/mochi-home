@@ -1,5 +1,4 @@
 import { Webhook, WebhookVerificationError } from 'standardwebhooks';
-import { validateEvent } from '@polar-sh/sdk/webhooks.js';
 
 /**
  * What happens to an incoming webhook, decided apart from HTTP.
@@ -27,15 +26,16 @@ export interface WebhookDeps {
   secret: string;
   /** Records the delivery id, returning false when it was already there. */
   claim: (deliveryId: string) => Promise<boolean>;
-  handle: (event: { type: string; data: unknown }) => Promise<void>;
   /**
-   * Turns a verified payload into an event.
+   * Does the work, and says whether it did any.
    *
-   * A seam, because the real one is Polar's `validateEvent`, which parses
-   * against generated zod schemas — building a payload those accept takes
-   * several hundred lines of fixture and pins this service's tests to the
-   * shape of somebody else's API.
+   * The boolean is what keeps the counters honest. Most of what Polar sends is
+   * somebody else's business — orders, benefits, customers — and a handler that
+   * returned nothing made those indistinguishable from a subscription change
+   * that was actually applied. `false` means read, understood, not ours.
    */
+  handle: (event: { type: string; data: unknown }) => Promise<boolean | void>;
+  /** Turns a verified payload into an event. Defaults to {@link readEvent}. */
   parse?: (payload: string, headers: Record<string, string>, secret: string) => unknown;
 }
 
@@ -169,23 +169,24 @@ export async function receiveWebhook(
 
   let event: { type: string; data: unknown };
   try {
-    event = (deps.parse ?? validateEvent)(payload, headers, deps.secret) as {
+    event = (deps.parse ?? readEvent)(payload, headers, deps.secret) as {
       type: string;
       data: unknown;
     };
   } catch (error) {
     /**
-     * Signed by Polar, and not something this build understands.
+     * Signed by Polar, and not something this build can read.
      *
-     * This used to be a 500. The old code had a `default:` branch commented
-     * "acknowledged so Polar stops retrying it" — which never ran, because the
-     * SDK throws on an unknown event type before the switch is reached. Polar
-     * sends new event types, and adds fields to existing ones; either would
-     * have turned this endpoint into a permanent retry loop with no symptom
-     * except error noise nobody was reading.
+     * Acknowledged rather than retried: retrying cannot fix a payload we
+     * cannot parse, and reconcile-on-read picks the subscription up anyway.
      *
-     * Acknowledged instead. Retrying cannot fix a payload we cannot read, and
-     * reconcile-on-read picks the subscription up on the next request anyway.
+     * Worth knowing what this branch is *not* for. It used to catch the SDK's
+     * `validateEvent`, which verifies the signature a second time and knows
+     * only the legacy key derivation — so every event under a modern `whsec_`
+     * secret passed `verify` above, failed here, and was written down as a
+     * payload this build did not understand. The counter said "ignored", which
+     * reads as "not ours", and every plan change Polar sent was silently
+     * dropped for as long as that lasted.
      */
     console.error('[service] webhook payload not recognised', error);
     return ok({ received: true, ignored: true });
@@ -197,14 +198,35 @@ export async function receiveWebhook(
       // not handled again.
       return ok({ received: true, duplicate: true });
     }
-    await deps.handle(event);
-    return ok({ received: true });
+    const acted = await deps.handle(event);
+    return acted === false ? ok({ received: true, ignored: true }) : ok({ received: true });
   } catch (error) {
     // Polar treats any 2xx as delivered, so a failure has to leave as a
     // non-2xx or the event is gone for good.
     console.error('[service] webhook handling failed', event.type, error);
     return refuse(500, 'handler_failed', 'could not handle that event — please retry');
   }
+}
+
+/**
+ * The event, read rather than validated against Polar's schemas.
+ *
+ * There is nothing here to validate. `handle` takes the subscription id and
+ * re-reads the current state from Polar precisely so that it does not depend
+ * on the shape, or the freshness, of what arrived — so parsing the rest
+ * against generated schemas bought no safety, and cost a second signature
+ * check performed with a key derivation this service had already found to be
+ * the wrong one.
+ *
+ * It also means a new event type, or a new field on an existing one, costs
+ * nothing. Polar adds both.
+ */
+export function readEvent(payload: string): { type: string; data: unknown } {
+  const parsed: unknown = JSON.parse(payload);
+  if (typeof parsed !== 'object' || parsed === null) throw new Error('payload is not an object');
+  const { type, data } = parsed as { type?: unknown; data?: unknown };
+  if (typeof type !== 'string') throw new Error('payload carries no event type');
+  return { type, data };
 }
 
 /** The subscription events this service acts on. Everything else is noise. */
