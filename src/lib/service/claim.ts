@@ -28,6 +28,14 @@ export interface Claim {
   expiresAt: string;
   fetchedAt: string;
   /**
+   * When Pro ends, on a subscription that will not renew. Absent when it will.
+   *
+   * Signed like everything else here, so the app can show "Pro until the 3rd"
+   * with the network unplugged and without trusting a response body it has no
+   * way to check.
+   */
+  endsAt?: string;
+  /**
    * What this account is allowed, when we want to say so.
    *
    * Absent is the normal case: the app uses the numbers it shipped with. Set,
@@ -48,6 +56,16 @@ export function buildClaim(input: {
   plan: Plan;
   email: string | null;
   seats: number;
+  /**
+   * When Pro runs out, for a subscription that will not renew.
+   *
+   * Null while it renews normally, and omitted from the claim in that case:
+   * "no end date" is the ordinary state and does not need saying. Present, it
+   * is the one thing the app could not tell a person who had just cancelled —
+   * the plan still said Pro, the button still said Cancel, and nothing on
+   * screen was different from a minute before.
+   */
+  endsAt?: string | null;
   now?: Date;
 }): Claim {
   const now = input.now ?? new Date();
@@ -63,6 +81,7 @@ export function buildClaim(input: {
     // Omitted rather than set to undefined: the claim is signed as its exact
     // JSON bytes, and a key with no value would change them for no reason.
     ...(limits ? { limits } : {}),
+    ...(input.endsAt ? { endsAt: input.endsAt } : {}),
   };
 }
 

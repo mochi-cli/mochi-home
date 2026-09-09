@@ -24,6 +24,14 @@ export interface Subscription {
   status: string;
   seats: number;
   currentPeriodEnd: string | null;
+  /**
+   * Whether this stops at the end of the paid period.
+   *
+   * Kept apart from `status`, which reads "active" for the whole of somebody's
+   * last month. Those are different facts and only one of them can be shown to
+   * the person as "your plan renews on the 3rd".
+   */
+  cancelAtPeriodEnd: boolean;
   syncedAt: string;
 }
 
@@ -58,7 +66,8 @@ export async function upsertAccount(email: string): Promise<Account> {
 
 export async function subscriptionFor(accountId: string): Promise<Subscription | null> {
   const rows = await sql()`
-    SELECT account_id, polar_id, status, seats, current_period_end, synced_at
+    SELECT account_id, polar_id, status, seats, current_period_end,
+           cancel_at_period_end, synced_at
       FROM subscriptions WHERE account_id = ${accountId}
   `;
   const row = rows[0];
@@ -69,6 +78,7 @@ export async function subscriptionFor(accountId: string): Promise<Subscription |
         status: row.status as string,
         seats: Number(row.seats),
         currentPeriodEnd: row.current_period_end as string | null,
+        cancelAtPeriodEnd: row.cancel_at_period_end === true,
         syncedAt: row.synced_at as string,
       }
     : null;
@@ -80,15 +90,18 @@ export async function saveSubscription(input: {
   status: string;
   seats: number;
   currentPeriodEnd: string | null;
+  cancelAtPeriodEnd: boolean;
 }): Promise<void> {
   await sql()`
-    INSERT INTO subscriptions (account_id, polar_id, status, seats, current_period_end, synced_at)
+    INSERT INTO subscriptions (account_id, polar_id, status, seats, current_period_end,
+                               cancel_at_period_end, synced_at)
     VALUES (${input.accountId}, ${input.polarId}, ${input.status}, ${input.seats},
-            ${input.currentPeriodEnd}, now())
+            ${input.currentPeriodEnd}, ${input.cancelAtPeriodEnd}, now())
     ON CONFLICT (account_id) DO UPDATE SET
       polar_id = EXCLUDED.polar_id,
       status = EXCLUDED.status,
       seats = EXCLUDED.seats,
+      cancel_at_period_end = EXCLUDED.cancel_at_period_end,
       current_period_end = EXCLUDED.current_period_end,
       synced_at = now()
   `;

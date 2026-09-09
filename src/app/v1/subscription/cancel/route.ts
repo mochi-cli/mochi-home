@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     const { plan, seats } = planFor(subscription);
 
     return NextResponse.json({
-      ...(await signClaim(buildClaim({ plan, email, seats }))),
+      ...(await signClaim(buildClaim({ plan, email, seats, endsAt: subscription?.cancelAtPeriodEnd ? subscription.currentPeriodEnd : null }))),
       // Until when Pro actually lasts. The app says this back to the person,
       // and a date they can read is the difference between "cancelled" and
       // "cancelled, and you keep it until the 14th".

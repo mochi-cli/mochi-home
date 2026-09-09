@@ -234,3 +234,42 @@ describe('limits signed into a claim', () => {
     }
   });
 });
+
+/**
+ * Telling somebody their cancellation took.
+ *
+ * Cancelling leaves the plan on Pro — correctly, they paid for the month — so
+ * the app had nothing to show that was different from a minute earlier: same
+ * badge, same Cancel button, same everything. The date is the difference, and
+ * it has to be signed like the rest or the app cannot believe it offline.
+ */
+describe('an end date on a plan that will not renew', () => {
+  // A claim needs a kid to be built at all; this is not about signing config.
+  const withKid = <T>(run: () => T): T => {
+    const before = process.env.CLAIM_KID;
+    process.env.CLAIM_KID = 'ends-test';
+    try {
+      return run();
+    } finally {
+      if (before === undefined) delete process.env.CLAIM_KID;
+      else process.env.CLAIM_KID = before;
+    }
+  };
+
+  test('carried when the subscription is ending', () => {
+    const claim = withKid(() =>
+      buildClaim({ plan: 'pro', email: 'a@b.c', seats: 1, endsAt: '2026-10-03T16:08:23.715Z' })
+    );
+    assert.equal(claim.endsAt, '2026-10-03T16:08:23.715Z');
+  });
+
+  test('omitted, not null, while it renews', () => {
+    // The claim is signed as its exact JSON bytes, so a key carrying nothing
+    // changes the signature for no reason — and `endsAt: null` would have to
+    // be read as "renews" by every version of the app that ever sees it.
+    withKid(() => {
+      assert.equal('endsAt' in buildClaim({ plan: 'pro', email: 'a@b.c', seats: 1, endsAt: null }), false);
+      assert.equal('endsAt' in buildClaim({ plan: 'pro', email: 'a@b.c', seats: 1 }), false);
+    });
+  });
+});
