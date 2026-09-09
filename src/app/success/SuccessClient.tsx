@@ -5,7 +5,7 @@ import { track } from "@vercel/analytics";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useLang } from "@/components/LanguageProvider";
-import { DOWNLOAD_URL, REPO_URL } from "@/lib/links";
+import { DOWNLOAD_URL } from "@/lib/links";
 
 function SuccessContent() {
   const { m } = useLang();
@@ -40,12 +40,10 @@ function SuccessContent() {
             {m.hero.download}
           </a>
           <a
-            href={REPO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={DOWNLOAD_URL}
             className="text-[15px] text-ink underline-offset-4 transition-colors hover:text-ink-2 hover:underline"
           >
-            {m.success.cta}
+            {m.hero.download}
           </a>
           <Link
             href="/"

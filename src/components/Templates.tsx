@@ -24,7 +24,6 @@ import {
 import { useLang } from "./LanguageProvider";
 import CanvasSection from "./CanvasSection";
 import { AppTabs, AppToolbar, Box, Cell, Chip, type Collection, HeadCell, Pill, type Tone } from "./appui";
-import { REPO_URL } from "@/lib/links";
 
 /* Four starting points, each shown as the workspace it actually produces:
    the same collection strip, toolbar and grid as the rest of the page. */
@@ -207,16 +206,6 @@ export default function Templates() {
             );
           })}
         </div>
-      }
-      after={
-        <a
-          href={REPO_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-10 inline-block text-[15px] text-ink underline-offset-4 transition-colors hover:text-ink-2 hover:underline"
-        >
-          {m.tpl.viewAll}
-        </a>
       }
     >
       <div ref={previewRef} className="canvas appui">

@@ -2,7 +2,7 @@
 
 import Reveal from "./Reveal";
 import { useLang } from "./LanguageProvider";
-import { DOWNLOAD_URL, REPO_URL } from "@/lib/links";
+import { DOWNLOAD_URL } from "@/lib/links";
 
 /** The closing block. This is the page's one inversion: the final ask and the
  *  footer share a single ink slab, so the light-locked page ends on a deliberate
@@ -27,9 +27,7 @@ export default function CTASection() {
               {m.hero.download}
             </a>
             <a
-              href={REPO_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/docs"
               className="text-[15px] text-ink underline-offset-4 transition-colors hover:text-ink-2 hover:underline"
             >
               {m.nav.docs}
