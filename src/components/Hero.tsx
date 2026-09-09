@@ -62,6 +62,13 @@ export default function Hero() {
           </a>
         </div>
 
+          {/* Said before the click, not after the download.
+              Deliberately not detected: Safari on Apple Silicon reports
+              "Intel Mac OS X" in its user agent, so sniffing would warn the
+              people the build is *for*. A sentence is more honest than a
+              guess that is wrong half the time. */}
+          <p className="mt-4 text-[13px] text-ink-3">{m.hero.requirements}</p>
+
         {/* The canvas is the argument: ask in plain language, watch the grid
             change. It stays fully inside the column rather than bleeding off
             the edge, because the agent panel on its right has to be readable.
