@@ -3,7 +3,7 @@
 import { Check } from "lucide-react";
 import Reveal from "./Reveal";
 import { useLang } from "./LanguageProvider";
-import { DOWNLOAD_URL } from "@/lib/links";
+import { useDownloadHref } from "@/lib/useDownloadHref";
 import type { Plans } from "@/lib/service/plans";
 
 /** Two plans, split by a single rule. The Pro price comes from Polar rather
@@ -12,6 +12,7 @@ import type { Plans } from "@/lib/service/plans";
  *  still renders: a marketing page with a gap is better than one that fails. */
 export default function Pricing({ plans }: { plans: Plans | null }) {
   const { m } = useLang();
+  const { href: downloadHref } = useDownloadHref();
   const [free, pro] = m.price.plans;
 
   const money = (amount: number, currency: string) =>
@@ -41,7 +42,7 @@ export default function Pricing({ plans }: { plans: Plans | null }) {
               <Features items={free.features} />
               <div className="mt-auto pt-8">
                 <a
-                  href={DOWNLOAD_URL}
+                  href={downloadHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex h-11 items-center justify-center rounded-[var(--r)] border border-line-strong px-6 text-[15px] text-ink transition-colors hover:bg-paper-sunk active:translate-y-px"

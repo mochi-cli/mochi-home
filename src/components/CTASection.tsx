@@ -2,13 +2,14 @@
 
 import Reveal from "./Reveal";
 import { useLang } from "./LanguageProvider";
-import { DOWNLOAD_URL } from "@/lib/links";
+import { useDownloadHref } from "@/lib/useDownloadHref";
 
 /** The closing block. This is the page's one inversion: the final ask and the
  *  footer share a single ink slab, so the light-locked page ends on a deliberate
  *  full-width switch rather than alternating bands on the way down. */
 export default function CTASection() {
   const { m } = useLang();
+  const { href: downloadHref } = useDownloadHref();
 
   return (
     <section className="on-ink pt-28 md:pt-36">
@@ -19,7 +20,7 @@ export default function CTASection() {
 
           <div className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-4">
             <a
-              href={DOWNLOAD_URL}
+              href={downloadHref}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-11 items-center justify-center rounded-[var(--r)] bg-ink px-6 text-[15px] text-ink-inv transition-opacity hover:opacity-88 active:translate-y-px"

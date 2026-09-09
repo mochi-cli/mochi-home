@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useLang } from "./LanguageProvider";
-import { DOWNLOAD_URL } from "@/lib/links";
+import { useDownloadHref } from "@/lib/useDownloadHref";
 
 /** The hero holds the download button, and everything below it is argument, so
  *  once the hero scrolls away there is no way to act until the closing block.
@@ -10,6 +10,7 @@ import { DOWNLOAD_URL } from "@/lib/links";
  *  listener, so nothing runs per frame. */
 export default function StickyCTA() {
   const { m } = useLang();
+  const { href: downloadHref } = useDownloadHref();
   const [heroVisible, setHeroVisible] = useState(true);
 
   useEffect(() => {
@@ -36,7 +37,7 @@ export default function StickyCTA() {
           {m.footer.tagline}
         </p>
         <a
-          href={DOWNLOAD_URL}
+          href={downloadHref}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex h-10 w-full items-center justify-center rounded-[var(--r)] bg-ink px-5 text-[14px] text-ink-inv transition-opacity hover:opacity-88 active:translate-y-px sm:h-9 sm:w-auto sm:flex-none"

@@ -70,7 +70,11 @@ export interface Messages {
     badge: string;
     download: string;
     requirements: string;
-    intel: string;
+    archApple: string;
+    archIntel: string;
+    detected: string;
+    switchTo: string;
+    chooseUnknown: string;
     ctaPrimary: string;
     ctaSecondary: string;
     copyLabel: string;
@@ -396,7 +400,11 @@ const en: Messages = {
     badge: "Local-first · agent-native",
     download: "Download Mochi",
     requirements: "macOS 13 or newer. No Windows or Linux build yet.",
-    intel: "Intel Mac?",
+    archApple: "Apple Silicon",
+    archIntel: "Intel",
+    detected: "We think you need the {arch} build.",
+    switchTo: "Get {arch} instead",
+    chooseUnknown: "Choose your Mac:",
     ctaPrimary: "Get started",
     ctaSecondary: "See how it works",
     copyLabel: "Copy install command",
@@ -489,7 +497,7 @@ const en: Messages = {
   },
   price: {
     title: "Free while it is just you",
-    sub: "Everything on this page works without paying, up to 2,000 MCP calls a week. Pro lifts that limit and adds seats for the rest of your team.",
+    sub: "Everything on this page works without paying, up to 500 MCP calls a week. Pro lifts that limit and adds seats for the rest of your team.",
     free: "Free",
     perMonth: "per month",
     perYear: "per year",
@@ -497,7 +505,7 @@ const en: Messages = {
     soon: "Coming soon",
     note: "Billed through Polar. Cancel whenever you like, and your data stays on your machine either way.",
     plans: [
-      { tagline: "For one person", features: ["2,000 MCP calls a week", "Everything runs on your own machine", "As many workspaces and tables as you like", "Full history, and undo that goes back", "Connect Claude, Codex or OpenCode"] },
+      { tagline: "For one person", features: ["500 MCP calls a week", "Everything runs on your own machine", "As many workspaces and tables as you like", "Full history, and undo that goes back", "Connect Claude, Codex or OpenCode"] },
       { tagline: "For a team", features: ["MCP calls with no limit", "Everything in Free", "Seats for the rest of your team", "Shared workspaces that stay in step", "Email support"] },
     ],
   },
@@ -747,7 +755,11 @@ const es: Messages = {
     badge: "Local-first · nativo para IA",
     download: "Descargar Mochi",
     requirements: "macOS 13 o posterior. Aún no hay versión para Windows ni Linux.",
-    intel: "¿Mac con Intel?",
+    archApple: "Apple Silicon",
+    archIntel: "Intel",
+    detected: "Creemos que necesitas la versión {arch}.",
+    switchTo: "Descargar {arch}",
+    chooseUnknown: "Elige tu Mac:",
     ctaPrimary: "Empezar",
     ctaSecondary: "Ver cómo funciona",
     copyLabel: "Copiar comando de instalación",
@@ -840,7 +852,7 @@ const es: Messages = {
   },
   price: {
     title: "Gratis mientras seas tú solo",
-    sub: "Todo lo de esta página funciona sin pagar, hasta 2.000 llamadas MCP por semana. Pro quita ese límite y añade plazas para el resto del equipo.",
+    sub: "Todo lo de esta página funciona sin pagar, hasta 500 llamadas MCP por semana. Pro quita ese límite y añade plazas para el resto del equipo.",
     free: "Gratis",
     perMonth: "al mes",
     perYear: "al año",
@@ -848,7 +860,7 @@ const es: Messages = {
     soon: "Muy pronto",
     note: "Se cobra a través de Polar. Cancela cuando quieras: tus datos se quedan en tu máquina de todas formas.",
     plans: [
-      { tagline: "Para una persona", features: ["2.000 llamadas MCP por semana", "Todo funciona en tu propio ordenador", "Tantos espacios y tablas como quieras", "Historial completo, y deshacer que llega lejos", "Conecta Claude, Codex u OpenCode"] },
+      { tagline: "Para una persona", features: ["500 llamadas MCP por semana", "Todo funciona en tu propio ordenador", "Tantos espacios y tablas como quieras", "Historial completo, y deshacer que llega lejos", "Conecta Claude, Codex u OpenCode"] },
       { tagline: "Para un equipo", features: ["Llamadas MCP sin límite", "Todo lo de Gratis", "Plazas para el resto del equipo", "Espacios compartidos que van al día", "Soporte por correo"] },
     ],
   },
@@ -1098,7 +1110,11 @@ const fr: Messages = {
     badge: "Local-first · nativement IA",
     download: "Télécharger Mochi",
     requirements: "macOS 13 ou plus récent. Pas encore de version Windows ou Linux.",
-    intel: "Mac Intel ?",
+    archApple: "Apple Silicon",
+    archIntel: "Intel",
+    detected: "Nous pensons qu’il vous faut la version {arch}.",
+    switchTo: "Prendre {arch}",
+    chooseUnknown: "Choisissez votre Mac :",
     ctaPrimary: "Commencer",
     ctaSecondary: "Voir comment ça marche",
     copyLabel: "Copier la commande d'installation",
@@ -1191,7 +1207,7 @@ const fr: Messages = {
   },
   price: {
     title: "Gratuit tant que vous êtes seul",
-    sub: "Tout ce que montre cette page marche sans payer, jusqu'à 2 000 appels MCP par semaine. Pro lève cette limite et ajoute des places pour le reste de l'équipe.",
+    sub: "Tout ce que montre cette page marche sans payer, jusqu'à 500 appels MCP par semaine. Pro lève cette limite et ajoute des places pour le reste de l'équipe.",
     free: "Gratuit",
     perMonth: "par mois",
     perYear: "par an",
@@ -1199,7 +1215,7 @@ const fr: Messages = {
     soon: "Bientôt",
     note: "Facturé via Polar. Annulez quand vous voulez : vos données restent sur votre machine dans tous les cas.",
     plans: [
-      { tagline: "Pour une personne", features: ["2 000 appels MCP par semaine", "Tout tourne sur votre propre ordinateur", "Autant d'espaces et de tables que vous voulez", "Historique complet, et un retour arrière qui remonte loin", "Connectez Claude, Codex ou OpenCode"] },
+      { tagline: "Pour une personne", features: ["500 appels MCP par semaine", "Tout tourne sur votre propre ordinateur", "Autant d'espaces et de tables que vous voulez", "Historique complet, et un retour arrière qui remonte loin", "Connectez Claude, Codex ou OpenCode"] },
       { tagline: "Pour une équipe", features: ["Appels MCP sans limite", "Tout ce qu'il y a dans Gratuit", "Des places pour le reste de l'équipe", "Des espaces partagés qui restent d'accord", "Assistance par e-mail"] },
     ],
   },
@@ -1449,7 +1465,11 @@ const de: Messages = {
     badge: "Local-first · KI-nativ",
     download: "Mochi herunterladen",
     requirements: "macOS 13 oder neuer. Noch keine Version für Windows oder Linux.",
-    intel: "Intel-Mac?",
+    archApple: "Apple Silicon",
+    archIntel: "Intel",
+    detected: "Vermutlich brauchen Sie die {arch}-Version.",
+    switchTo: "Stattdessen {arch}",
+    chooseUnknown: "Wählen Sie Ihren Mac:",
     ctaPrimary: "Loslegen",
     ctaSecondary: "So funktioniert's",
     copyLabel: "Installationsbefehl kopieren",
@@ -1542,7 +1562,7 @@ const de: Messages = {
   },
   price: {
     title: "Kostenlos, solange du allein bist",
-    sub: "Alles auf dieser Seite funktioniert ohne zu zahlen, bis zu 2.000 MCP-Aufrufe pro Woche. Pro hebt diese Grenze auf und bringt Plätze für den Rest des Teams.",
+    sub: "Alles auf dieser Seite funktioniert ohne zu zahlen, bis zu 500 MCP-Aufrufe pro Woche. Pro hebt diese Grenze auf und bringt Plätze für den Rest des Teams.",
     free: "Kostenlos",
     perMonth: "pro Monat",
     perYear: "pro Jahr",
@@ -1550,7 +1570,7 @@ const de: Messages = {
     soon: "Bald",
     note: "Abrechnung über Polar. Jederzeit kündbar, und deine Daten bleiben so oder so auf deinem Rechner.",
     plans: [
-      { tagline: "Für eine Person", features: ["2.000 MCP-Aufrufe pro Woche", "Alles läuft auf deinem eigenen Rechner", "So viele Bereiche und Tabellen, wie du willst", "Vollständiger Verlauf, und ein Rückgängig, das weit zurückreicht", "Verbinde Claude, Codex oder OpenCode"] },
+      { tagline: "Für eine Person", features: ["500 MCP-Aufrufe pro Woche", "Alles läuft auf deinem eigenen Rechner", "So viele Bereiche und Tabellen, wie du willst", "Vollständiger Verlauf, und ein Rückgängig, das weit zurückreicht", "Verbinde Claude, Codex oder OpenCode"] },
       { tagline: "Für ein Team", features: ["MCP-Aufrufe ohne Limit", "Alles aus Kostenlos", "Plätze für den Rest des Teams", "Geteilte Bereiche, die beisammen bleiben", "Support per E-Mail"] },
     ],
   },
@@ -1800,7 +1820,11 @@ const ja: Messages = {
     badge: "ローカルファースト · AIネイティブ",
     download: "Mochi をダウンロード",
     requirements: "macOS 13 以降。Windows 版と Linux 版はまだありません。",
-    intel: "Intel Mac をお使いですか？",
+    archApple: "Apple Silicon",
+    archIntel: "Intel",
+    detected: "{arch} 版が必要と思われます。",
+    switchTo: "{arch} 版を入手",
+    chooseUnknown: "Mac を選択:",
     ctaPrimary: "はじめる",
     ctaSecondary: "使い方を見る",
     copyLabel: "インストールコマンドをコピー",
@@ -1893,7 +1917,7 @@ const ja: Messages = {
   },
   price: {
     title: "ひとりのうちは無料です",
-    sub: "このページにあることは、MCP 呼び出し週 2,000 回まで、払わなくても全部できます。Pro はその上限をなくし、チームの人数ぶんの席を足します。",
+    sub: "このページにあることは、MCP 呼び出し週 500 回まで、払わなくても全部できます。Pro はその上限をなくし、チームの人数ぶんの席を足します。",
     free: "無料",
     perMonth: "月あたり",
     perYear: "年あたり",
@@ -1901,7 +1925,7 @@ const ja: Messages = {
     soon: "近日公開",
     note: "支払いは Polar 経由です。いつでも解約でき、どちらにしてもデータはあなたのパソコンに残ります。",
     plans: [
-      { tagline: "ひとり用", features: ["MCP 呼び出しは週 2,000 回まで", "すべて自分のパソコンで動きます", "ワークスペースもテーブルも好きなだけ", "完全な履歴と、さかのぼれる取り消し", "Claude・Codex・OpenCode をつなげます"] },
+      { tagline: "ひとり用", features: ["MCP 呼び出しは週 500 回まで", "すべて自分のパソコンで動きます", "ワークスペースもテーブルも好きなだけ", "完全な履歴と、さかのぼれる取り消し", "Claude・Codex・OpenCode をつなげます"] },
       { tagline: "チーム用", features: ["MCP 呼び出しは無制限", "無料プランのすべて", "チームの人数ぶんの席", "ずれない共有ワークスペース", "メールサポート"] },
     ],
   },
@@ -2151,7 +2175,11 @@ const zh: Messages = {
     badge: "本地优先 · AI 原生",
     download: "下载 Mochi",
     requirements: "macOS 13 或更高版本。暂无 Windows 与 Linux 版本。",
-    intel: "使用 Intel Mac？",
+    archApple: "Apple Silicon",
+    archIntel: "Intel",
+    detected: "您可能需要 {arch} 版本。",
+    switchTo: "改用 {arch} 版",
+    chooseUnknown: "选择您的 Mac：",
     ctaPrimary: "开始使用",
     ctaSecondary: "看看怎么用",
     copyLabel: "复制安装命令",
@@ -2244,7 +2272,7 @@ const zh: Messages = {
   },
   price: {
     title: "一个人用，一直免费",
-    sub: "这一页上的东西不花钱就能全用，每周 2,000 次 MCP 调用以内。Pro 取消这个上限，并为团队其他人加席位。",
+    sub: "这一页上的东西不花钱就能全用，每周 500 次 MCP 调用以内。Pro 取消这个上限，并为团队其他人加席位。",
     free: "免费",
     perMonth: "每月",
     perYear: "每年",
@@ -2252,7 +2280,7 @@ const zh: Messages = {
     soon: "即将推出",
     note: "通过 Polar 收款。随时可以取消，无论如何数据都留在你自己的电脑上。",
     plans: [
-      { tagline: "一个人用", features: ["每周 2,000 次 MCP 调用", "全部在你自己的电脑上运行", "工作区和表想建多少建多少", "完整历史，撤销能一直往回退", "接上 Claude、Codex 或 OpenCode"] },
+      { tagline: "一个人用", features: ["每周 500 次 MCP 调用", "全部在你自己的电脑上运行", "工作区和表想建多少建多少", "完整历史，撤销能一直往回退", "接上 Claude、Codex 或 OpenCode"] },
       { tagline: "团队用", features: ["MCP 调用不限次数", "免费版的全部", "给团队其他人的席位", "共享工作区，始终一致", "邮件支持"] },
     ],
   },
@@ -2502,7 +2530,11 @@ const vi: Messages = {
     badge: "Local-first · thuần AI",
     download: "Tải Mochi",
     requirements: "macOS 13 trở lên. Chưa có bản cho Windows hay Linux.",
-    intel: "Dùng Mac Intel?",
+    archApple: "Apple Silicon",
+    archIntel: "Intel",
+    detected: "Có vẻ bạn cần bản {arch}.",
+    switchTo: "Lấy bản {arch}",
+    chooseUnknown: "Chọn máy của bạn:",
     ctaPrimary: "Bắt đầu",
     ctaSecondary: "Xem cách hoạt động",
     copyLabel: "Sao chép lệnh cài đặt",
@@ -2595,7 +2627,7 @@ const vi: Messages = {
   },
   price: {
     title: "Một mình thì miễn phí",
-    sub: "Mọi thứ trên trang này dùng không mất tiền, trong 2.000 lượt gọi MCP mỗi tuần. Pro bỏ giới hạn đó và thêm chỗ cho những người còn lại trong nhóm.",
+    sub: "Mọi thứ trên trang này dùng không mất tiền, trong 500 lượt gọi MCP mỗi tuần. Pro bỏ giới hạn đó và thêm chỗ cho những người còn lại trong nhóm.",
     free: "Miễn phí",
     perMonth: "mỗi tháng",
     perYear: "mỗi năm",
@@ -2603,7 +2635,7 @@ const vi: Messages = {
     soon: "Sắp có",
     note: "Thanh toán qua Polar. Huỷ lúc nào cũng được, và dù thế nào dữ liệu vẫn nằm trên máy bạn.",
     plans: [
-      { tagline: "Cho một người", features: ["2.000 lượt gọi MCP mỗi tuần", "Mọi thứ chạy trên máy của bạn", "Bao nhiêu workspace và bảng tuỳ bạn", "Lịch sử đầy đủ, hoàn tác lùi được xa", "Nối Claude, Codex hay OpenCode"] },
+      { tagline: "Cho một người", features: ["500 lượt gọi MCP mỗi tuần", "Mọi thứ chạy trên máy của bạn", "Bao nhiêu workspace và bảng tuỳ bạn", "Lịch sử đầy đủ, hoàn tác lùi được xa", "Nối Claude, Codex hay OpenCode"] },
       { tagline: "Cho cả nhóm", features: ["Gọi MCP không giới hạn", "Toàn bộ bản Miễn phí", "Chỗ ngồi cho những người còn lại", "Workspace dùng chung luôn khớp nhau", "Hỗ trợ qua email"] },
     ],
   },
