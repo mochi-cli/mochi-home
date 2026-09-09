@@ -229,6 +229,27 @@ export function readEvent(payload: string): { type: string; data: unknown } {
   return { type, data };
 }
 
+/**
+ * The account an event is about, from Polar's own JSON.
+ *
+ * That JSON is snake_case. It used to arrive here camelCased because the SDK's
+ * generated schemas remapped every field on the way in — and when those
+ * schemas went, the remap went with them. `customer.externalId` then read
+ * undefined on every delivery, the handler answered "not mine", and the
+ * counter said "ignored" a second time in one day about an entirely different
+ * cause. One word, two bugs, both invisible.
+ *
+ * Both spellings are accepted, and the wire one wins.
+ */
+export function accountIdFor(data: unknown): string | undefined {
+  const customer = (data as { customer?: Record<string, unknown> } | null)?.customer;
+  if (!customer) return undefined;
+  const wire = customer.external_id;
+  if (typeof wire === 'string' && wire !== '') return wire;
+  const camel = customer.externalId;
+  return typeof camel === 'string' && camel !== '' ? camel : undefined;
+}
+
 /** The subscription events this service acts on. Everything else is noise. */
 export const SUBSCRIPTION_EVENTS = new Set([
   'subscription.created',

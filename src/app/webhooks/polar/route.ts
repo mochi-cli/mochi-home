@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { env } from '@/lib/service/env.ts';
 import { claimEvent, recordWebhook } from '@/lib/service/db.ts';
 import { polar, syncSubscription } from '@/lib/service/billing.ts';
-import { outcomeLabel, receiveWebhook, SUBSCRIPTION_EVENTS } from '@/lib/service/webhook.ts';
+import { accountIdFor, outcomeLabel, receiveWebhook, SUBSCRIPTION_EVENTS } from '@/lib/service/webhook.ts';
 
 export const runtime = 'nodejs';
 
@@ -84,8 +84,8 @@ async function handle(event: { type: string; data: unknown }): Promise<boolean> 
 
   // The account id travels inside the event, because checkout set it as the
   // customer's external id. No lookup table, and nothing to be out of date.
-  const data = event.data as { id: string; customer?: { externalId?: string | null } };
-  const accountId = data.customer?.externalId;
+  const data = event.data as { id: string };
+  const accountId = accountIdFor(event.data);
   if (!accountId) return false;
 
   // Re-read rather than trusting the event's snapshot: `subscription.updated`
