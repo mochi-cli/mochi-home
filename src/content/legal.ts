@@ -15,10 +15,16 @@ export const SELLER = {
   name: 'TODO: legal name',
   /** Where notices can be sent. A registered address, not necessarily a home. */
   address: 'TODO: postal address',
-  /** Reached within a working day or two, and actually read. */
-  email: 'TODO: contact email',
+  /**
+   * Reached within a working day or two, and actually read.
+   *
+   * Temporary: a personal inbox standing in until there is a support address.
+   * It is on three public pages, so it will be scraped — worth replacing with
+   * something you can filter before this gets much traffic.
+   */
+  email: 'kurodenjiro@gmail.com',
   /** For privacy requests, if different from the address above. */
-  privacyEmail: 'TODO: contact email',
+  privacyEmail: 'kurodenjiro@gmail.com',
 } as const;
 
 /** When these were last changed, shown at the top of each page. */
