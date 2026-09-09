@@ -66,13 +66,24 @@ export async function GET() {
    * Asked without pulling the file: the redirect *is* the answer, and
    * following it would drag 46MB through a health check.
    */
-  let download: { ok: boolean; reason?: string } = { ok: false, reason: 'not checked' };
-  try {
-    const asset = await signedAssetUrl();
-    download = asset.ok ? { ok: true } : { ok: false, reason: asset.reason };
-  } catch (error) {
-    download = { ok: false, reason: (error as Error).message };
-  }
+  //
+  // Both architectures, because they are two assets on one release and either
+  // can be missing on its own. Checking only the default meant an Intel
+  // visitor could be the one person the button is broken for, and nothing here
+  // would disagree.
+  const asked = await Promise.all(
+    (['arm64', 'x64'] as const).map(async (arch) => {
+      try {
+        const asset = await signedAssetUrl(arch);
+        return asset.ok ? null : `${arch}: ${asset.reason}`;
+      } catch (error) {
+        return `${arch}: ${(error as Error).message}`;
+      }
+    })
+  );
+  const broken = asked.filter((reason): reason is string => reason !== null);
+  const download: { ok: boolean; reason?: string } =
+    broken.length === 0 ? { ok: true } : { ok: false, reason: broken.join('; ') };
 
   let database = false;
   let missingTables: string[] = EXPECTED;
