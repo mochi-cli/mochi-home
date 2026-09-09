@@ -30,7 +30,7 @@ export async function GET(request: Request) {
 
     const subscription = await currentSubscription(accountId);
     const { plan, seats } = planFor(subscription);
-    return NextResponse.json(await signClaim(buildClaim({ plan, email, seats })));
+    return NextResponse.json(await signClaim(buildClaim({ plan, email, seats, endsAt: subscription?.cancelAtPeriodEnd ? subscription.currentPeriodEnd : null })));
   });
 }
 

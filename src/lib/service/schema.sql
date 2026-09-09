@@ -132,3 +132,13 @@ CREATE TABLE IF NOT EXISTS web_sessions (
 );
 
 CREATE INDEX IF NOT EXISTS web_sessions_expiry ON web_sessions (expires_at);
+
+-- Added after the first release, so it arrives as an ALTER: a live database
+-- already has this table and `CREATE TABLE IF NOT EXISTS` above would skip it.
+--
+-- Whether the subscription stops at the end of the paid period. Not derivable
+-- from `status`, which stays "active" the whole time somebody is running out
+-- their last month — and that month is exactly when they want to be told that
+-- it is their last.
+ALTER TABLE subscriptions
+  ADD COLUMN IF NOT EXISTS cancel_at_period_end BOOLEAN NOT NULL DEFAULT FALSE;

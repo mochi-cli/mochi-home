@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     const { plan, seats } = planFor(subscription);
 
     return NextResponse.json({
-      ...(await signClaim(buildClaim({ plan, email: account.email, seats }))),
+      ...(await signClaim(buildClaim({ plan, email: account.email, seats, endsAt: subscription?.cancelAtPeriodEnd ? subscription.currentPeriodEnd : null }))),
       refreshToken: await issueRefreshToken(account.id),
     });
   });

@@ -18,6 +18,7 @@ const subscription = (status: string) => ({
   status,
   seats: 1,
   currentPeriodEnd: null,
+    cancelAtPeriodEnd: false,
   syncedAt: new Date().toISOString(),
 });
 

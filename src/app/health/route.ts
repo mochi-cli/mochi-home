@@ -37,8 +37,23 @@ export async function GET() {
     'web_sessions',
   ];
 
+  /**
+   * Columns added after the first release, which a live database only gets by
+   * running schema.sql again.
+   *
+   * Tables were already checked; columns were not, and a column is the easier
+   * one to miss — `CREATE TABLE IF NOT EXISTS` silently does nothing on a
+   * database that already has the table, so the ALTER at the bottom of the file
+   * is the only thing that adds it. Forgetting means every signed-in person
+   * gets a 500 from the one query that selects it, with `ready: true` here.
+   */
+  const EXPECTED_COLUMNS: Array<[string, string]> = [
+    ['subscriptions', 'cancel_at_period_end'],
+  ];
+
   let database = false;
   let missingTables: string[] = EXPECTED;
+  let missingColumns: string[] = [];
   /**
    * How many webhook deliveries have ever been handled.
    *
@@ -60,6 +75,15 @@ export async function GET() {
     database = true;
     const present = new Set(rows.map((row) => row.table_name as string));
     missingTables = EXPECTED.filter((name) => !present.has(name));
+
+    const columns = await sql()`
+      SELECT table_name, column_name FROM information_schema.columns
+       WHERE table_schema = 'public'
+    `;
+    const held = new Set(columns.map((row) => `${row.table_name}.${row.column_name}`));
+    missingColumns = EXPECTED_COLUMNS.filter(([t, c]) => present.has(t) && !held.has(`${t}.${c}`)).map(
+      ([t, c]) => `${t}.${c}`
+    );
     if (present.has('handled_events')) {
       const counted = await sql()`SELECT count(*)::int AS n FROM handled_events`;
       webhooksHandled = (counted[0]?.n as number | undefined) ?? 0;
@@ -124,6 +148,8 @@ export async function GET() {
     database,
     /** Empty when schema.sql has been applied. Anything here is a 500 waiting. */
     missingTables,
+    /** Empty when the ALTERs at the end of schema.sql have been applied too. */
+    missingColumns,
     /** Zero means no webhook has ever been delivered successfully. */
     webhooksHandled,
     webhooks,
@@ -146,6 +172,7 @@ export async function GET() {
   const ready =
     checks.database &&
     checks.missingTables.length === 0 &&
+    checks.missingColumns.length === 0 &&
     checks.origin &&
     checks.google &&
     checks.polar &&

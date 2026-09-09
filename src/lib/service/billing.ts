@@ -73,6 +73,7 @@ export async function syncSubscription(
     // every plan Mochi sells today. One machine, one seat.
     seats: subscription.seats ?? 1,
     currentPeriodEnd: subscription.currentPeriodEnd?.toISOString() ?? null,
+    cancelAtPeriodEnd: subscription.cancelAtPeriodEnd === true,
   });
 }
 
