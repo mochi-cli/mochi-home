@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import PageShell from "@/components/PageShell";
 import { InlineCode } from "@/components/Prose";
 import { RELEASES } from "@/content/changelog";
-import { RELEASES_URL } from "@/lib/links";
 
 export const metadata: Metadata = {
   title: "Changelog",
@@ -33,18 +32,6 @@ export default function ChangelogPage() {
           ))}
         </ol>
 
-        <p className="mt-8 text-[15px] text-ink-2">
-          Older releases live in{" "}
-          <a
-            href={RELEASES_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-ink underline-offset-4 transition-colors hover:text-ink-2 hover:underline"
-          >
-            the release list on GitHub
-          </a>
-          .
-        </p>
       </section>
     </PageShell>
   );

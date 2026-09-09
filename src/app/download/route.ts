@@ -1,19 +1,7 @@
 import { NextResponse } from 'next/server';
+import { CURRENT, SITE } from '@/lib/service/release.ts';
 
 export const runtime = 'nodejs';
-
-/**
- * The build this page hands out. One line to change per release.
- *
- * The buttons point at `/download`, never at a file, so publishing a new
- * version does not mean finding five hrefs — and a link somebody bookmarked,
- * or pasted into a chat a month ago, keeps working and gives them the current
- * build rather than the one that was current when they saved it.
- */
-const CURRENT = {
-  version: '0.1.0',
-  file: '/downloads/Mochi-Table-0.1.0-arm64.dmg',
-};
 
 /**
  * Sends somebody to the macOS build.
@@ -28,7 +16,7 @@ const CURRENT = {
  * to yet, and pretending otherwise would send somebody a file that cannot run.
  */
 export function GET() {
-  return NextResponse.redirect(new URL(CURRENT.file, 'https://mochi-cli.com'), {
+  return NextResponse.redirect(new URL(CURRENT.file, SITE), {
     status: 302,
     headers: {
       // Not cached: the whole point of the indirection is that this answer

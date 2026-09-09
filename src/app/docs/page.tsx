@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import PageShell from "@/components/PageShell";
 import { CodeBlock, InlineCode, Note } from "@/components/Prose";
-import { DOWNLOAD_URL, REPO_URL } from "@/lib/links";
+import { DOWNLOAD_URL } from "@/lib/links";
 
 export const metadata: Metadata = {
   title: "Docs",
@@ -158,19 +158,6 @@ git clone history.bundle history`}</CodeBlock>
               </article>
             ))}
 
-            <p className="mt-8 text-[15px] text-ink-2">
-              The full reference, including every command and what Mochi deliberately does not do,
-              lives in{" "}
-              <a
-                href={REPO_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-ink underline-offset-4 transition-colors hover:text-ink-2 hover:underline"
-              >
-                the README
-              </a>
-              .
-            </p>
           </div>
         </div>
       </section>
