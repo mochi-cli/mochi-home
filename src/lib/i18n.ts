@@ -45,6 +45,9 @@ export interface Messages {
     pricing: string;
     docs: string;
     changelog: string;
+    terms: string;
+    privacy: string;
+    refund: string;
     community: string;
     howItWorks: string;
     features: string;
@@ -149,6 +152,9 @@ const en: Messages = {
     pricing: "Pricing",
     docs: "Docs",
     changelog: "Changelog",
+    terms: "Terms",
+    privacy: "Privacy",
+    refund: "Refunds",
     community: "Community",
     howItWorks: "How it works",
     features: "Features",
@@ -527,6 +533,9 @@ const es: Messages = {
     pricing: "Precios",
     docs: "Documentación",
     changelog: "Novedades",
+    terms: "Términos",
+    privacy: "Privacidad",
+    refund: "Reembolsos",
     community: "Comunidad",
     howItWorks: "Cómo funciona",
     features: "Funciones",
@@ -873,6 +882,9 @@ const fr: Messages = {
     pricing: "Tarifs",
     docs: "Documentation",
     changelog: "Nouveautés",
+    terms: "Conditions",
+    privacy: "Confidentialité",
+    refund: "Remboursements",
     community: "Communauté",
     howItWorks: "Comment ça marche",
     features: "Fonctionnalités",
@@ -1219,6 +1231,9 @@ const de: Messages = {
     pricing: "Preise",
     docs: "Doku",
     changelog: "Changelog",
+    terms: "AGB",
+    privacy: "Datenschutz",
+    refund: "Rückerstattung",
     community: "Community",
     howItWorks: "So funktioniert's",
     features: "Funktionen",
@@ -1565,6 +1580,9 @@ const ja: Messages = {
     pricing: "料金",
     docs: "ドキュメント",
     changelog: "変更履歴",
+    terms: "利用規約",
+    privacy: "プライバシー",
+    refund: "返金",
     community: "コミュニティ",
     howItWorks: "使い方",
     features: "機能",
@@ -1911,6 +1929,9 @@ const zh: Messages = {
     pricing: "价格",
     docs: "文档",
     changelog: "更新日志",
+    terms: "条款",
+    privacy: "隐私",
+    refund: "退款",
     community: "社区",
     howItWorks: "如何使用",
     features: "功能",
@@ -2257,6 +2278,9 @@ const vi: Messages = {
     pricing: "Bảng giá",
     docs: "Tài liệu",
     changelog: "Nhật ký thay đổi",
+    terms: "Điều khoản",
+    privacy: "Quyền riêng tư",
+    refund: "Hoàn tiền",
     community: "Cộng đồng",
     howItWorks: "Cách hoạt động",
     features: "Tính năng",

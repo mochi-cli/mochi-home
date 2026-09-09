@@ -6,7 +6,10 @@ import { useLang } from "./LanguageProvider";
 export default function Footer() {
   const { m } = useLang();
 
-  const columns = [
+  const columns: Array<{
+    heading: string;
+    links: Array<{ label: string; href: string; external?: boolean }>;
+  }> = [
     {
       heading: m.footer.product,
       links: [
@@ -19,8 +22,6 @@ export default function Footer() {
       heading: m.footer.developer,
       links: [
         { label: m.nav.docs, href: "/docs" },
-        { label: m.nav.repo, href: "https://github.com/mochi-cli/mochi", external: true },
-        { label: m.nav.repoHome, href: "https://github.com/mochi-cli/home", external: true },
         { label: m.nav.mcp, href: "/#features" },
       ],
     },
@@ -28,7 +29,11 @@ export default function Footer() {
       heading: m.footer.company,
       links: [
         { label: m.nav.changelog, href: "/changelog" },
-        { label: m.nav.discussions, href: "https://github.com/mochi-cli/mochi/discussions", external: true },
+        // Reachable from every page. A terms page nobody links to is a terms
+        // page nobody has been shown, which is most of the point of having one.
+        { label: m.nav.terms, href: "/terms" },
+        { label: m.nav.privacy, href: "/privacy" },
+        { label: m.nav.refund, href: "/refund" },
       ],
     },
   ];
