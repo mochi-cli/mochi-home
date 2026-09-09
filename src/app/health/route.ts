@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { signedAssetUrl } from '@/lib/service/release.ts';
 import { env } from '@/lib/service/env';
 import { sql } from '@/lib/service/db';
 import { webhookHealth } from '@/lib/service/db.ts';
@@ -52,6 +53,26 @@ export async function GET() {
     ['subscriptions', 'cancel_at_period_end'],
     ['refresh_tokens', 'label'],
   ];
+
+  /**
+   * Whether the download button still works.
+   *
+   * It depends on a GitHub token that expires. When it does, `/download`
+   * starts answering 503 and nothing here would have said so — the first
+   * report would be somebody who came to buy, could not, and did not write in
+   * to mention it. A dead download is a dead shop, and it is exactly the kind
+   * of failure this endpoint exists to notice before a customer does.
+   *
+   * Asked without pulling the file: the redirect *is* the answer, and
+   * following it would drag 46MB through a health check.
+   */
+  let download: { ok: boolean; reason?: string } = { ok: false, reason: 'not checked' };
+  try {
+    const asset = await signedAssetUrl();
+    download = asset.ok ? { ok: true } : { ok: false, reason: asset.reason };
+  } catch (error) {
+    download = { ok: false, reason: (error as Error).message };
+  }
 
   let database = false;
   let missingTables: string[] = EXPECTED;
@@ -149,6 +170,7 @@ export async function GET() {
     environment: process.env.VERCEL_ENV ?? null,
     database,
     /** Empty when schema.sql has been applied. Anything here is a 500 waiting. */
+    download,
     missingTables,
     /** Empty when the ALTERs at the end of schema.sql have been applied too. */
     missingColumns,
@@ -175,6 +197,7 @@ export async function GET() {
     checks.database &&
     checks.missingTables.length === 0 &&
     checks.missingColumns.length === 0 &&
+    checks.download.ok &&
     checks.origin &&
     checks.google &&
     checks.polar &&

@@ -11,10 +11,23 @@
  * read them will trust the product less for it.
  */
 export const SELLER = {
-  /** Legal name of the person or company selling. */
-  name: 'TODO: legal name',
-  /** Where notices can be sent. A registered address, not necessarily a home. */
-  address: 'TODO: postal address',
+  /**
+   * Legal name of the person or company selling.
+   *
+   * A trading name for now. EU and UK consumer law wants the trader's actual
+   * identity — the name a court could serve papers on — so this is a stopgap
+   * that stops the page saying TODO, not the finished answer.
+   */
+  name: 'Kuro',
+  /**
+   * Where notices can be sent.
+   *
+   * A country is not an address. The requirement is somewhere a letter
+   * arrives: street, city, postal code. A registered-agent or mailbox service
+   * satisfies it without putting a home address on a public page, which is
+   * usually what somebody selling software on their own actually wants.
+   */
+  address: 'USA',
   /**
    * Reached within a working day or two, and actually read.
    *

@@ -69,6 +69,7 @@ export interface Messages {
     sub: string;
     badge: string;
     download: string;
+    requirements: string;
     ctaPrimary: string;
     ctaSecondary: string;
     copyLabel: string;
@@ -393,6 +394,7 @@ const en: Messages = {
     sub: "Build a customer list, a hiring tracker, anything your team needs. It all lives on your own computer.",
     badge: "Local-first · agent-native",
     download: "Download Mochi",
+    requirements: "macOS 13 or newer, Apple Silicon. No Intel or Windows build yet.",
     ctaPrimary: "Get started",
     ctaSecondary: "See how it works",
     copyLabel: "Copy install command",
@@ -742,6 +744,7 @@ const es: Messages = {
     sub: "Crea una lista de clientes, un seguimiento de contrataciones, lo que tu equipo necesite. Todo vive en tu propio ordenador.",
     badge: "Local-first · nativo para IA",
     download: "Descargar Mochi",
+    requirements: "macOS 13 o posterior, Apple Silicon. Aún no hay versión para Intel ni Windows.",
     ctaPrimary: "Empezar",
     ctaSecondary: "Ver cómo funciona",
     copyLabel: "Copiar comando de instalación",
@@ -1091,6 +1094,7 @@ const fr: Messages = {
     sub: "Créez une liste de clients, un suivi de recrutement, tout ce dont votre équipe a besoin. Tout reste sur votre ordinateur.",
     badge: "Local-first · nativement IA",
     download: "Télécharger Mochi",
+    requirements: "macOS 13 ou plus récent, Apple Silicon. Pas encore de version Intel ou Windows.",
     ctaPrimary: "Commencer",
     ctaSecondary: "Voir comment ça marche",
     copyLabel: "Copier la commande d'installation",
@@ -1440,6 +1444,7 @@ const de: Messages = {
     sub: "Baue eine Kundenliste, ein Bewerbungsboard oder was dein Team sonst braucht. Alles bleibt auf deinem eigenen Rechner.",
     badge: "Local-first · KI-nativ",
     download: "Mochi herunterladen",
+    requirements: "macOS 13 oder neuer, Apple Silicon. Noch keine Version für Intel oder Windows.",
     ctaPrimary: "Loslegen",
     ctaSecondary: "So funktioniert's",
     copyLabel: "Installationsbefehl kopieren",
@@ -1789,6 +1794,7 @@ const ja: Messages = {
     sub: "顧客リストでも採用管理でも、チームに必要なものを作れます。すべて自分のパソコンの中にあります。",
     badge: "ローカルファースト · AIネイティブ",
     download: "Mochi をダウンロード",
+    requirements: "macOS 13 以降、Apple Silicon。Intel 版と Windows 版はまだありません。",
     ctaPrimary: "はじめる",
     ctaSecondary: "使い方を見る",
     copyLabel: "インストールコマンドをコピー",
@@ -2138,6 +2144,7 @@ const zh: Messages = {
     sub: "做一份客户名单、一张招聘看板，或者团队需要的任何东西。它们都存在你自己的电脑上。",
     badge: "本地优先 · AI 原生",
     download: "下载 Mochi",
+    requirements: "macOS 13 或更高版本，Apple Silicon。暂无 Intel 与 Windows 版本。",
     ctaPrimary: "开始使用",
     ctaSecondary: "看看怎么用",
     copyLabel: "复制安装命令",
@@ -2487,6 +2494,7 @@ const vi: Messages = {
     sub: "Dựng danh sách khách hàng, bảng theo dõi tuyển dụng, hay bất cứ thứ gì nhóm bạn cần. Tất cả nằm trên máy của bạn.",
     badge: "Local-first · thuần AI",
     download: "Tải Mochi",
+    requirements: "macOS 13 trở lên, chip Apple Silicon. Chưa có bản cho Intel hay Windows.",
     ctaPrimary: "Bắt đầu",
     ctaSecondary: "Xem cách hoạt động",
     copyLabel: "Sao chép lệnh cài đặt",
