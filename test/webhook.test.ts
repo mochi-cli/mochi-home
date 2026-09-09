@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
 import { Webhook } from 'standardwebhooks';
-import { SUBSCRIPTION_EVENTS, outcomeLabel, receiveWebhook } from '../src/lib/service/webhook.ts';
+import { SUBSCRIPTION_EVENTS, accountIdFor, outcomeLabel, receiveWebhook } from '../src/lib/service/webhook.ts';
 
 /**
  * The billing endpoint strangers can reach.
@@ -485,5 +485,82 @@ describe('why a signature was refused', () => {
     const outcome = await receiveWebhook(payload, headers, deps);
     assert.equal(outcome.status, 400);
     assert.equal(outcome.error?.code, 'bad_signature');
+  });
+});
+
+/**
+ * The name on the wire.
+ *
+ * Polar sends snake_case. The SDK's generated schemas used to remap it before
+ * this service ever saw it, so `customer.externalId` was correct — right up
+ * until those schemas were removed for verifying the signature a second time
+ * with the wrong key. The remap left with them, the id read undefined on every
+ * delivery, and every subscription change was filed as "not ours". A fix for
+ * one silent failure that introduced another, counted in the same word.
+ *
+ * These use the shape Polar actually posts, which is the only shape that
+ * matters and the one no test here was using.
+ */
+describe('finding the account in a payload Polar actually sends', () => {
+  const wire = {
+    id: 'sub_1',
+    status: 'canceled',
+    customer: {
+      id: 'cus_1',
+      email: 'a@b.c',
+      external_id: 'acct_42',
+      email_verified: true,
+      created_at: '2026-09-09T04:58:01Z',
+    },
+  };
+
+  test('reads external_id, the name Polar puts on it', () => {
+    assert.equal(accountIdFor(wire), 'acct_42');
+  });
+
+  test('still reads externalId, for anything already camelCased', () => {
+    assert.equal(accountIdFor({ customer: { externalId: 'acct_42' } }), 'acct_42');
+  });
+
+  test('a customer with no external id is not an account', () => {
+    // Somebody who reached Polar without going through our checkout. Nothing
+    // to attribute the subscription to, so nothing to do — but it must be a
+    // clear nothing, not an undefined that reads as a string somewhere later.
+    assert.equal(accountIdFor({ customer: { id: 'cus_1', email: 'a@b.c' } }), undefined);
+    assert.equal(accountIdFor({ customer: { external_id: '' } }), undefined);
+    assert.equal(accountIdFor({ customer: null }), undefined);
+    assert.equal(accountIdFor(null), undefined);
+  });
+
+  test('a revoked subscription carries one, which is the whole point', async () => {
+    // End to end on the real path: signed with a modern secret, parsed without
+    // the SDK, and the id pulled out of the snake_case body. Every step here
+    // has broken separately.
+    let seen: string | undefined = 'not called';
+    const payload = JSON.stringify({ type: 'subscription.revoked', data: wire });
+    const id = 'msg_' + Math.random().toString(36).slice(2);
+    const timestamp = new Date();
+    const secret = `whsec_${Buffer.from('a'.repeat(32)).toString('base64')}`;
+
+    const outcome = await receiveWebhook(
+      payload,
+      {
+        'webhook-id': id,
+        'webhook-timestamp': Math.floor(timestamp.getTime() / 1000).toString(),
+        'webhook-signature': new Webhook(secret).sign(id, timestamp, payload),
+      },
+      {
+        secret,
+        claim: async () => true,
+        handle: async (event) => {
+          seen = accountIdFor(event.data);
+          return seen !== undefined;
+        },
+      }
+    );
+
+    assert.equal(outcome.status, 200, JSON.stringify(outcome.body));
+    assert.equal(seen, 'acct_42');
+    assert.equal(outcome.body.ignored, undefined, 'a subscription change is not "not ours"');
   });
 });
