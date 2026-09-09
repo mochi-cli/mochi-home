@@ -1,5 +1,6 @@
 import { Polar } from '@polar-sh/sdk';
 import type { Subscription as PolarSubscription } from '@polar-sh/sdk/models/components/subscription.js';
+import { AlreadyCanceledSubscription } from '@polar-sh/sdk/models/errors/alreadycanceledsubscription.js';
 import { env } from './env.ts';
 import { isActive, saveSubscription, subscriptionFor, type Account, type Subscription } from './db.ts';
 
@@ -161,10 +162,24 @@ export async function cancelSubscription(accountId: string): Promise<Subscriptio
   // with nothing to cancel is an ordinary answer rather than a fault.
   if (!cached) return null;
 
-  const updated = await polar().subscriptions.update({
-    id: cached.polarId,
-    subscriptionUpdate: { cancelAtPeriodEnd: true },
-  });
+  let updated: PolarSubscription;
+  try {
+    updated = await polar().subscriptions.update({
+      id: cached.polarId,
+      subscriptionUpdate: { cancelAtPeriodEnd: true },
+    });
+  } catch (error) {
+    // Cancelling something already set to end at the period boundary is not a
+    // fault — it is the state the person asked for, reached before they asked.
+    // Polar says so with a 403, which arrived here as a throw, became a 500,
+    // and had the app tell them the cancellation was refused and nothing had
+    // changed. Both halves of that were false, and the second one is the sort
+    // a person acts on: they go looking for a subscription to cancel again.
+    if (!(error instanceof AlreadyCanceledSubscription)) throw error;
+    // Read it back rather than trusting the cache, so what is stored and what
+    // is signed both come from Polar even on this path.
+    updated = await polar().subscriptions.get({ id: cached.polarId });
+  }
   await syncSubscription(accountId, updated);
   return await subscriptionFor(accountId);
 }
