@@ -11,8 +11,8 @@ export const runtime = 'nodejs';
  * build rather than the one that was current when they saved it.
  */
 const CURRENT = {
-  version: '0.2.22',
-  file: '/downloads/Mochi-Table-0.2.22-arm64.dmg',
+  version: '0.1.0',
+  file: '/downloads/Mochi-Table-0.1.0-arm64.dmg',
 };
 
 /**
