@@ -178,6 +178,14 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* Ahrefs Web Analytics, for the marketing site only. In head and not
+            through next/script because that is where their verification looks
+            for it. The key identifies the property, not a visitor. */}
+        <script
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="i1EYYnIqnu/54XU+yWZ8KQ"
+          async
+        />
       </head>
       <body className="min-h-full flex flex-col">
         <LanguageProvider>{children}</LanguageProvider>
