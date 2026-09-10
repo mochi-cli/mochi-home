@@ -34,6 +34,13 @@ const partners = [
     width: 202,
     height: 64,
   },
+  {
+    href: "https://www.producthunt.com/products/mochi-table?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-mochi-table",
+    src: "https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1246557&theme=dark&t=1789054685200",
+    alt: "Mochi Table - One place for all your work. No servers, no monthly bill. | Product Hunt",
+    width: 250,
+    height: 54,
+  },
 ] as const;
 
 export default function PartnerRow() {
