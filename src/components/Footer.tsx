@@ -1,9 +1,10 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Brand from "./Brand";
 import { useLang } from "./LanguageProvider";
 
-export default function Footer() {
+export default function Footer({ children }: { children?: ReactNode }) {
   const { m } = useLang();
 
   const columns: Array<{
@@ -45,6 +46,11 @@ export default function Footer() {
           <div className="max-w-xs">
             <Brand onInk />
             <p className="mt-5 text-[15px] leading-relaxed text-ink-2">{m.footer.tagline}</p>
+            {children && (
+              <div aria-label="As featured in" className="mt-7">
+                {children}
+              </div>
+            )}
           </div>
 
           {columns.map((col) => (
