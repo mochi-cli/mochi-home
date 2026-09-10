@@ -7,6 +7,7 @@ import Templates from "@/components/Templates";
 import Speed from "@/components/Speed";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
+import PartnerRow from "@/components/PartnerRow";
 import Pricing from "@/components/Pricing";
 import StickyCTA from "@/components/StickyCTA";
 import { plansOrNull } from "@/lib/service/plans";
@@ -31,7 +32,7 @@ export default async function Home() {
   const plans = await plansOrNull();
 
   return (
-    <div className="flex flex-1 flex-col font-sans">
+    <div className="flex flex-1 flex-col pb-16 font-sans sm:pb-0">
       <Navbar />
       <main className="flex-1">
         {/* pitch, install command, and the workspace itself running off the fold */}
@@ -57,21 +58,8 @@ export default async function Home() {
 
       {/* closing ask and footer share one ink slab */}
       <CTASection />
-      <Footer>
-        <a
-          href="https://www.scrolllaunch.com/products/mochi-table?ref=badge"
-          target="_blank"
-          rel="noopener"
-        >
-          <img
-            src="https://www.scrolllaunch.com/api/badge/mochi-table"
-            alt="Featured on ScrollLaunch"
-            width="220"
-            height="48"
-            loading="lazy"
-          />
-        </a>
-      </Footer>
+      <PartnerRow />
+      <Footer />
       <StickyCTA />
     </div>
   );
