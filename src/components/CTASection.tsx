@@ -12,7 +12,7 @@ export default function CTASection() {
   const { href: downloadHref } = useDownloadHref();
 
   return (
-    <section className="on-ink pt-28 md:pt-36">
+    <section className="on-ink pb-10 pt-28 md:pb-14 md:pt-36">
       <div className="mx-auto max-w-[1280px] px-5 sm:px-8">
         <Reveal>
           <h2 className="display max-w-[16ch]">{m.cta.title}</h2>
