@@ -13,6 +13,13 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.1.2",
+    items: [
+      "A workspace's path is an \"Open folder\" button now, not a line of grey text. The path is still there on hover; the click shows the file.",
+      "Shorter text on the account panel.",
+    ],
+  },
+  {
     version: "0.1.1",
     items: [
       "Paying anywhere other than the app is noticed when you switch back to it, instead of within a day.",
