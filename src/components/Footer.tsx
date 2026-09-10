@@ -46,6 +46,21 @@ export default function Footer({ children }: { children?: ReactNode }) {
           <div className="max-w-xs">
             <Brand onInk />
             <p className="mt-5 text-[15px] leading-relaxed text-ink-2">{m.footer.tagline}</p>
+            <a
+              href="https://letslaunch.today/product/mochi"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex transition-opacity hover:opacity-80"
+              aria-label="Mochi on LetsLaunch"
+            >
+              <img
+                src="https://letslaunch.today/badge/mochi.svg"
+                alt="Mochi on LetsLaunch"
+                width={250}
+                height={54}
+                loading="lazy"
+              />
+            </a>
             {children && (
               <div aria-label="As featured in" className="mt-7">
                 {children}

@@ -4,6 +4,8 @@ Landing page for [Mochi](https://github.com/mochi-cli/mochi) — an agent-native
 data assistant for Claude Code, Claude Desktop, OpenCode, and Hermes-Agent.
 Built with Next.js (App Router), TypeScript, Tailwind CSS v4, and shadcn/ui.
 
+[![Mochi on LetsLaunch](https://letslaunch.today/badge/mochi.svg)](https://letslaunch.today/product/mochi)
+
 ## Getting started
 
 ```bash
