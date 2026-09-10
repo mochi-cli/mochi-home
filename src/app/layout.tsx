@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import { Analytics } from "@vercel/analytics/next";
@@ -6,6 +7,7 @@ import { Analytics } from "@vercel/analytics/next";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mochi-cli.com";
 const TWITTER_HANDLE = process.env.NEXT_PUBLIC_TWITTER_HANDLE ?? "";
+const GOOGLE_ANALYTICS_ID = "G-Z2Z56Z8N9H";
 
 const TITLE = "Mochi · One place for all your team's work";
 const DESCRIPTION =
@@ -190,6 +192,22 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <LanguageProvider>{children}</LanguageProvider>
         <Analytics />
+        {process.env.NODE_ENV === "production" && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){window.dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GOOGLE_ANALYTICS_ID}');
+              `}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );
