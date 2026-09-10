@@ -7,16 +7,15 @@
  * bumped once.
  */
 export const CURRENT = {
-  version: '0.1.1',
+  version: '0.1.2',
   /** The tag the asset hangs off. Derived, so there is still one number. */
   get tag() {
     return `v${CURRENT.version}`;
   },
   publishedAt: '2026-09-10T00:00:00.000Z',
   notes: [
-    'Paying anywhere other than the app is noticed when you switch back to it, instead of within a day.',
-    'Free accounts are no longer told to sign in again to restore a Pro they never bought.',
-    'On Pro the agent calls line says unlimited rather than counting up against nothing.',
+    "A workspace's path is an \"Open folder\" button now, not a line of grey text. The path is still there on hover; the click shows the file.",
+    'Shorter text on the account panel.',
   ].join('\n'),
 };
 
