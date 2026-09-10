@@ -7,15 +7,14 @@
  * bumped once.
  */
 export const CURRENT = {
-  version: '0.1.2',
+  version: '0.1.3',
   /** The tag the asset hangs off. Derived, so there is still one number. */
   get tag() {
     return `v${CURRENT.version}`;
   },
   publishedAt: '2026-09-10T00:00:00.000Z',
   notes: [
-    "A workspace's path is an \"Open folder\" button now, not a line of grey text. The path is still there on hover; the click shows the file.",
-    'Shorter text on the account panel.',
+    'Installing an update while an agent was connected left the new build on disk and the old one on screen, with nothing saying so. The window now says which version is serving it, and how to stop it happening.',
   ].join('\n'),
 };
 
