@@ -57,7 +57,21 @@ export default async function Home() {
 
       {/* closing ask and footer share one ink slab */}
       <CTASection />
-      <Footer />
+      <Footer>
+        <a
+          href="https://www.scrolllaunch.com/products/mochi-table?ref=badge"
+          target="_blank"
+          rel="noopener"
+        >
+          <img
+            src="https://www.scrolllaunch.com/api/badge/mochi-table"
+            alt="Featured on ScrollLaunch"
+            width="220"
+            height="48"
+            loading="lazy"
+          />
+        </a>
+      </Footer>
       <StickyCTA />
     </div>
   );
