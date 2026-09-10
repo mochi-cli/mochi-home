@@ -13,6 +13,12 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.1.3",
+    items: [
+      "Installing an update while an agent was connected left the new build on disk and the old one on screen, with nothing saying so. The window now says which version is serving it, and how to stop it happening.",
+    ],
+  },
+  {
     version: "0.1.2",
     items: [
       "A workspace's path is an \"Open folder\" button now, not a line of grey text. The path is still there on hover; the click shows the file.",
