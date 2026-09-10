@@ -13,6 +13,12 @@ export interface Release {
 
 export const RELEASES: Release[] = [
   {
+    version: "0.1.4",
+    items: [
+      "When the window is showing an older Mochi than the one installed, it offers to restart the server holding it rather than only saying so.",
+    ],
+  },
+  {
     version: "0.1.3",
     items: [
       "Installing an update while an agent was connected left the new build on disk and the old one on screen, with nothing saying so. The window now says which version is serving it, and how to stop it happening.",

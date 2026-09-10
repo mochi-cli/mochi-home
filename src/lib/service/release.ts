@@ -7,14 +7,14 @@
  * bumped once.
  */
 export const CURRENT = {
-  version: '0.1.3',
+  version: '0.1.4',
   /** The tag the asset hangs off. Derived, so there is still one number. */
   get tag() {
     return `v${CURRENT.version}`;
   },
   publishedAt: '2026-09-10T00:00:00.000Z',
   notes: [
-    'Installing an update while an agent was connected left the new build on disk and the old one on screen, with nothing saying so. The window now says which version is serving it, and how to stop it happening.',
+    'When the window is showing an older Mochi than the one installed, it offers to restart the server holding it rather than only saying so.',
   ].join('\n'),
 };
 
