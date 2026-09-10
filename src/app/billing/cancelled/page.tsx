@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import StatusPage from "@/components/StatusPage";
+
+// A billing redirect lands here; it is not a page to find.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default function Cancelled() {
   return (
