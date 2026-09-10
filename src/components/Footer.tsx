@@ -61,6 +61,22 @@ export default function Footer({ children }: { children?: ReactNode }) {
                 loading="lazy"
               />
             </a>
+            <a
+              href="https://domain-rating.com/site/mochi-cli.com?utm_source=badge"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex max-w-full transition-opacity hover:opacity-80"
+              aria-label="Mochi domain rating"
+            >
+              <img
+                src="https://domain-rating.com/badge/mochi-cli.com.svg"
+                alt="mochi-cli.com — verified DR 0/100"
+                width={300}
+                height={64}
+                loading="lazy"
+                className="h-auto max-w-full"
+              />
+            </a>
             {children && (
               <div aria-label="As featured in" className="mt-7">
                 {children}
