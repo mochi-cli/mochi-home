@@ -41,6 +41,13 @@ const partners = [
     width: 250,
     height: 54,
   },
+  {
+    href: "https://www.tinyshelf.co/?ref=mochi-cli.com",
+    src: "https://www.tinyshelf.co/badge/tinyshelf-badge-dark-f4d1216a.svg",
+    alt: "Featured on tinyshelf",
+    width: 216,
+    height: 64,
+  },
 ] as const;
 
 export default function PartnerRow() {
@@ -51,7 +58,7 @@ export default function PartnerRow() {
     >
       <div className="mx-auto grid max-w-[1280px] grid-cols-1 items-center gap-x-5 gap-y-6 px-5 sm:grid-cols-2 sm:px-8 md:grid-cols-[140px_repeat(4,minmax(0,1fr))] md:gap-x-6">
         <h2 id="partners-heading" className="kicker col-span-full text-ink-2 md:col-span-1">
-          Partners
+          Featured on
         </h2>
         {partners.map((partner) => (
           <a
