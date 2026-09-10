@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import StatusPage from "@/components/StatusPage";
+
+// Reached only by redirect from Google. Nothing to index.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 /**
  * Where Google sends people back to. Nothing of value is in this page — no
