@@ -48,6 +48,13 @@ const partners = [
     width: 216,
     height: 64,
   },
+  {
+    href: "https://www.makeitla.st/",
+    src: "https://www.makeitla.st/badge/makeitlast-badge-dark.svg?v=3",
+    alt: "Featured on MakeItLast",
+    width: 252,
+    height: 76,
+  },
 ] as const;
 
 export default function PartnerRow() {
